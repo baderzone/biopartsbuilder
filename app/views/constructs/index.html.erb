@@ -1,0 +1,27 @@
+<h1>Listing constructs</h1>
+
+<table>
+  <tr>
+    <th>Design</th>
+    <th>Name</th>
+    <th>Seq</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @constructs.each do |construct| %>
+  <tr>
+    <td><%= construct.design_id %></td>
+    <td><%= construct.name %></td>
+    <td><%= construct.seq %></td>
+    <td><%= link_to 'Show', construct %></td>
+    <td><%= link_to 'Edit', edit_construct_path(construct) %></td>
+    <td><%= link_to 'Destroy', construct, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Construct', new_construct_path %>

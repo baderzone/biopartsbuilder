@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Accession:</b>
+  <%= @sequence.accession %>
+</p>
+
+<p>
+  <b>Organism:</b>
+  <%= @sequence.organism_id %>
+</p>
+
+<p>
+  <b>Part:</b>
+  <%= @sequence.part_id %>
+</p>
+
+<p>
+  <b>Seq:</b>
+  <%= @sequence.seq %>
+</p>
+
+<p>
+  <b>Annotation:</b>
+  <%= @sequence.annotation %>
+</p>
+
+
+<%= link_to 'Edit', edit_sequence_path(@sequence) %> |
+<%= link_to 'Back', sequences_path %>

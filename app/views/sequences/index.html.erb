@@ -1,0 +1,31 @@
+<h1>Listing sequences</h1>
+
+<table>
+  <tr>
+    <th>Accession</th>
+    <th>Organism</th>
+    <th>Part</th>
+    <th>Seq</th>
+    <th>Annotation</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @sequences.each do |sequence| %>
+  <tr>
+    <td><%= sequence.accession %></td>
+    <td><%= sequence.organism_id %></td>
+    <td><%= sequence.part_id %></td>
+    <td><%= sequence.seq %></td>
+    <td><%= sequence.annotation %></td>
+    <td><%= link_to 'Show', sequence %></td>
+    <td><%= link_to 'Edit', edit_sequence_path(sequence) %></td>
+    <td><%= link_to 'Destroy', sequence, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Sequence', new_sequence_path %>

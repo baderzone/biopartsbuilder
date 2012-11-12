@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  part_id: 1
+  protocol_id: 1
+  user_id: 1
+
+two:
+  part_id: 1
+  protocol_id: 1
+  user_id: 1

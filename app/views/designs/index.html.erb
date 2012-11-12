@@ -1,0 +1,27 @@
+<h1>Listing designs</h1>
+
+<table>
+  <tr>
+    <th>Part</th>
+    <th>Protocol</th>
+    <th>User</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @designs.each do |design| %>
+  <tr>
+    <td><%= design.part_id %></td>
+    <td><%= design.protocol_id %></td>
+    <td><%= design.user_id %></td>
+    <td><%= link_to 'Show', design %></td>
+    <td><%= link_to 'Edit', edit_design_path(design) %></td>
+    <td><%= link_to 'Destroy', design, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Design', new_design_path %>

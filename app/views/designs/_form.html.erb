@@ -1,0 +1,29 @@
+<%= form_for(@design) do |f| %>
+  <% if @design.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@design.errors.count, "error") %> prohibited this design from being saved:</h2>
+
+      <ul>
+      <% @design.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :part_id %><br />
+    <%= f.number_field :part_id %>
+  </div>
+  <div class="field">
+    <%= f.label :protocol_id %><br />
+    <%= f.number_field :protocol_id %>
+  </div>
+  <div class="field">
+    <%= f.label :user_id %><br />
+    <%= f.number_field :user_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

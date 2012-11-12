@@ -1,0 +1,27 @@
+<h1>Listing organisms</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Fullname</th>
+    <th>Code</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @organisms.each do |organism| %>
+  <tr>
+    <td><%= organism.name %></td>
+    <td><%= organism.fullname %></td>
+    <td><%= organism.code %></td>
+    <td><%= link_to 'Show', organism %></td>
+    <td><%= link_to 'Edit', edit_organism_path(organism) %></td>
+    <td><%= link_to 'Destroy', organism, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Organism', new_organism_path %>

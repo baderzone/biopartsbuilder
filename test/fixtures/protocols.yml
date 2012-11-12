@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  prefix: MyString
+  suffix: MyString
+  overlap: MyString
+  construct_size: 1
+  rs_enz: MyString
+
+two:
+  name: MyString
+  prefix: MyString
+  suffix: MyString
+  overlap: MyString
+  construct_size: 1
+  rs_enz: MyString

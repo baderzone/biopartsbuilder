@@ -1,0 +1,29 @@
+<h3>Protocols</h3>
+
+<table class="table table-striped">
+  <tr>
+    <th>#</th>
+    <th>Name</th>
+    <th>External Prefix</th>
+    <th>External Suffix</th>
+    <th>Internal Prefix</th>
+    <th>Internal Suffix</th>
+    <th>Overlap</th>
+    <th>Size Restriction</th>
+    <th>Forbidden enzymes</th>
+  </tr>
+
+  <tr>
+    <td><%= @protocol.id %></td>
+    <td><%= @protocol.name %></td>
+    <td><%= @protocol.ext_prefix %></td>
+    <td><%= @protocol.ext_suffix %></td>
+    <td><%= @protocol.int_prefix %></td>
+    <td><%= @protocol.int_suffix %></td>
+    <td><%= @protocol.overlap %></td>
+    <td><%= @protocol.construct_size %></td>
+    <td><%= @protocol.rs_enz %></td>
+  </tr>
+</table>
+
+<br><br>

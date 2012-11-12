@@ -1,0 +1,18 @@
+<h3>New part</h3>
+
+<%= form_for @sequence do |f| %>
+  <table>
+    <tr>
+      <td colspan='2'><%= f.label :accession, "Protein/Nucleotide Accession Number:"%></td>
+    </tr>
+    <tr>
+      <td><%= f.text_area :accession, :cols => 200, :rows => 10 %></td>
+      <td>One id per line<br>e.g.<br>NP_539626.1<br>NP_459636.1<br>P29929.1</td>
+    </tr>
+    <tr>
+      <td colspan='2'><%= f.submit 'Create Parts' %></td>
+    </tr>
+  </table>
+<% end %>
+
+

@@ -1,0 +1,57 @@
+<ul class="nav">
+	<!-- Workspace menu -->
+	<li class="dropdown">
+	  <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+	    Parts
+	    <b class="caret"></b>
+	  </a>
+	  <ul class="dropdown-menu">
+	    <li><%= link_to 'View', parts_path %></li>
+	    <li><%= link_to 'New', new_sequence_path %></li>	
+	  </ul>
+  </li>
+	<li class="dropdown">
+	  <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+	    Designs
+	    <b class="caret"></b>
+	  </a>
+	  <ul class="dropdown-menu">
+	    <li><%= link_to 'View', designs_path %></li>
+	    <li><%= link_to 'New', new_design_path %></li>	
+	  </ul>
+  </li>
+	<li class="dropdown">
+	  <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+	    Orders
+	    <b class="caret"></b>
+	  </a>
+	  <ul class="dropdown-menu">
+	    <li><%= link_to 'View', orders_path %></li>
+	    <li><%= link_to 'New', new_order_path %></li>	
+	  </ul>
+  </li>
+	<li class="dropdown">
+	  <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+	    Protocols
+	    <b class="caret"></b>
+	  </a>
+	  <ul class="dropdown-menu">
+	    <li><%= link_to 'View', protocols_path %></li>
+	    <li><%= link_to 'New', new_protocol_path %></li>	
+	  </ul>
+  </li>
+</ul>
+
+<ul class="nav pull-right">
+	<li class="dropdown">
+	  <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+	    Account
+	    <b class="caret"></b>
+	  </a>
+	  <ul class="dropdown-menu">
+	    <li><%= link_to 'Info', users_path %></li>
+	    <li class="divider"></li>
+	    <li><%= link_to 'Logout', signout_path %></li>
+	  </ul>
+	</li>
+</ul>
