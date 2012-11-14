@@ -4,25 +4,27 @@
   <tr>
     <th>#</th>
     <th>Name</th>
+    <th>Orgnism</th>
     <th>External Prefix</th>
     <th>External Suffix</th>
     <th>Internal Prefix</th>
     <th>Internal Suffix</th>
-    <th>Overlap</th>
     <th>Size Restriction</th>
     <th>Forbidden enzymes</th>
+    <th>Overlap</th>
   </tr>
 
   <tr>
     <td><%= @protocol.id %></td>
     <td><%= @protocol.name %></td>
+    <td><%= @protocol.organism.fullname %></td>
     <td><%= @protocol.ext_prefix %></td>
     <td><%= @protocol.ext_suffix %></td>
     <td><%= @protocol.int_prefix %></td>
     <td><%= @protocol.int_suffix %></td>
-    <td><%= @protocol.overlap %></td>
     <td><%= @protocol.construct_size %></td>
     <td><%= @protocol.rs_enz %></td>
+    <td><%= @protocol.overlap %></td>
   </tr>
 </table>
 

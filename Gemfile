@@ -43,6 +43,7 @@ gem 'zip'
 gem 'axlsx', "~> 1.3.1"
 gem 'resque', :require => 'resque/server'
 gem 'clockwork'
+gem 'xml-simple'
 
 # Use unicorn as the app server
 gem 'unicorn'

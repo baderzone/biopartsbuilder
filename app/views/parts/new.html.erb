@@ -1,5 +1,18 @@
 <h3>New part</h3>
 
-<%= render 'form' %>
+<%= form_tag({:controller => "parts", :action => "create"}, :method => "post") do %>
+  <table>
+    <tr>
+      <td colspan='2'><%= label_tag(:accession, "Protein/Nucleotide Accession Number:") %></td>
+    </tr>
+    <tr>
+      <td><%= text_area_tag(:accession, "", :size => "50x10")%></td>
+      <td>One id per line<br>e.g.<br>NP_539626.1<br>NP_459636.1<br>P29929.1</td>
+    </tr>
+    <tr>
+      <td colspan='2'><%= submit_tag("Create Parts") %></td>
+    </tr>
+  </table>
+<% end %>
 
-<%= link_to 'Back', parts_path %>
+

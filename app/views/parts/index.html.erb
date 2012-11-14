@@ -5,17 +5,17 @@
   <tr>
     <th>#</th>
     <th>Part Name</th>
-    <th>Protein Accession</th>
+    <th>Protein Accession Number</th>
     <th>Organism</th>
     <th>Type</th>
   </tr>
 
 <% @parts.each do |part| %>
   <tr>
-    <td>part.id</td>
+    <td><%= part.id %></td>
     <td><%= part.name %></td>
-    <td><%= link_to 'Show', part.sequence.accession %></td>
-    <td><%= part.sequence.organism %></td>
+    <td><%= part.sequence.accession %></td>
+    <td><%= part.sequence.organism.fullname %></td>
     <td><%= part.sequence.annotation %></td>
   </tr>
 <% end %>

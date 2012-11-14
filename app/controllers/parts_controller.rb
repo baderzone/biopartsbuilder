@@ -12,6 +12,17 @@ class PartsController < ApplicationController
   end
 
   def create
-    @part = Part.new(params[:part])
+    if params[:accession].empty?
+      render :new
+    else
+      params[:accession].split("\r\n").each do |entry|
+        entry.strip!
+        if Sequence.where("accession = ?", entry).empty?
+          Resque.enqueue(NewPart, entry)
+        end 
+      end 
+      redirect_to parts_path, :notice => "Parts submitted correctly!"
+    end 
   end
+
 end

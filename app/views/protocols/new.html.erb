@@ -6,6 +6,10 @@
       <td colspan="2"><%= f.text_field :name %></td>
     </tr>
     <tr>
+      <td width="150px" align="center"><%= f.label :organism %></td>
+      <td colspan="2"><%= f.collection_select :organism, Organism.find((1..6).to_a), :code, :fullname %></td>
+    </tr>
+    <tr>
       <td align="center"><%= f.label :ext_prefix, "External Prefix" %></td>
       <td colspan="2"><%= f.text_field :ext_prefix %></td>
     </tr>

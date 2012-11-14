@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121112194901) do
+ActiveRecord::Schema.define(:version => 20121114150001) do
 
   create_table "constructs", :force => true do |t|
     t.integer  "design_id"
@@ -55,20 +55,21 @@ ActiveRecord::Schema.define(:version => 20121112194901) do
     t.string   "name"
     t.string   "int_prefix"
     t.string   "int_suffix"
-    t.string   "overlap"
+    t.text     "overlap"
     t.integer  "construct_size"
     t.string   "rs_enz"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
     t.string   "ext_prefix"
     t.string   "ext_suffix"
+    t.integer  "organism_id"
   end
 
   create_table "sequences", :force => true do |t|
     t.string   "accession"
     t.integer  "organism_id"
     t.integer  "part_id"
-    t.string   "seq"
+    t.text     "seq"
     t.string   "annotation"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false

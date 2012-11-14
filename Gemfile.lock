@@ -177,6 +177,7 @@ GEM
       raindrops (~> 0.7)
     vegas (0.1.11)
       rack (>= 1.0.0)
+    xml-simple (1.1.2)
     zip (2.0.2)
 
 PLATFORMS
@@ -204,4 +205,5 @@ DEPENDENCIES
   twitter-bootstrap-rails
   uglifier (>= 1.0.3)
   unicorn
+  xml-simple
   zip
