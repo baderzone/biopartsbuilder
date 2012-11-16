@@ -1,27 +1,25 @@
-<h1>Listing designs</h1>
+<h3>Designs</h3>
 
-<table>
-  <tr>
-    <th>Part</th>
-    <th>Protocol</th>
-    <th>User</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<div id="indexDiv">
+  <table class="table table-striped">
+    <tr>
+      <th>#</th>
+      <th>Part</th>
+      <th>Protocol</th>
+      <th>Result</th>
+    </tr>
 
-<% @designs.each do |design| %>
-  <tr>
-    <td><%= design.part_id %></td>
-    <td><%= design.protocol_id %></td>
-    <td><%= design.user_id %></td>
-    <td><%= link_to 'Show', design %></td>
-    <td><%= link_to 'Edit', edit_design_path(design) %></td>
-    <td><%= link_to 'Destroy', design, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
+    <% @designs.each do |design| %>
+      <tr>
+        <td><%= design.id %></td>
+        <td><%= design.part.name %></td>
+        <td><%= design.protocol.name %></td>
+        <td><%= link_to 'View', design_path(design.id), {:style => 'color: #049cdb;'} %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
 <br />
 
-<%= link_to 'New Design', new_design_path %>
+<%= link_to 'Export selected design results', '#', {:style => 'color: #049cdb;'} %>
+<br><br>

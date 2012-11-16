@@ -11,12 +11,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121114150001) do
+ActiveRecord::Schema.define(:version => 20121116154711) do
 
   create_table "constructs", :force => true do |t|
     t.integer  "design_id"
     t.string   "name"
-    t.string   "seq"
+    t.text     "seq"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -24,7 +24,6 @@ ActiveRecord::Schema.define(:version => 20121114150001) do
   create_table "designs", :force => true do |t|
     t.integer  "part_id"
     t.integer  "protocol_id"
-    t.integer  "user_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end

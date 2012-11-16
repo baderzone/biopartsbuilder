@@ -1,20 +1,11 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <b>Part:</b>
-  <%= @design.part_id %>
-</p>
-
-<p>
-  <b>Protocol:</b>
-  <%= @design.protocol_id %>
-</p>
-
-<p>
-  <b>User:</b>
-  <%= @design.user_id %>
-</p>
-
-
-<%= link_to 'Edit', edit_design_path(@design) %> |
-<%= link_to 'Back', designs_path %>
+<h3>Designed parts for <%= @design.part.name %></h3>
+<br>
+<h5>Protocol: <%= @design.protocol.name %></h5>
+<br>
+<% @design.construct.each do |construct| %>
+  <b><%= construct.name %></b><br>
+  <div id="construct">
+    <%= construct.seq %>
+  </div>
+  <br>
+<% end %>

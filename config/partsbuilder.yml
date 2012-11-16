@@ -1,0 +1,5 @@
+development:
+    program:
+        part_fasta_path: public/parts
+        partsbuilder_processing_path: public/design_processing
+        geneDesign_path: lib/geneDesign

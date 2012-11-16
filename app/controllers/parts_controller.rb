@@ -13,7 +13,7 @@ class PartsController < ApplicationController
 
   def create
     if params[:accession].empty?
-      render :new
+      render :new, :alert => "test"
     else
       params[:accession].split("\r\n").each do |entry|
         entry.strip!

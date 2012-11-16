@@ -13,7 +13,7 @@ class ProtocolsController < ApplicationController
 
   def create
     if params[:protocol]['overlap'].include?("\r\n")
-      params[:protocol]['overlap'] = params[:protocol]['overlap'].split("\r\n").join(',')
+      params[:protocol]['overlap'] = params[:protocol]['overlap'].split("\r\n").join(',').upcase
     end
     if params[:protocol]['rs_enz'].include?("\r\n")
       params[:protocol]['rs_enz'] = params[:protocol]['rs_enz'].split("\r\n").join(':')

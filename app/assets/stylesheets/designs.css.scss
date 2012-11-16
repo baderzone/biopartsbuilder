@@ -1,3 +1,18 @@
 // Place all the styles related to the Designs controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+#indexDiv {
+height: 400px;
+overflow: auto;
+}
+#newDiv {
+height: 200px;
+overflow: auto;
+}
+#construct {
+border: 1px solid; 
+width: 50%; 
+height: 150px; 
+word-wrap: break-word;
+overflow: auto;
+}

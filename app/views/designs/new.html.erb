@@ -1,5 +1,54 @@
-<h1>New design</h1>
+<h3>New design</h3>
 
-<%= render 'form' %>
+<%= form_for(@design) do |f| %>
+  <h5> Select one protocol: </h5>
+  <div id="newDiv">
+    <table class="table table-striped">
+      <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Organism</th>
+        <th>External Prefix</th>
+        <th>External Suffix</th>
+        <th>Internal Prefix</th>
+        <th>Internal Suffix</th>
+        <th>Size Restriction</th>
+        <th>Forbidden enzymes</th>
+        <th>Overlap</th>
+      </tr>
+      <% @protocols.each do |protocol| %>
+        <tr>
+          <td><%= f.radio_button :protocol_id, protocol.id %></td>
+          <td><%= protocol.name %></td>
+          <td><%= protocol.organism.fullname %></td>
+          <td><%= protocol.ext_prefix %></td>
+          <td><%= protocol.ext_suffix %></td>
+          <td><%= protocol.int_prefix %></td>
+          <td><%= protocol.int_suffix %></td>
+          <td><%= protocol.construct_size %></td>
+          <td><%= protocol.rs_enz %></td>
+          <td><%= protocol.overlap %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
 
-<%= link_to 'Back', designs_path %>
+  <h5> Select parts: </h5> 
+  <div id="newDiv">
+    <table class="table table-striped">
+      <tr>
+        <th></th>
+        <th>Part Name</th>
+      </tr>
+      <% @parts.each do |part| %>
+        <tr>
+          <td><%= f.check_box(:part_id, {:multiple => true}, part.id, nil) %></td>
+          <td><%= part.name %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+  <br>
+  <%= f.submit %>
+<% end %>
+

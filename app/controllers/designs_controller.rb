@@ -1,83 +1,36 @@
 class DesignsController < ApplicationController
-  # GET /designs
-  # GET /designs.json
+
   def index
     @designs = Design.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @designs }
-    end
   end
 
-  # GET /designs/1
-  # GET /designs/1.json
   def show
-    @design = Design.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @design }
+    begin
+      @design = Design.find(params[:id])
+    rescue  
+      redirect_to designs_path, :alert => "Design unfinished! Please COME BACK 10 minutes later"
     end
+
   end
 
-  # GET /designs/new
-  # GET /designs/new.json
   def new
+    @parts = Part.all
+    @protocols = Protocol.all
     @design = Design.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @design }
-    end
   end
 
-  # GET /designs/1/edit
-  def edit
-    @design = Design.find(params[:id])
-  end
-
-  # POST /designs
-  # POST /designs.json
   def create
-    @design = Design.new(params[:design])
-
-    respond_to do |format|
-      if @design.save
-        format.html { redirect_to @design, notice: 'Design was successfully created.' }
-        format.json { render json: @design, status: :created, location: @design }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @design.errors, status: :unprocessable_entity }
+    if params[:design].nil? || params[:design][:protocol_id].nil? || params[:design][:part_id].nil?
+      render :new
+    else
+      params[:design][:part_id].each do |part_id|
+        @design = Design.new(:part_id => part_id, :protocol_id => params[:design][:protocol_id])
+        if @design.save
+          Resque.enqueue(DesignPart, @design.id)
+        end
       end
+      redirect_to designs_path, :notice => "Designs submitted correctly!"
     end
   end
 
-  # PUT /designs/1
-  # PUT /designs/1.json
-  def update
-    @design = Design.find(params[:id])
-
-    respond_to do |format|
-      if @design.update_attributes(params[:design])
-        format.html { redirect_to @design, notice: 'Design was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @design.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /designs/1
-  # DELETE /designs/1.json
-  def destroy
-    @design = Design.find(params[:id])
-    @design.destroy
-
-    respond_to do |format|
-      format.html { redirect_to designs_url }
-      format.json { head :no_content }
-    end
-  end
 end
