@@ -15,8 +15,11 @@ class ProtocolsController < ApplicationController
     if params[:protocol]['overlap'].include?("\r\n")
       params[:protocol]['overlap'] = params[:protocol]['overlap'].split("\r\n").join(',').upcase
     end
-    if params[:protocol]['rs_enz'].include?("\r\n")
-      params[:protocol]['rs_enz'] = params[:protocol]['rs_enz'].split("\r\n").join(':')
+    if params[:protocol]['forbid_enzymes'].include?("\r\n")
+      params[:protocol]['forbid_enzymes'] = params[:protocol]['forbid_enzymes'].split("\r\n").join(':')
+    end
+    if params[:protocol]['check_enzymes'].include?("\r\n")
+      params[:protocol]['check_enzymes'] = params[:protocol]['check_enzymes'].split("\r\n").join(':')
     end
     @protocol = Protocol.new(params[:protocol])
 
@@ -24,6 +27,28 @@ class ProtocolsController < ApplicationController
       redirect_to @protocol, notice: 'Protocol was successfully created.'
     else
       render :new
+    end
+  end
+
+  def edit
+    @protocol = Protocol.find(params[:id])
+  end
+
+  def update
+    @protocol = Protocol.find(params[:id])
+    if params[:protocol]['overlap'].include?("\r\n")
+      params[:protocol]['overlap'] = params[:protocol]['overlap'].split("\r\n").join(',').upcase
+    end
+    if params[:protocol]['forbid_enzymes'].include?("\r\n")
+      params[:protocol]['forbid_enzymes'] = params[:protocol]['forbid_enzymes'].split("\r\n").join(':')
+    end
+    if params[:protocol]['check_enzymes'].include?("\r\n")
+      params[:protocol]['check_enzymes'] = params[:protocol]['check_enzymes'].split("\r\n").join(':')
+    end
+    if @protocol.update_attributes(params[:protocol])
+      redirect_to protocol_path(@protocol), :notice => "Protocol updated"
+    else
+      render :edit, :id => @protocol, :flash => {:error => "Protocol update failed."}
     end
   end
 

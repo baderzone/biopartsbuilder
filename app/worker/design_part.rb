@@ -5,6 +5,7 @@ class DesignPart
 
     design = Design.find(design_id)
 
+    # parameters
     process_path = "#{PARTSBUILDER_CONFIG['program']['partsbuilder_processing_path']}"
     protein_path = "#{PARTSBUILDER_CONFIG['program']['part_fasta_path']}"
     geneDesign_path = "#{PARTSBUILDER_CONFIG['program']['geneDesign_path']}"
@@ -12,7 +13,7 @@ class DesignPart
     int_prefix = design.protocol.int_prefix
     ext_suffix = design.protocol.ext_suffix
     int_suffix = design.protocol.int_suffix
-    enzymes = design.protocol.rs_enz
+    enzymes = design.protocol.forbid_enzymes
     seq_size = design.protocol.construct_size
     overlap_list = design.protocol.overlap.split(',')
     org_code = design.protocol.organism.id
@@ -53,17 +54,22 @@ class DesignPart
         # find unique overlap
         while (! allowable_overlap.include?(overlap)) && (i != frag_num) do
           cnt += 1
+          # if overlap is not unique, move +-n bp to find unique overlap 
+          # shift = -1, 1, -2, 2, -3, 3, -4, 4 .....
           shift = (cnt/2 + cnt%2) * ((-1) ** cnt)
+          # if cannot find unique overlap, return false
           if (shift.abs > frag_size) || (flag+shift >= recode_seq.length)
-            return false   # cannot find unique overlap
+            return false   
           end 
           stop_site = flag + shift
           overlap = recode_seq[(stop_site - overlap_size + 1), overlap_size]
         end
         if i != frag_num
           if i == 1
+            # first fragment, seq = ext_prefix + seq + int_suffix
             construct_seq = (recode_seq[start_site, (stop_site-start_site+1)]).to_s + int_suffix
           else
+            # if not first and not last, seq = int_prefix + seq + int_suffix
             construct_seq = int_prefix + (recode_seq[start_site, (stop_site-start_site+1)]).to_s + int_suffix
           end
           construct = Construct.create(:design_id => design_id, :name => "#{design.part.name}_COy_#{i}", :seq => construct_seq)
@@ -74,6 +80,8 @@ class DesignPart
           start_site = stop_site - overlap_size + 1
           stop_site = start_site + frag_size
         else
+          # last fragment, seq = int_prefix + seq + ext_suffix
+          # for the last fragment, there is no need to find unique overlap
           construct_seq = int_prefix + (recode_seq[start_site, recode_seq.length]).to_s
           construct = Construct.create(:design_id => design_id, :name => "#{design.part.name}_COy_#{i}", :seq => construct_seq)
         end

@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
-  has_many :design
   has_many :order
+  has_many :job
 
-  attr_accessible :email, :fullname, :provider, :uid
+  attr_accessible :email, :fullname, :provider, :uid, :order, :job
 
   #utility method for creating an user at the first login
   def self.create_with_omniauth(auth)

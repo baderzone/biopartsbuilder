@@ -1,8 +1,20 @@
 Partsbuilder::Application.routes.draw do
+  
+  get "jobs/show"
+
+  get "auto_design/index"
+
+  get "auto_design/show"
+
+  get "auto_design/new"
+
   get "home/index"
+  
   get "sequence/create"
+  
   get "part/create"
 
+  match "/orders/:id/get_zip_file", :to => "orders#get_zip_file" 
   match "/auth/:provider/callback" => "sessions#create"
   match "/signout" => "sessions#destroy", :as => :signout
 
@@ -10,10 +22,12 @@ Partsbuilder::Application.routes.draw do
   resources :constructs
   resources :orders
   resources :designs
+  resources :auto_designs
   resources :users
   resources :parts
   resources :sequences
   resources :organisms
+  resources :jobs
 
   root :to => 'home#index'
 

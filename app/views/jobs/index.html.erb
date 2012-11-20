@@ -1,0 +1,21 @@
+<h3>Jobs</h3>
+<table class="table table-striped">
+  <tr>
+    <th>#</th>
+    <th>Job Status</th>
+    <th>Job Type</th>
+    <th>Created_at</th>
+    <th>Updated_at</th>
+  </tr>
+  <% cnt = 0 %>
+  <% @jobs.each do |job| %>
+    <% cnt += 1 %>
+    <tr>
+      <td><%= cnt %></td>
+      <td><span class="label <%= get_status_label_style(job.job_status.name)%>"><%= job.job_status.name %></span></td>
+      <td><%= job.job_type.name %></td>
+      <td><%= job.created_at %></td>
+      <td><%= job.updated_at %></td>
+    </tr>
+  <% end %>
+</table>

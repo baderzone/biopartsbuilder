@@ -1,0 +1,62 @@
+<h3>Edit protocol </h3>
+<%= form_for(@protocol) do |f| %>
+  <table>
+    <tr>
+      <td width="150px" align="center"><%= f.label :name %></td>
+      <td colspan="2"><%= f.text_field :name %></td>
+    </tr>
+    <tr>
+      <td width="150px" align="center"><%= f.label :organism_id %></td>
+      <td colspan="2"><%= f.collection_select :organism_id, Organism.find((1..6).to_a), :code, :fullname %></td>
+    </tr>
+    <tr>
+      <td align="center"><%= f.label :ext_prefix, "External Prefix" %></td>
+      <td colspan="2"><%= f.text_field :ext_prefix %></td>
+    </tr>
+    <tr>
+      <td align="center"><%= f.label :ext_suffix, "External Suffix" %></td>
+      <td colspan="2"><%= f.text_field :ext_suffix %></td>
+    </tr>
+    <tr>
+      <td align="center"><%= f.label :int_prefix, "Internal Prefix" %></td>
+      <td colspan="2"><%= f.text_field :int_prefix %></td>
+    </tr>
+    <tr>
+      <td align="center"><%= f.label :int_suffix, "Internal Suffix" %></td>
+      <td colspan="2"><%= f.text_field :int_suffix %></td>
+    </tr>
+    <tr>
+      <td align="center"><%= f.label :overlap %></td>
+      <td><%= f.text_area :overlap, :rows => 5, :value => @protocol.overlap.gsub(/,/, "\r\n") %></td>
+      <td>One overlap per line, only letters allowed<br>e.g.<br>ATTT<br>GCCA<br>CTAA</td>
+    </tr>
+    <tr>
+      <td align="center"><%= f.label :construct_size, "Size Restriction" %></td>
+      <td><%= f.number_field :construct_size %></td>
+      <td>Maximum size of sequence, if longer than maximum size, sequence will be carved into fragments</td>
+    </tr>
+    <tr>
+      <td align="center"><%= f.label :forbid_enzymes, "Forbidden Enzymes" %></td>
+      <td><%= f.text_area :forbid_enzymes, :rows => 5, :value => @protocol.forbid_enzymes.gsub(/:/, "\r\n") %></td>
+      <td>One enzyme per line, only letters allowed<br>e.g.<br>BsaI<br>BsmBI<br>EcoRI</td>
+    </tr>
+    <tr>
+      <td align="center"><%= f.label :check_enzymes, "Check Enzymes" %></td>
+      <% if @protocol.check_enzymes.nil? %>
+        <td><%= f.text_area :check_enzymes, :rows => 5 %></td>
+      <% else %>
+        <td><%= f.text_area :check_enzymes, :rows => 5, :value => @protocol.check_enzymes.gsub(/:/, "\r\n") %></td>
+      <% end %>
+      <td>PartBuilder will check if these enzymes in the sequence but not remove them.<br><br> One enzyme per line<br>e.g.<br>BceAI<br>SalI</td>
+    </tr>
+    <tr>
+      <td align="center"><%= f.label :comment %></td>
+      <td><%= f.text_area :comment, :rows => 5 %></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="2" align="right"><br><%= f.submit :class => "btn btn-primary" %></td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+<% end %>

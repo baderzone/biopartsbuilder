@@ -1,4 +1,5 @@
 class Order < ActiveRecord::Base
   belongs_to :user
-  attr_accessible :name, :user_id, :vendor
+  belongs_to :vendor
+  attr_accessible :name, :user, :user_id, :vendor, :vendor_id
 end

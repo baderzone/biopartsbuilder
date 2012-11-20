@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  job_type_id: 1
+  job_status_id: 1
+  job_user_id: 1
+
+two:
+  job_type_id: 1
+  job_status_id: 1
+  job_user_id: 1

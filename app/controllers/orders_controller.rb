@@ -1,83 +1,37 @@
 class OrdersController < ApplicationController
-  # GET /orders
-  # GET /orders.json
-  def index
-    @orders = Order.all
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @orders }
-    end
+  def index
+    @orders = current_user.order
   end
 
-  # GET /orders/1
-  # GET /orders/1.json
   def show
     @order = Order.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @order }
-    end
   end
 
-  # GET /orders/new
-  # GET /orders/new.json
   def new
     @order = Order.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @order }
-    end
+    @designs = Design.all
   end
 
-  # GET /orders/1/edit
-  def edit
-    @order = Order.find(params[:id])
-  end
-
-  # POST /orders
-  # POST /orders.json
   def create
-    @order = Order.new(params[:order])
-
-    respond_to do |format|
-      if @order.save
-        format.html { redirect_to @order, notice: 'Order was successfully created.' }
-        format.json { render json: @order, status: :created, location: @order }
+    if params[:name].nil? || params[:order][:vendor_id].nil? || params[:design_id].nil?
+      redirect_to new_order_path, :alert => "Please input order name, select one vendor, and select at least one design!"
+    else
+      @order = Order.new(:name => params[:name], :user_id => current_user.id, :vendor_id => params[:order][:vendor_id])
+      if @order.save      
+        worker_params = {:order_id => @order.id, :designs => params[:design_id]}
+        Resque.enqueue(NewOrder, worker_params)
+        redirect_to orders_path, :notice => "Order submitted correctly!"
       else
-        format.html { render action: "new" }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
-      end
+        render :new
+      end 
     end
   end
 
-  # PUT /orders/1
-  # PUT /orders/1.json
-  def update
-    @order = Order.find(params[:id])
-
-    respond_to do |format|
-      if @order.update_attributes(params[:order])
-        format.html { redirect_to @order, notice: 'Order was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
-      end
-    end
+  def get_zip_file
+    result_path = "#{PARTSBUILDER_CONFIG['program']['order_path']}/#{params[:id]}"
+    filename = "#{result_path}/order#{params[:id]}.zip"
+    send_file filename, :type => 'archive/zip', :disposition => 'inline'
   end
 
-  # DELETE /orders/1
-  # DELETE /orders/1.json
-  def destroy
-    @order = Order.find(params[:id])
-    @order.destroy
-
-    respond_to do |format|
-      format.html { redirect_to orders_url }
-      format.json { head :no_content }
-    end
-  end
 end

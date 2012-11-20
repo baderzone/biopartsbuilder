@@ -1,8 +1,10 @@
 <h3>parts</h3>
 <p>If your parts do not show up, please COME BACK 5 minutes later, since it would take some time to download data from NCBI </p>
 <p>if your parts never show up, please check if the accession number is correct</p>
+<b>Filter:</b> <%= text_field_tag :filter %>
+<%= javascript_tag "Tables_setLiveFilter('#parts','input#filter')" %>
 <div id="indexDiv">
-  <table class="table table-striped">
+  <table class="table table-striped" id="parts">
     <tr>
       <th>#</th>
       <th>Part Name</th>

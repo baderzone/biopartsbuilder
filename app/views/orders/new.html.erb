@@ -1,5 +1,34 @@
-<h1>New order</h1>
+<h3>New order</h3>
 
-<%= render 'form' %>
+<%= form_tag({:controller => "orders", :action => "create"}, :method => "post") do %>
+  <table>
+    <tr>
+      <td width="60px"><%= label_tag :name %></td>
+      <td><%= text_field_tag :name %></td>
+    </tr>
+    <tr>
+      <td width="60px"><%= label_tag :vendor_id, "Vendor" %></td>
+      <td><%= collection_select :order, :vendor_id, Vendor.all, :id, :name %></td>
+    </tr>
+  </table>
+  <h5> Select designs: </h5> 
+  <div id="newDiv">
+    <table class="table table-striped">
+      <tr>
+        <th></th>
+        <th>Part Name</th>
+        <th>Protocol</th>
+      </tr>
+      <% @designs.each do |design| %>
+        <tr>
+          <td><%= check_box_tag("design_id[]", design.id, false) %></td>
+          <td><%= design.part.name %></td>
+          <td><%= design.protocol.name %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+  <br>
+  <%= submit_tag "Create Order", :class => "btn btn-primary" %>
+<% end %>
 
-<%= link_to 'Back', orders_path %>

@@ -2,4 +2,5 @@ development:
     program:
         part_fasta_path: public/parts
         partsbuilder_processing_path: public/design_processing
+        order_path: public/orders
         geneDesign_path: lib/geneDesign

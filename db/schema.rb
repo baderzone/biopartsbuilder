@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121116154711) do
+ActiveRecord::Schema.define(:version => 20121120155842) do
 
   create_table "constructs", :force => true do |t|
     t.integer  "design_id"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(:version => 20121116154711) do
     t.text     "seq"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.text     "comment"
   end
 
   create_table "designs", :force => true do |t|
@@ -28,10 +29,30 @@ ActiveRecord::Schema.define(:version => 20121116154711) do
     t.datetime "updated_at",  :null => false
   end
 
+  create_table "job_statuses", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "job_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "jobs", :force => true do |t|
+    t.integer  "job_type_id"
+    t.integer  "job_status_id"
+    t.integer  "user_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
   create_table "orders", :force => true do |t|
     t.string   "name"
     t.integer  "user_id"
-    t.string   "vendor"
+    t.integer  "vendor_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -56,12 +77,14 @@ ActiveRecord::Schema.define(:version => 20121116154711) do
     t.string   "int_suffix"
     t.text     "overlap"
     t.integer  "construct_size"
-    t.string   "rs_enz"
+    t.string   "forbid_enzymes"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
     t.string   "ext_prefix"
     t.string   "ext_suffix"
     t.integer  "organism_id"
+    t.string   "check_enzymes"
+    t.text     "comment"
   end
 
   create_table "sequences", :force => true do |t|
@@ -79,6 +102,12 @@ ActiveRecord::Schema.define(:version => 20121116154711) do
     t.string   "fullname"
     t.string   "email"
     t.string   "provider"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "vendors", :force => true do |t|
+    t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

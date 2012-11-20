@@ -1,37 +1,33 @@
 <h3>Protocols</h3>
 
-<div id="indexDiv">
-  <table class="table table-striped">
-    <tr>
-      <th>#</th>
-      <th>Name</th>
-      <th>Organism</th>
-      <th>External Prefix</th>
-      <th>External Suffix</th>
-      <th>Internal Prefix</th>
-      <th>Internal Suffix</th>
-      <th>Size Restriction</th>
-      <th>Forbidden enzymes</th>
-      <th>Overlap</th>
-    </tr>
+<table class="table table-striped">
+  <tr>
+    <th>#</th>
+    <th>Name</th>
+    <th>External Prefix</th>
+    <th>External Suffix</th>
+    <th>Internal Prefix</th>
+    <th>Internal Suffix</th>
+    <th>Size Restriction</th>
+    <th>Forbidden enzymes</th>
+    <th>Check enzymes</th>
+  </tr>
 
-    <% @protocols.each do |protocol| %>
-      <tr>
-        <td><%= protocol.id %></td>
-        <td><%= protocol.name %></td>
-        <td><%= protocol.organism.fullname %></td>
-        <td><%= protocol.ext_prefix %></td>
-        <td><%= protocol.ext_suffix %></td>
-        <td><%= protocol.int_prefix %></td>
-        <td><%= protocol.int_suffix %></td>
-        <td><%= protocol.construct_size %></td>
-        <td><%= protocol.rs_enz %></td>
-        <td><%= protocol.overlap %></td>
-      </tr>
-    <% end %>
-  </table>
-</div>
+  <% @protocols.each do |protocol| %>
+    <tr>
+      <td><%= protocol.id %></td>
+      <td><%= link_to protocol.name, protocol_path(protocol.id), {:style => 'color: #049cdb;'} %></td>
+      <td><%= protocol.ext_prefix %></td>
+      <td><%= protocol.ext_suffix %></td>
+      <td><%= protocol.int_prefix %></td>
+      <td><%= protocol.int_suffix %></td>
+      <td><%= protocol.construct_size %></td>
+      <td><%= protocol.forbid_enzymes %></td>
+      <td><%= protocol.check_enzymes %></td>
+    </tr>
+  <% end %>
+</table>
 <br />
 
-<%= link_to 'New Protocol', new_protocol_path, {:style => 'color: #049cdb;' } %>
+<%= link_to 'New Protocol', new_protocol_path, {:style => 'color: #049cdb;'} %>
 <br><br>

@@ -1,37 +1,15 @@
 <h3>New design</h3>
 
-<%= form_for(@design) do |f| %>
+<%= simple_form_for(@design) do |f| %>
   <h5> Select one protocol: </h5>
-  <div id="newDiv">
-    <table class="table table-striped">
+  <table>
+    <% @protocols.each do |protocol| %>
       <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Organism</th>
-        <th>External Prefix</th>
-        <th>External Suffix</th>
-        <th>Internal Prefix</th>
-        <th>Internal Suffix</th>
-        <th>Size Restriction</th>
-        <th>Forbidden enzymes</th>
-        <th>Overlap</th>
+        <td width="20px"><%= f.radio_button :protocol_id, protocol.id %></td>
+        <td><%= protocol.name %></td>
       </tr>
-      <% @protocols.each do |protocol| %>
-        <tr>
-          <td><%= f.radio_button :protocol_id, protocol.id %></td>
-          <td><%= protocol.name %></td>
-          <td><%= protocol.organism.fullname %></td>
-          <td><%= protocol.ext_prefix %></td>
-          <td><%= protocol.ext_suffix %></td>
-          <td><%= protocol.int_prefix %></td>
-          <td><%= protocol.int_suffix %></td>
-          <td><%= protocol.construct_size %></td>
-          <td><%= protocol.rs_enz %></td>
-          <td><%= protocol.overlap %></td>
-        </tr>
-      <% end %>
-    </table>
-  </div>
+    <% end %>
+  </table>
 
   <h5> Select parts: </h5> 
   <div id="newDiv">
@@ -49,6 +27,6 @@
     </table>
   </div>
   <br>
-  <%= f.submit %>
+  <%= f.submit :class => "btn btn-primary" %>
 <% end %>
 

@@ -1,0 +1,2 @@
+module AutoDesignHelper
+end

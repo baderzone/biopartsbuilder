@@ -21,12 +21,14 @@ class DesignsController < ApplicationController
 
   def create
     if params[:design].nil? || params[:design][:protocol_id].nil? || params[:design][:part_id].nil?
-      render :new
+      redirect_to new_design_path, :alert => "at least one protocol and one part should be selected"
     else
       params[:design][:part_id].each do |part_id|
-        @design = Design.new(:part_id => part_id, :protocol_id => params[:design][:protocol_id])
-        if @design.save
-          Resque.enqueue(DesignPart, @design.id)
+        if Design.where("part_id = ? AND protocol_id = ?", part_id, params[:design][:protocol_id]).empty?
+          @design = Design.new(:part_id => part_id, :protocol_id => params[:design][:protocol_id])
+          if @design.save
+            Resque.enqueue(DesignPart, @design.id)
+          end
         end
       end
       redirect_to designs_path, :notice => "Designs submitted correctly!"

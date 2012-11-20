@@ -1,0 +1,8 @@
+<h3>Job status</h3>
+<br>
+<b>Type: </b>&nbsp;&nbsp;<%= @job.job_type.name %><br><br>
+<b>Status: </b>&nbsp;&nbsp;<span class="label <%= get_status_label_style(@job.job_status.name)%>"><%= @job.job_status.name %></span><br><br>
+<b>User: </b>&nbsp;&nbsp;<%= @job.user.fullname %><br><br>
+<b>Created_at: </b>&nbsp;&nbsp;<%= @job.created_at %><br><br>
+<b>Updated_at: </b>&nbsp;&nbsp;<%= @job.updated_at %><br><br>
+<br>
