@@ -2,7 +2,11 @@
 <br>
 <b>Type: </b>&nbsp;&nbsp;<%= @job.job_type.name %><br><br>
 <b>Status: </b>&nbsp;&nbsp;<span class="label <%= get_status_label_style(@job.job_status.name)%>"><%= @job.job_status.name %></span><br><br>
+<b>Errors: </b>&nbsp;&nbsp;<%= @job.error_info || 'none' %><br><br>
 <b>User: </b>&nbsp;&nbsp;<%= @job.user.fullname %><br><br>
 <b>Created_at: </b>&nbsp;&nbsp;<%= @job.created_at %><br><br>
 <b>Updated_at: </b>&nbsp;&nbsp;<%= @job.updated_at %><br><br>
-<br>
+<% if @job.job_status.name == 'finished' %>
+  <%= link_to 'Check Results', "/#{@job.job_type.name}s", :class => "btn btn-warning" %>
+<% end %>
+<br><br><br>

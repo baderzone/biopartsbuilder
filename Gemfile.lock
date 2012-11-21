@@ -145,6 +145,7 @@ GEM
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
+    seed_dump (0.4.1)
     simple_form (2.0.4)
       actionpack (~> 3.0)
       activemodel (~> 3.0)
@@ -200,6 +201,7 @@ DEPENDENCIES
   rails (= 3.2.8)
   resque
   sass-rails (~> 3.2.3)
+  seed_dump
   simple_form
   therubyracer
   twitter-bootstrap-rails

@@ -4,5 +4,5 @@ class Sequence < ActiveRecord::Base
 
   attr_accessible :accession, :annotation, :organism_id, :part_id, :seq
 
-  validates :accession, :presence => true
+  validates_presence_of :accession
 end

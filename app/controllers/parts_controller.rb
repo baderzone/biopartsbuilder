@@ -15,13 +15,10 @@ class PartsController < ApplicationController
     if params[:accession].empty?
       redirect_to new_part_path, :alert => "Accession number can't be empty"
     else
-      @job = Job.create(:job_type_id => get_job_type_id('part'), :user_id => current_user.id, :job_status_id => get_job_status_id('submitted'))
-      params[:accession].strip.split("\r\n").each do |entry|
-        entry.strip!
-        if Sequence.where("accession = ?", entry).empty?
-         # Resque.enqueue(NewPart, entry)
-        end 
-      end 
+      @job = Job.create(:job_type_id => JobType.find_by_name('part').id, :user_id => current_user.id, :job_status_id => JobStatus.find_by_name('submitted').id)
+      accession = params[:accession].strip.split("\r\n")
+      worker_params = {:job_id => @job.id, :accession => accession}
+      Resque.enqueue(NewPart, worker_params)
       redirect_to job_path(@job.id), :notice => "Parts submitted correctly!"
     end 
   end

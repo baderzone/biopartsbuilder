@@ -19,9 +19,10 @@ class OrdersController < ApplicationController
     else
       @order = Order.new(:name => params[:name], :user_id => current_user.id, :vendor_id => params[:order][:vendor_id])
       if @order.save      
-        worker_params = {:order_id => @order.id, :designs => params[:design_id]}
+        @job = Job.create(:job_type_id => JobType.find_by_name('order').id, :user_id => current_user.id, :job_status_id => JobStatus.find_by_name('submitted').id)
+        worker_params = {:order_id => @order.id, :designs => params[:design_id], :job_id => @job.id}
         Resque.enqueue(NewOrder, worker_params)
-        redirect_to orders_path, :notice => "Order submitted correctly!"
+        redirect_to job_path(@job.id), :notice => "Order submitted correctly!"
       else
         render :new
       end 

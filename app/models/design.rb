@@ -5,7 +5,6 @@ class Design < ActiveRecord::Base
   
   attr_accessible :part_id, :protocol_id, :construct, :part, :protocol
 
-  validates :part_id, :presence => true
-  validates :protocol_id, :presence => true
+  validates_presence_of :part_id, :protocol_id
 
 end

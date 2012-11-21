@@ -52,5 +52,7 @@ gem 'foreman'
 # Deploy with Capistrano
 gem 'capistrano'
 
+# seed dump
+gem 'seed_dump'
 # To use debugger
 # gem 'debugger'

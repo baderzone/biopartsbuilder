@@ -3,7 +3,7 @@
 # Do not hesitate to tweak this to your needs
 
 Construct.create([
-  { :design_id => nil, :name => nil, :seq => nil, :created_at => nil, :updated_at => nil }
+  { :design_id => nil, :name => nil, :seq => nil, :created_at => nil, :updated_at => nil, :comment => nil }
 ], :without_protection => true )
 
 
@@ -14,8 +14,32 @@ Design.create([
 
 
 
+Job.create([
+  { :job_type_id => nil, :job_status_id => nil, :user_id => nil, :created_at => nil, :updated_at => nil }
+], :without_protection => true )
+
+
+
+JobStatus.create([
+  { :name => "submitted", :created_at => "2012-11-19 16:38:00", :updated_at => "2012-11-19 16:38:00" },
+  { :name => "running", :created_at => "2012-11-19 16:38:00", :updated_at => "2012-11-19 16:38:00" },
+  { :name => "finished", :created_at => "2012-11-19 16:38:00", :updated_at => "2012-11-19 16:38:00" },
+  { :name => "failed", :created_at => "2012-11-19 16:38:00", :updated_at => "2012-11-19 16:38:00" }
+], :without_protection => true )
+
+
+
+JobType.create([
+  { :name => "auto design", :created_at => "2012-11-19 16:38:00", :updated_at => "2012-11-19 16:38:00" },
+  { :name => "part", :created_at => "2012-11-19 16:38:00", :updated_at => "2012-11-19 16:38:00" },
+  { :name => "design", :created_at => "2012-11-19 16:38:00", :updated_at => "2012-11-19 16:38:00" },
+  { :name => "order", :created_at => "2012-11-19 16:38:00", :updated_at => "2012-11-19 16:38:00" }
+], :without_protection => true )
+
+
+
 Order.create([
-  { :name => nil, :user_id => nil, :vendor => nil, :created_at => nil, :updated_at => nil }
+  { :name => nil, :user_id => nil, :vendor_id => nil, :created_at => nil, :updated_at => nil }
 ], :without_protection => true )
 
 
@@ -26,7 +50,11 @@ Organism.create([
   { :name => "Hsa", :fullname => "Homo sapiens", :code => 3, :created_at => "2012-11-13 09:58:00", :updated_at => "2012-11-13 09:58:00" },
   { :name => "Cel", :fullname => "Caenorhabditis elegans", :code => 4, :created_at => "2012-11-13 09:58:00", :updated_at => "2012-11-13 09:58:00" },
   { :name => "Dme", :fullname => "Drosophila melanogaster", :code => 5, :created_at => "2012-11-13 09:58:00", :updated_at => "2012-11-13 09:58:00" },
-  { :name => "Bsu", :fullname => "Bacillus subtilis", :code => 6, :created_at => "2012-11-13 09:58:00", :updated_at => "2012-11-13 09:58:00" }
+  { :name => "Bsu", :fullname => "Bacillus subtilis", :code => 6, :created_at => "2012-11-13 09:58:00", :updated_at => "2012-11-13 09:58:00" },
+  { :name => "Bme", :fullname => "Brucella melitensis", :code => nil, :created_at => "2012-11-14 19:22:53", :updated_at => "2012-11-14 19:22:53" },
+  { :name => "Sen", :fullname => "Salmonella enterica", :code => nil, :created_at => "2012-11-14 19:22:53", :updated_at => "2012-11-14 19:22:53" },
+  { :name => "Pde", :fullname => "Pseudomonas denitrificans", :code => nil, :created_at => "2012-11-14 19:22:55", :updated_at => "2012-11-14 19:22:55" },
+  { :name => "Miv", :fullname => "Methanobacterium ivanovii", :code => nil, :created_at => "2012-11-16 18:38:10", :updated_at => "2012-11-16 18:38:10" }
 ], :without_protection => true )
 
 
@@ -38,7 +66,7 @@ Part.create([
 
 
 Protocol.create([
-  { :name => "v1.0", :int_prefix => "CGTCTCA", :int_suffix => "TGAGACG", :overlap => "AAAT,AAAC,AAAG,AATA,AATC,AACA,AACT,AACC,AACG,AAGA,AAGT,AAGC,AAGG,ATAA,ATAC,ATAG,ATTA,ATTC,ATTG,ATCA,ATCT,ATCG,ATGA,ATGT,ATGC,ATGG,ACAA,ACAC,ACAG,ACTA,ACTC,ACCA,ACCT,ACCC,ACCG,ACGA,ACGC,ACGG,AGAA,AGAC,AGAG,AGTA,AGTC,AGTG,AGCA,AGCC,AGCG,AGGA,AGGC,AGGG,TAAA,TAAG,TATC,TATG,TACA,TACC,TACG,TAGA,TAGC,TAGG,TTAC,TTAG,TTTC,TTTG,TTCA,TTCC,TTCG,TTGA,TTGC,TTGG,TCAC,TCAG,TCTC,TCTG,TCCA,TCCC,TCCG,TCGC,TCGG,TGAC,TGTC,TGTG,TGCC,TGCG,TGGC,TGGG,CAAC,CAAG,CATC,CACC,CACG,CAGC,CAGG,CTAC,CTTC,CTCC,CTCG,CTGC,CTGG,CCAC,CCTC,CCCC,CCCG,CCGC,CGAC,CGTC,CGCC,CGGC,GAAC,GACC,GAGC,GTCC,GTGC,GCCC", :construct_size => 1178, :rs_enz => "BsaI:BsmBI:BceAI:SalI:XhoI", :created_at => "2012-11-13 15:32:50", :updated_at => "2012-11-13 15:32:50", :ext_prefix => "CGTCTCAA", :ext_suffix => "TGAGCGAGACGTATGCCGT", :organism_id => 1 }
+  { :name => "v1.0", :int_prefix => "CGTCTCA", :int_suffix => "TGAGACG", :overlap => "AAAT,AAAC,AAAG,AATA,AATC,AACA,AACT,AACC,AACG,AAGA,AAGT,AAGC,AAGG,ATAA,ATAC,ATAG,ATTA,ATTC,ATTG,ATCA,ATCT,ATCG,ATGA,ATGT,ATGC,ATGG,ACAA,ACAC,ACAG,ACTA,ACTC,ACCA,ACCT,ACCC,ACCG,ACGA,ACGC,ACGG,AGAA,AGAC,AGAG,AGTA,AGTC,AGTG,AGCA,AGCC,AGCG,AGGA,AGGC,AGGG,TAAA,TAAG,TATC,TATG,TACA,TACC,TACG,TAGA,TAGC,TAGG,TTAC,TTAG,TTTC,TTTG,TTCA,TTCC,TTCG,TTGA,TTGC,TTGG,TCAC,TCAG,TCTC,TCTG,TCCA,TCCC,TCCG,TCGC,TCGG,TGAC,TGTC,TGTG,TGCC,TGCG,TGGC,TGGG,CAAC,CAAG,CATC,CACC,CACG,CAGC,CAGG,CTAC,CTTC,CTCC,CTCG,CTGC,CTGG,CCAC,CCTC,CCCC,CCCG,CCGC,CGAC,CGTC,CGCC,CGGC,GAAC,GACC,GAGC,GTCC,GTGC,GCCC", :construct_size => 1178, :forbid_enzymes => "BsaI:BsmBI:BceAI:SalI:XhoI", :created_at => "2012-11-13 15:32:50", :updated_at => "2012-11-20 18:27:11", :ext_prefix => "CGTCTCAA", :ext_suffix => "TGAGCGAGACGTATGCCGT", :organism_id => 1, :check_enzymes => "", :comment => "" }
 ], :without_protection => true )
 
 
@@ -51,6 +79,12 @@ Sequence.create([
 
 User.create([
   { :uid => "https://www.google.com/accounts/o8/id?id=AItOawnkuXVO04qZO5aXN0Py1G5ngYDlVTUBPFY", :fullname => "Kun Yang", :email => "cleo.k.yang@gmail.com", :provider => "google", :created_at => "2012-11-09 21:13:19", :updated_at => "2012-11-09 21:13:19" }
+], :without_protection => true )
+
+
+
+Vendor.create([
+  { :name => "Gen9", :created_at => "2012-11-19 12:07:00", :updated_at => "2012-11-19 12:07:00" }
 ], :without_protection => true )
 
 

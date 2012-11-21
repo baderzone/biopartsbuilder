@@ -5,12 +5,7 @@ class DesignsController < ApplicationController
   end
 
   def show
-    begin
-      @design = Design.find(params[:id])
-    rescue  
-      redirect_to designs_path, :alert => "Design unfinished! Please COME BACK 10 minutes later"
-    end
-
+    @design = Design.find(params[:id])
   end
 
   def new
@@ -23,15 +18,10 @@ class DesignsController < ApplicationController
     if params[:design].nil? || params[:design][:protocol_id].nil? || params[:design][:part_id].nil?
       redirect_to new_design_path, :alert => "at least one protocol and one part should be selected"
     else
-      params[:design][:part_id].each do |part_id|
-        if Design.where("part_id = ? AND protocol_id = ?", part_id, params[:design][:protocol_id]).empty?
-          @design = Design.new(:part_id => part_id, :protocol_id => params[:design][:protocol_id])
-          if @design.save
-            Resque.enqueue(DesignPart, @design.id)
-          end
-        end
-      end
-      redirect_to designs_path, :notice => "Designs submitted correctly!"
+      @job = Job.create(:job_type_id => JobType.find_by_name('design').id, :user_id => current_user.id, :job_status_id => JobStatus.find_by_name('submitted').id)
+      worker_params = {:job_id => @job.id, :protocol_id =>params[:design][:protocol_id], :part_id => params[:design][:part_id]}
+      Resque.enqueue(DesignPart, worker_params)
+      redirect_to job_path(@job.id), :notice => "Designs submitted correctly!"
     end
   end
 

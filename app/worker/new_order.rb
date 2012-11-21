@@ -5,6 +5,10 @@ class NewOrder
 
     require 'csv'
 
+    # change job status
+    job = Job.find(para['job_id'])
+    job.change_status('running')
+    
     order_path = "#{PARTSBUILDER_CONFIG['program']['order_path']}"
     system "mkdir #{order_path}/#{para['order_id']}"
     result_path = "#{PARTSBUILDER_CONFIG['program']['order_path']}/#{para['order_id']}"
@@ -48,7 +52,7 @@ class NewOrder
       ar.add(sum_file_name, "#{result_path}/#{sum_file_name}")
     end
 
-    puts "Order#{para['order_id']} Prepared!"
+    job.change_status('finished')
   end
 
 end

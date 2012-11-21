@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :fullname, :provider, :uid, :order, :job
 
+  validates_presence_of :email
+
   #utility method for creating an user at the first login
   def self.create_with_omniauth(auth)
     create! do |user|

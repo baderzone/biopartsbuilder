@@ -4,4 +4,6 @@ class Part < ActiveRecord::Base
   has_many :design
   
   attr_accessible :name, :sequence
+
+  validates_presence_of :name
 end
