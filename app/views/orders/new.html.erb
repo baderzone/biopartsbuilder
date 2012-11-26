@@ -13,19 +13,25 @@
   </table>
   <h5> Select designs: </h5> 
   <div id="newDiv">
-    <table class="table table-striped">
-      <tr>
-        <th></th>
-        <th>Part Name</th>
-        <th>Protocol</th>
-      </tr>
-      <% @designs.each do |design| %>
+    <table class="tablesorter-blue" id="sortable-table">
+      <thead>
         <tr>
-          <td><%= check_box_tag("design_id[]", design.id, false) %></td>
-          <td><%= design.part.name %></td>
-          <td><%= design.protocol.name %></td>
+          <th></th>
+          <th>Part Name</th>
+          <th>Protocol</th>
+          <th>Created_at</th>
         </tr>
-      <% end %>
+      </thead>
+      <tbody>
+        <% @designs.each do |design| %>
+          <tr>
+            <td><%= check_box_tag("design_id[]", design.id, false) %></td>
+            <td><%= design.part.name %></td>
+            <td><%= design.protocol.name %></td>
+            <td><%= design.created_at %></td>
+          </tr>
+        <% end %>
+      </tbody>
     </table>
   </div>
   <br>

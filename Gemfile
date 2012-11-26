@@ -29,6 +29,7 @@ end
 gem 'jquery-rails'
 gem 'simple_form'
 gem 'carrierwave'
+gem 'jquery-tablesorter'
 
 #bio gems
 gem 'bio'

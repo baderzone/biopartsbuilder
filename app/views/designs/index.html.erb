@@ -1,21 +1,26 @@
 <h3>Designs</h3>
 
 <div id="indexDiv">
-  <table class="table table-striped">
-    <tr>
-      <th>#</th>
-      <th>Part</th>
-      <th>Protocol</th>
-      <th>Result</th>
-    </tr>
-
-    <% @designs.each do |design| %>
+  <table class="tablesorter-blue" id="sortable-table">
+    <thead>
       <tr>
-        <td><%= design.id %></td>
-        <td><%= design.part.name %></td>
-        <td><%= design.protocol.name %></td>
-        <td><%= link_to 'View', design_path(design.id), {:style => 'color: #049cdb;'} %></td>
+        <th>#</th>
+        <th>Part</th>
+        <th>Protocol</th>
+        <th>Result</th>
+        <th>Created_at</th>
       </tr>
+    </thead>
+    <% @designs.each do |design| %>
+      <tbody>
+        <tr>
+          <td><%= design.id %></td>
+          <td><%= design.part.name %></td>
+          <td><%= design.protocol.name %></td>
+          <td><%= link_to 'View', design_path(design.id), {:style => 'color: #049cdb;'} %></td>
+          <td><%= design.created_at %></td>
+        </tr>
+      </tbody>
     <% end %>
   </table>
 </div>

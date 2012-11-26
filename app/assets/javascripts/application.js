@@ -13,4 +13,10 @@
 //= require jquery
 //= require jquery_ujs
 //= require twitter/bootstrap
+//= require jquery-tablesorter
+
+jQuery(document).ready(function($){
+		$("#sortable-table").tablesorter();
+		});
+
 //= require_tree .

@@ -13,17 +13,27 @@
 
   <h5> Select parts: </h5> 
   <div id="newDiv">
-    <table class="table table-striped">
-      <tr>
-        <th></th>
-        <th>Part Name</th>
-      </tr>
-      <% @parts.each do |part| %>
+    <table class="tablesorter-blue" id="sortable-table">
+      <thead>
         <tr>
-          <td><%= f.check_box(:part_id, {:multiple => true}, part.id, nil) %></td>
-          <td><%= part.name %></td>
+          <th></th>
+          <th>Part Name</th>
+          <th>Accession Number</th>
+          <th>Organism</th>
+          <th>Created_at</th>
         </tr>
-      <% end %>
+      </thead>
+      <tbody>
+        <% @parts.each do |part| %>
+          <tr>
+            <td><%= f.check_box(:part_id, {:multiple => true}, part.id, nil) %></td>
+            <td><%= part.name %></td>
+            <td><%= part.sequence.accession %></td>
+            <td><%= part.sequence.organism.fullname %></td>
+            <td><%= part.created_at %></td>
+          </tr>
+        <% end %>
+      </tbody>
     </table>
   </div>
   <br>

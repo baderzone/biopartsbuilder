@@ -1,25 +1,30 @@
 <h3>Orders</h3>
 
-<table class="table table-striped">
-  <tr>
-    <th>#</th>
-    <th>Name</th>
-    <th>User</th>
-    <th>Vendor</th>
-    <th>Result</th>
-  </tr>
-
-  <% cnt = 0 %>
-  <% @orders.each do |order| %>
-  <% cnt += 1 %>
-  <tr>
-    <td><%= cnt %></td>
-    <td><%= order.name %></td>
-    <td><%= order.user.fullname %></td>
-    <td><%= order.vendor.name %></td>
-    <td><%= link_to "Download", {:action => :get_zip_file, :id => order.id}, {:style => 'color: #049cdb;'} %></td>
-  </tr>
-<% end %>
+<table class="tablesorter-blue" id="sortable-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>User</th>
+      <th>Vendor</th>
+      <th>Result</th>
+      <th>Created_at</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% cnt = 0 %>
+    <% @orders.each do |order| %>
+      <% cnt += 1 %>
+      <tr>
+        <td><%= cnt %></td>
+        <td><%= order.name %></td>
+        <td><%= order.user.fullname %></td>
+        <td><%= order.vendor.name %></td>
+        <td><%= link_to "Download", {:action => :get_zip_file, :id => order.id}, {:style => 'color: #049cdb;'} %></td>
+        <td><%= order.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 
 <br />
