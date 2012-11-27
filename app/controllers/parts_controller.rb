@@ -19,7 +19,7 @@ class PartsController < ApplicationController
       accession = params[:accession].strip.split("\r\n")
       worker_params = {:job_id => @job.id, :accession => accession}
       Resque.enqueue(NewPart, worker_params)
-      redirect_to job_path(@job.id), :notice => "Parts submitted correctly!"
+      redirect_to job_path(@job.id), :notice => "Parts submitted!"
     end 
   end
 

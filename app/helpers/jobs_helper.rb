@@ -11,7 +11,7 @@ module JobsHelper
   end
 
   def get_type_style(type_tag)
-    if type_tag == 'auto design'
+    if type_tag == 'auto_build'
       return 'text-error'
     elsif type_tag == 'part'
       return 'text-success'

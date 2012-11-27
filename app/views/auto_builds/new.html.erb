@@ -1,0 +1,32 @@
+<h3>Design your parts</h3>
+<%= form_tag({:controller => "auto_builds", :action => "create"}, :method => "post") do %>
+  <table>
+    <tr>
+      <td width="100px"><%= label_tag :order_name %></td>
+      <td><%= text_field_tag :order_name %></td>
+    </tr>
+    <tr>
+      <td width="100px"><%= label_tag :vendor_id, "Vendor" %></td>
+      <td><%= collection_select :order, :vendor_id, Vendor.all, :id, :name %></td>
+    </tr>
+  </table>
+
+  <h5> Select one protocol: </h5>
+  <table>
+    <% @protocols.each do |protocol| %>
+      <tr>
+        <td width="20px"><%= radio_button_tag :protocol_id, protocol.id %></td>
+        <td><%= protocol.name %></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <h5> Please Input Protein/Nucleotide Accession Number: </h5>
+  <table>
+    <tr>
+      <td><%= text_area_tag(:accession, "", :size => "50x10")%></td>
+      <td>One id per line<br>e.g.<br>NP_539626.1<br>NP_459636.1<br>P29929.1</td>
+    </tr>
+  </table>
+  <%= submit_tag("Create Parts", :class => "btn btn-primary") %>
+<% end %>

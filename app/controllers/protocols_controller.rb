@@ -24,7 +24,7 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.new(params[:protocol])
 
     if @protocol.save
-      redirect_to @protocol, notice: 'Protocol was successfully created.'
+      redirect_to @protocol, notice: 'New protocol created!'
     else
       render :new
     end

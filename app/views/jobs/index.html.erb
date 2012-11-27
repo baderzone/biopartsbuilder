@@ -1,21 +1,25 @@
 <h3>Jobs</h3>
-<table class="table table-striped">
-  <tr>
-    <th>#</th>
-    <th>Job Status</th>
-    <th>Job Type</th>
-    <th>Errors</th>
-    <th>Created_at</th>
-    <th>Updated_at</th>
-  </tr>
-  <% @jobs.each do |job| %>
+<table class="tablesorter-blue" id="sortable-table">
+  <thead>
     <tr>
-      <td><%= job.id %></td>
-      <td><span class="label <%= get_status_label_style(job.job_status.name)%>"><%= job.job_status.name %></span></td>
-      <td><span class="<%= get_type_style(job.job_type.name)%>"><%= job.job_type.name %></span></td>
-      <td><%= job.error_info || 'none' %></td>
-      <td><%= job.created_at %></td>
-      <td><%= job.updated_at %></td>
+      <th>#</th>
+      <th>Job Status</th>
+      <th>Job Type</th>
+      <th>Errors</th>
+      <th>Created_at</th>
+      <th>Updated_at</th>
     </tr>
-  <% end %>
+  </thead>
+  <tbody>
+    <% @jobs.each do |job| %>
+      <tr>
+        <td><%= job.id %></td>
+        <td><span class="label <%= get_status_label_style(job.job_status.name)%>"><%= job.job_status.name %></span></td>
+        <td><span class="<%= get_type_style(job.job_type.name)%>"><%= job.job_type.name %></span></td>
+        <td><%= job.error_info || 'none' %></td>
+        <td><%= job.created_at %></td>
+        <td><%= job.updated_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>

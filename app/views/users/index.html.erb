@@ -1,29 +1,20 @@
-<h1>Listing users</h1>
+<h3>User Info</h3>
 
-<table>
+<table class="tablesorter-blue">
   <tr>
-    <th>Uid</th>
     <th>Fullname</th>
     <th>Email</th>
     <th>Provider</th>
     <th></th>
-    <th></th>
-    <th></th>
   </tr>
 
-<% @users.each do |user| %>
   <tr>
-    <td><%= user.uid %></td>
-    <td><%= user.fullname %></td>
-    <td><%= user.email %></td>
-    <td><%= user.provider %></td>
-    <td><%= link_to 'Show', user %></td>
-    <td><%= link_to 'Edit', edit_user_path(user) %></td>
-    <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td><%= @user.fullname %></td>
+    <td><%= @user.email %></td>
+    <td><%= @user.provider %></td>
+    <td><%= link_to 'Edit', edit_user_path(@user), {:style => 'color: #049cdb;'} %></td>
   </tr>
-<% end %>
 </table>
 
 <br />
-
-<%= link_to 'New User', new_user_path %>
+<br />

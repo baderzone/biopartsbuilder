@@ -1,6 +1,5 @@
-<h1>Editing user</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Show', @user %> |
-<%= link_to 'Back', users_path %>
+<h3>Editing user</h3>
+<%= simple_form_for @user do |f| %>
+  <%= f.input :fullname %>
+  <%= f.submit :class => 'btn btn-primary' %>
+<% end %>

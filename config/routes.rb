@@ -2,11 +2,7 @@ Partsbuilder::Application.routes.draw do
   
   get "jobs/show"
 
-  get "auto_design/index"
-
-  get "auto_design/show"
-
-  get "auto_design/new"
+  get "auto_build/create"
 
   get "home/index"
   
@@ -22,12 +18,12 @@ Partsbuilder::Application.routes.draw do
   resources :constructs
   resources :orders
   resources :designs
-  resources :auto_designs
   resources :users
   resources :parts
   resources :sequences
   resources :organisms
   resources :jobs
+  resources :auto_builds
 
   root :to => 'home#index'
 

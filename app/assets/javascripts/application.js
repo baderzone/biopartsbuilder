@@ -14,9 +14,12 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require jquery-tablesorter
+//= require jquery.quicksearch
 
 jQuery(document).ready(function($){
 		$("#sortable-table").tablesorter();
 		});
-
+jQuery(document).ready(function($){
+		$("#search").quicksearch('table#sortable-table tbody tr');
+		});
 //= require_tree .
