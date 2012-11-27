@@ -13,11 +13,9 @@
     </tr>
   </thead>
   <tbody>
-    <% cnt = 0 %>
     <% @orders.each do |order| %>
-      <% cnt += 1 %>
       <tr>
-        <td><%= cnt %></td>
+        <td><%= order.id %></td>
         <td><%= order.name %></td>
         <td><%= order.user.fullname %></td>
         <td><%= order.vendor.name %></td>
