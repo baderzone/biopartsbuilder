@@ -64,4 +64,16 @@ Partsbuilder::Application.configure do
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
+  
+  # mailer configuration
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = { 
+    :address              => "smtp.gmail.com",
+    :port                 => 587,
+    :domain               => 'www.partsbuilder.com',
+    :user_name            => 'syntheticyeast1@gmail.com',
+    :password             => 'd.748563*p',
+    :authentication       => 'plain',
+    :enable_starttls_auto => true  }
+
 end

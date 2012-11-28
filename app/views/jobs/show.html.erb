@@ -1,5 +1,7 @@
 <h3>Job status</h3>
 <br>
+<i>Refresh this page to check your job status or wait for the email notice</i>
+<br><br>
 <b>Type: </b>&nbsp;&nbsp;<%= @job.job_type.name %><br><br>
 <b>Status: </b>&nbsp;&nbsp;<span class="label <%= get_status_label_style(@job.job_status.name)%>"><%= @job.job_status.name %></span><br><br>
 <b>Errors: </b>&nbsp;&nbsp;<%= @job.error_info || 'none' %><br><br>

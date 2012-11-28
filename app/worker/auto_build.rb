@@ -257,6 +257,9 @@ class AutoBuild
       job.error_info = error_info
       job.save
     end
+    # send email notice
+    order = Order.find(para['order_id'])
+    PartsbuilderMailer.finished_notice(order.user).deliver
 
   end 
 

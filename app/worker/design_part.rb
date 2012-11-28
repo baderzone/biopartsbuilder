@@ -128,6 +128,9 @@ class DesignPart
       job.error_info = error_info
       job.save
     end
+    # send email notice
+    current_user = User.find(session[:user_id])
+    PartsbuilderMailer.finished_notice(current_user).deliver
 
   end
 
