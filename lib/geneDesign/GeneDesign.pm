@@ -40,7 +40,7 @@ my $LOCALIP = "localhost";
 
 our $docpath = "../../Documents/gd";
 our $linkpath = "http://$LOCALIP/gd";
-our $enzfile = "/Users/kunyang/work/partsbuilder/lib/geneDesign/bs_enzymes.txt";
+our $enzfile = "bs_enzymes.txt";
 
 my %NTIDES = (A => "A", B => "[BCGKSTY]", C => "C", D => "[ADGKRTW]", G => "G", H => "[ACHMTWY]", K => "[GKT]", M => "[ACM]", 
 				   N => "[ABCDGHKMNRSTVWY]", R => "[AGR]", S => "[CGS]", T => "T", V => "[ACGMRSV]", W => "[ATW]", Y => "[CTY]", );

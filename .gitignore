@@ -13,7 +13,10 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+/config/database.yml
+/config/partsbuilder.yml
 
+# Ignore parsBuilder processing files
 /public/orders
 /public/design_processing
 /public/parts

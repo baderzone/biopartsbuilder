@@ -6,7 +6,7 @@ use Getopt::Long;
 use File::Basename qw(fileparse);
 use File::Path qw(make_path);
 use Perl6::Slurp;
-use lib '/Users/kunyang/work/partsbuilder/lib/geneDesign'; 
+use lib '.'; 
 use GeneDesign;
 
 
