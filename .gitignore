@@ -19,6 +19,9 @@
 # Ignore foreman config
 Procfile
 
+# Ignore resque.rake
+/lib/tasks/resque.rake
+
 # Ignore parsBuilder processing files
 /public/orders
 /public/design_processing

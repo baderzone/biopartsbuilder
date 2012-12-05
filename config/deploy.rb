@@ -63,9 +63,9 @@ namespace :deploy do
     run "cd #{current_path}; RAILS_ENV=production rake assets:precompile"
   end
 
-  #start resque worker
-  task :resque_worker do
-    run "cd #{current_path}; RAILS_ENV=production rake resque:work QUEUE=*"
+  #restart resque workers
+  task :restart_workers, :roles => :db do
+    run "cd #{current_path}; RAILS_ENV=production rake resque:restart_workers"
   end
 
 end
