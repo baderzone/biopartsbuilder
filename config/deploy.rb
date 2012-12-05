@@ -60,10 +60,17 @@ namespace :deploy do
   task :pipeline_precompile do
     run "cd #{current_path}; RAILS_ENV=production rake assets:precompile"
   end
+
+  #start resque worker
+  task :redis_worker do
+    run "cd #{current_path}; RAILS_ENV=production rake resque:work QUEUE=*"
+  end
+
 end
 
 after "deploy:create_symlink", "deploy:config_symlink"
 after "deploy:create_symlink", "deploy:pipeline_precompile"
+after "deploy:create_symlink", "deploy:redis_worker"
 
 # remove old releases
 after "deploy", "deploy:cleanup"

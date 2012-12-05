@@ -16,6 +16,9 @@
 /config/database.yml
 /config/partsbuilder.yml
 
+# Ignore foreman config
+Procfile
+
 # Ignore parsBuilder processing files
 /public/orders
 /public/design_processing
