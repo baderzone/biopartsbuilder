@@ -70,7 +70,7 @@ end
 
 after "deploy:create_symlink", "deploy:config_symlink"
 after "deploy:create_symlink", "deploy:pipeline_precompile"
-after "deploy:create_symlink", "deploy:redis_worker"
+after "deploy:pipeline_precompile", "deploy:redis_worker"
 
 # remove old releases
 after "deploy", "deploy:cleanup"
