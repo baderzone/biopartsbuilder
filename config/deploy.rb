@@ -56,7 +56,8 @@ namespace :deploy do
   task :config_symlink do
     run "cd #{current_path}; 
          ln -s #{shared_path}/config/database.yml config/database.yml; 
-         ln -s #{shared_path}/config/partsbuilder.yml config/partsbuilder.yml"
+         ln -s #{shared_path}/config/partsbuilder.yml config/partsbuilder.yml;
+         ln -s #{shared_path}/tasks/resque.rake lib/tasks/resque.rake"
   end
   
   task :pipeline_precompile do
@@ -72,7 +73,7 @@ end
 
 after "deploy:create_symlink", "deploy:config_symlink"
 after "deploy:create_symlink", "deploy:pipeline_precompile"
-after "deploy:create_symlink", "deploy:resque_worker"
+after "deploy:create_symlink", "deploy:restart_workers"
 
 # remove old releases
 after "deploy", "deploy:cleanup"
