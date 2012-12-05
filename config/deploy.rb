@@ -54,7 +54,9 @@ namespace :deploy do
   
   #linking data directory
   task :config_symlink do
-    run "cd #{current_path}; ln -s #{shared_path}/config/database.yml config/database.yml; ln -s #{shared_path}/uploads/ public/uploads"
+    run "cd #{current_path}; 
+         ln -s #{shared_path}/config/database.yml config/database.yml; 
+         ln -s #{shared_path}/config/partsbuilder.yml config/partsbuilder.yml"
   end
   
   task :pipeline_precompile do
