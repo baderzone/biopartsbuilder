@@ -1,5 +1,5 @@
 class AutoBuild
-  @queue = :partsbuilder_new_part_queue
+  @queue = :partsbuilder_auto_build_queue
 
   def self.perform(para)
 
