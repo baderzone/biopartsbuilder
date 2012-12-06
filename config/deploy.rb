@@ -65,7 +65,7 @@ namespace :deploy do
 
   #restart resque workers
   task :restart_workers, :roles => :db do
-    run "cd #{current_path}; RAILS_ENV=production rake resque:restart_workers"
+    run "cd #{current_path}; RAILS_ENV=production BACKGROUND=yes rake resque:work"
   end
 
 end
