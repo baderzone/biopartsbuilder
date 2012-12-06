@@ -64,15 +64,15 @@ namespace :deploy do
   end
 
   #restart resque workers
-  task :restart_workers, :roles => :db do
-    run "cd #{current_path}; RAILS_ENV=production BACKGROUND=yes rake resque:work"
+  task :start_workers, :roles => :db do
+    run "cd #{current_path}; RAILS_ENV=production BACKGROUND=yes QUEUE=* rake resque:work"
   end
 
 end
 
 after "deploy:create_symlink", "deploy:config_symlink"
 after "deploy:create_symlink", "deploy:pipeline_precompile"
-after "deploy:create_symlink", "deploy:restart_workers"
+after "deploy:create_symlink", "deploy:start_workers"
 
 # remove old releases
 after "deploy", "deploy:cleanup"
