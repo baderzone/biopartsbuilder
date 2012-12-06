@@ -34,14 +34,6 @@ set :unicorn_binary, "/home/deployer/.rbenv/shims/unicorn_rails"
 set :unicorn_config, "#{current_path}/config/unicorn.rb"
 set :unicorn_pid, "#{shared_path}/pids/unicorn.pid" 
 
-def run_remote_rake(rake_cmd)
-  rake_args = ENV['RAKE_ARGS'].to_s.split(',')
-  cmd = "cd #{current_path} && #{fetch(:rake, "rake")} RAILS_ENV=#{fetch(:rails_env, "production")} #{rake_cmd}"
-  cmd += "['#{rake_args.join("','")}']" unless rake_args.empty?
-  run cmd
-  set :rakefile, nil if exists?(:rakefile)
-end
-
 namespace :deploy do
   #start task
   task :start, :roles => :app, :except => { :no_release => true } do
@@ -73,7 +65,7 @@ namespace :deploy do
 
   #restart resque workers
   task :restart_workers, :roles => :db do
-    run_remote_rake "resque:restart_workers"
+    run "cd #{current_path}; RAILS_ENV=production rake resque:restart_workers"
   end
 
 end
