@@ -1,8 +1,10 @@
 class AutoBuild
+  extend Resque::Plugins::Logger
   @queue = :partsbuilder_auto_build_queue
 
   def self.perform(para)
 
+    logger.info('it works!')
     require 'xmlsimple' 
     require 'csv'
 

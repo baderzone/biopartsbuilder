@@ -140,6 +140,8 @@ GEM
       redis-namespace (~> 1.0)
       sinatra (>= 0.9.2)
       vegas (~> 0.1.2)
+    resque-logger (0.1.0)
+      resque
     ruby-openid (2.2.2)
     rubyzip (0.9.9)
     sass (3.2.2)
@@ -203,6 +205,7 @@ DEPENDENCIES
   open4
   rails (= 3.2.8)
   resque
+  resque-logger
   sass-rails (~> 3.2.3)
   seed_dump
   simple_form
