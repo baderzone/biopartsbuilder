@@ -34,24 +34,31 @@ set :unicorn_binary, "/home/deployer/.rbenv/shims/unicorn_rails"
 set :unicorn_config, "#{current_path}/config/unicorn.rb"
 set :unicorn_pid, "#{shared_path}/pids/unicorn.pid" 
 
+def run_remote_rake(rake_cmd)
+  rake_args = ENV['RAKE_ARGS'].to_s.split(',')
+  cmd = "cd #{current_path} && #{fetch(:rake, "rake")} RAILS_ENV=#{fetch(:rails_env, "production")} #{rake_cmd}"
+  cmd += "['#{rake_args.join("','")}']" unless rake_args.empty?
+  run cmd
+  set :rakefile, nil if exists?(:rakefile)
+end
 
 namespace :deploy do
   #start task
   task :start, :roles => :app, :except => { :no_release => true } do
     run "cd #{current_path} && #{try_sudo} #{unicorn_binary} -c #{unicorn_config} -E #{rails_env} -D"
   end
-  
+
   #stop task
   task :stop, :roles => :app, :except => { :no_release => true } do
     run "if ps aux | awk '{print $2 }' | grep `cat #{unicorn_pid}` > /dev/null; then kill `cat #{unicorn_pid}`; else echo 'Unicorn was already shutdown'; fi"
   end
-  
+
   #restart task
   task :restart, :roles => :app, :except => { :no_release => true } do
     stop
     start
   end
-  
+
   #linking data directory
   task :config_symlink do
     run "cd #{current_path}; 
@@ -59,14 +66,14 @@ namespace :deploy do
          ln -s #{shared_path}/config/partsbuilder.yml config/partsbuilder.yml;
          ln -s #{shared_path}/tasks/resque.rake lib/tasks/resque.rake"
   end
-  
+
   task :pipeline_precompile do
     run "cd #{current_path}; RAILS_ENV=production rake assets:precompile"
   end
 
   #restart resque workers
   task :restart_workers, :roles => :db do
-    run "cd #{current_path}; RAILS_ENV=production rake resque:restart_workers"
+    run_remote_rake "resque:restart_workers"
   end
 
 end
