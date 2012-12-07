@@ -132,7 +132,7 @@ class DesignPart
       job.save
     end
     # send email notice
-    current_user = User.find(session[:user_id])
+    current_user = User.find(para['user_id'])
     PartsbuilderMailer.finished_notice(current_user).deliver
 
   end

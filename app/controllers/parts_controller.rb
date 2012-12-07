@@ -17,7 +17,7 @@ class PartsController < ApplicationController
     else
       @job = Job.create(:job_type_id => JobType.find_by_name('part').id, :user_id => current_user.id, :job_status_id => JobStatus.find_by_name('submitted').id)
       accession = params[:accession].strip.split("\r\n")
-      worker_params = {:job_id => @job.id, :accession => accession}
+      worker_params = {:job_id => @job.id, :accession => accession, :user_id => current_user.id}
       Resque.enqueue(NewPart, worker_params)
       redirect_to job_path(@job.id), :notice => "Parts submitted!"
     end 
