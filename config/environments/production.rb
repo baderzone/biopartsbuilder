@@ -70,10 +70,9 @@ Partsbuilder::Application.configure do
   config.action_mailer.smtp_settings = { 
     :address              => "smtp.gmail.com",
     :port                 => 587,
-    :domain               => 'www.partsbuilder.com',
     :user_name            => 'syntheticyeast1@gmail.com',
     :password             => 'd.748563*p',
-    :authentication       => 'plain',
+    :authentication       => 'login',
     :enable_starttls_auto => true  }
 
 end
