@@ -120,12 +120,12 @@ class DesignPart
             end
           end
         end
+        logger.info("#{design.part.name} Designed! ")
       end
     end
     # change job status
     if error_info.empty?
       job.change_status('finished')
-      logger.info("#{design.part.name} Designed! ")
     else
       job.change_status('failed')
       job.error_info = error_info
