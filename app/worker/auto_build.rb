@@ -4,7 +4,6 @@ class AutoBuild
 
   def self.perform(para)
 
-    logger.info('it works!')
     require 'xmlsimple' 
     require 'csv'
 
@@ -234,7 +233,7 @@ class AutoBuild
         end # end of creating order for one part 
 
       end # end of auto_build one part  
-    puts "part #{accession} designed!"
+    logger.info("part #{accession} designed!")
     end # end of auto_build all parts
 
     # create summary file and zip file

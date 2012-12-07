@@ -55,8 +55,7 @@ namespace :deploy do
   task :config_symlink do
     run "cd #{current_path}; 
          ln -s #{shared_path}/config/database.yml config/database.yml; 
-         ln -s #{shared_path}/config/partsbuilder.yml config/partsbuilder.yml;
-         ln -s #{shared_path}/tasks/resque.rake lib/tasks/resque.rake"
+         ln -s #{shared_path}/config/partsbuilder.yml config/partsbuilder.yml"
   end
 
   task :pipeline_precompile do
@@ -64,15 +63,16 @@ namespace :deploy do
   end
 
   #restart resque workers
-  task :start_workers, :roles => :db do
-    run "cd #{current_path}; RAILS_ENV=production BACKGROUND=yes QUEUE=* rake resque:work"
+  task :restart_workers, :roles => :db do
+    run "cd #{shared_path}; if ps aux | awk '{print $2 }' | grep `tail -1 resque.pid` > /dev/null; then kill `tail -1 resque.pid`; else echo 'No resque worker of PartsBuilder running'; fi"
+    run "cd #{current_path}; PIDFILE=#{shared_path}/resque.pid RAILS_ENV=production BACKGROUND=yes QUEUE=* rake resque:work"
   end
 
 end
 
 after "deploy:create_symlink", "deploy:config_symlink"
 after "deploy:create_symlink", "deploy:pipeline_precompile"
-after "deploy:create_symlink", "deploy:start_workers"
+after "deploy:create_symlink", "deploy:restart_workers"
 
 # remove old releases
 after "deploy", "deploy:cleanup"

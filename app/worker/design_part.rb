@@ -1,4 +1,5 @@
 class DesignPart
+  extend Resque::Plugins::Logger
   @queue = :partsbuilder_design_part_queue
 
   def self.perform(para)
@@ -87,6 +88,7 @@ class DesignPart
               if (shift.abs > frag_size) || (stop_site_before_shift + shift >= recode_seq.length)
                 comment << "Resize Failed! "
                 error_info << "Resize #{design.part.name} Failed! No unique overlap found! "
+                logger.info("Resize #{design.part.name} Failed! No unique overlap found!")
                 i = frag_num
                 break;   
               end 
@@ -123,6 +125,7 @@ class DesignPart
     # change job status
     if error_info.empty?
       job.change_status('finished')
+      logger.info("#{design.part.name} Designed! ")
     else
       job.change_status('failed')
       job.error_info = error_info
