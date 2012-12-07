@@ -19,6 +19,9 @@
 # Ignore foreman config
 Procfile
 
+# Ignore geneDesign script
+/lib/geneDesign
+
 # Ignore parsBuilder processing files
 /public/orders
 /public/design_processing
