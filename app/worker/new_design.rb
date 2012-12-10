@@ -1,6 +1,6 @@
-class DesignPart
+class NewDesign
   extend Resque::Plugins::Logger
-  @queue = :partsbuilder_design_part_queue
+  @queue = :partsbuilder_new_design_queue
 
   def self.perform(para)
 

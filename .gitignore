@@ -24,6 +24,6 @@ Procfile
 
 # Ignore parsBuilder processing files
 /public/orders
-/public/design_processing
+/public/designs
 /public/parts
 /public/assets
