@@ -64,8 +64,8 @@ namespace :deploy do
 
   #restart resque workers
   task :restart_workers, :roles => :db do
-    run "cd #{shared_path}; if ps aux | awk '{print $2 }' | grep `tail -1 resque.pid` > /dev/null; then kill `tail -1 resque.pid`; else echo 'No resque worker of PartsBuilder running'; fi"
-    run "cd #{current_path}; PIDFILE=#{shared_path}/resque.pid RAILS_ENV=production BACKGROUND=yes QUEUE=* rake resque:work"
+    run "cd #{shared_path}/pids; if ps aux | awk '{print $2 }' | grep `tail -1 resque.pid` > /dev/null; then kill `tail -1 resque.pid`; else echo 'No resque worker of PartsBuilder running'; fi"
+    run "cd #{current_path}; PIDFILE=#{shared_path}/pids/resque.pid RAILS_ENV=production BACKGROUND=yes QUEUE=* rake resque:work"
   end
 
 end
