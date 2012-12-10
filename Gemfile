@@ -43,8 +43,6 @@ gem 'open4'
 gem 'zip'
 gem 'axlsx', "~> 1.3.1"
 gem 'resque', :require => 'resque/server'
-gem 'resque-logger'
-gem 'clockwork'
 gem 'xml-simple'
 
 # Use unicorn as the app server
@@ -54,7 +52,5 @@ gem 'foreman'
 # Deploy with Capistrano
 gem 'capistrano'
 
-# seed dump
-gem 'seed_dump'
 # To use debugger
 # gem 'debugger'

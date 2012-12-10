@@ -1,5 +1,4 @@
 class NewOrder
-  extend Resque::Plugins::Logger
   @queue = :partsbuilder_new_order_queue
 
   def self.perform(para)
@@ -53,7 +52,6 @@ class NewOrder
       ar.add(sum_file_name, "#{result_path}/#{sum_file_name}")
     end
 
-    logger.info("Order ##{para['order_id']} created!")
     job.change_status('finished')
     # send email notice
     order = Order.find(para['order_id'])

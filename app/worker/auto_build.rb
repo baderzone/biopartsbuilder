@@ -1,5 +1,4 @@
 class AutoBuild
-  extend Resque::Plugins::Logger
   @queue = :partsbuilder_auto_build_queue
 
   def self.perform(para)
@@ -233,7 +232,6 @@ class AutoBuild
         end # end of creating order for one part 
 
       end # end of auto_build one part  
-    logger.info("part #{accession} designed!")
     end # end of auto_build all parts
 
     # create summary file and zip file

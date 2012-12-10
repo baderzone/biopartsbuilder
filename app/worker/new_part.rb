@@ -1,5 +1,4 @@
 class NewPart
-  extend Resque::Plugins::Logger
   @queue = :partsbuilder_new_part_queue
 
   def self.perform(para)
@@ -22,14 +21,11 @@ class NewPart
           ncbi = Bio::NCBI::REST.efetch(accession, {"db"=>"protein", "rettype"=>"gp", "retmode" => "xml"})
           if ncbi.include?("ERROR")
             is_ncbi_success = false
-            logger.info("Bad ID: #{accession}!")
             error_info << "Bad ID: #{accession}! "
           else
-            logger.info("#{accession}! retrieved")
           end
         rescue
           is_ncbi_success = false
-          logger.info("Retrieve #{accession} failed!")
           error_info << "Retrieve #{accession} failed! "
         end   
 
