@@ -71,8 +71,8 @@ namespace :deploy do
 end
 
 after "deploy:create_symlink", "deploy:config_symlink"
-after "deploy:create_symlink", "deploy:pipeline_precompile"
-after "deploy:create_symlink", "deploy:restart_workers"
+after "deploy:stop", "deploy:pipeline_precompile"
+after "deploy:pipeline_precompile", "deploy:restart_workers"
 
 # remove old releases
 after "deploy", "deploy:cleanup"
