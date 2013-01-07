@@ -15,7 +15,7 @@
     <tbody>
       <% @parts.each do |part| %>
         <tr>
-          <td><%= part.id %></td>
+					<td><%= link_to part.id, part_path(part.id), {:style => 'color: #049cdb;' } %></td>
           <td><%= part.name %></td>
           <td><%= part.sequence.accession %></td>
           <td><%= part.sequence.organism.fullname %></td>

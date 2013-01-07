@@ -3,7 +3,7 @@ require "bundler/capistrano"
 #set :bundle_flags, "--deployment --quiet --binstubs --shebang ruby-local-exec"
 #set (:bundle_cmd) { "/home/deployer/.rbenv/shims/bundle" }
 set :default_environment, {
-  'PATH' => "$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
+	'PATH' => "$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 }
 
 #application info
@@ -35,38 +35,45 @@ set :unicorn_config, "#{current_path}/config/unicorn.rb"
 set :unicorn_pid, "#{shared_path}/pids/unicorn.pid" 
 
 namespace :deploy do
-  #start task
-  task :start, :roles => :app, :except => { :no_release => true } do
-    run "cd #{current_path} && #{try_sudo} #{unicorn_binary} -c #{unicorn_config} -E #{rails_env} -D"
-  end
+	#start task
+	task :start, :roles => :app, :except => { :no_release => true } do
+		run "cd #{current_path} && #{try_sudo} #{unicorn_binary} -c #{unicorn_config} -E #{rails_env} -D"
+	end
 
-  #stop task
-  task :stop, :roles => :app, :except => { :no_release => true } do
-    run "if ps aux | awk '{print $2 }' | grep `cat #{unicorn_pid}` > /dev/null; then kill `cat #{unicorn_pid}`; else echo 'Unicorn was already shutdown'; fi"
-  end
+	#stop task
+	task :stop, :roles => :app, :except => { :no_release => true } do
+		run "if ps aux | awk '{print $2 }' | grep `cat #{unicorn_pid}` > /dev/null; then kill `cat #{unicorn_pid}`; else echo 'Unicorn was already shutdown'; fi"
+	end
 
-  #restart task
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    stop
-    start
-  end
+	#restart task
+	task :restart, :roles => :app, :except => { :no_release => true } do
+		stop
+		start
+	end
 
-  #linking data directory
-  task :config_symlink do
-    run "cd #{current_path}; 
-         ln -s #{shared_path}/config/database.yml config/database.yml; 
-         ln -s #{shared_path}/config/partsbuilder.yml config/partsbuilder.yml"
-  end
+	#linking data directory
+	task :config_symlink do
+		run "cd #{current_path}; 
+				 ln -s #{shared_path}/config/database.yml config/database.yml; 
+				 ln -s #{shared_path}/config/partsbuilder.yml config/partsbuilder.yml"
+	end
 
-  task :pipeline_precompile do
-    run "cd #{current_path}; RAILS_ENV=production rake assets:precompile"
-  end
+	task :pipeline_precompile, :roles => web, :except => { :no_release => true} do
+		from = source.next_revision(current_revision)
+		if capture("cd #{latest_release} && #{source.local.log(from)} vendor/assets/ app/assets/ | wc -l").to_i > 0
+			run "cd #{current_path}; RAILS_ENV=production rake assets:precompile"
+			run "cp -rf #{current_path}/public/assets #{shared_path}"
+		else
+			run "ln -s #{shared_path}/assets public/assets"
+			logger.info "Skipping asset pre-compilation because there were no asset changes"
+		end
+	end
 
-  #restart resque workers
-  task :restart_workers, :roles => :db do
-    run "cd #{shared_path}/pids; if ps aux | awk '{print $2 }' | grep `tail -1 resque.pid` > /dev/null; then kill `tail -1 resque.pid`; else echo 'No resque worker of PartsBuilder running'; fi"
-    run "cd #{current_path}; PIDFILE=#{shared_path}/pids/resque.pid RAILS_ENV=production BACKGROUND=yes QUEUE=* rake resque:work"
-  end
+	#restart resque workers
+	task :restart_workers, :roles => :db do
+		run "cd #{shared_path}/pids; if ps aux | awk '{print $2 }' | grep `tail -1 resque.pid` > /dev/null; then kill `tail -1 resque.pid`; else echo 'No resque worker of PartsBuilder running'; fi"
+		run "cd #{current_path}; PIDFILE=#{shared_path}/pids/resque.pid RAILS_ENV=production BACKGROUND=yes QUEUE=* rake resque:work"
+	end
 
 end
 

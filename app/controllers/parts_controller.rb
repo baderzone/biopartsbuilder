@@ -6,6 +6,21 @@ class PartsController < ApplicationController
   def show
     @part = Part.find(params[:id])
   end
+  
+	def edit
+    @part = Part.find(params[:id])
+  end
+  
+  def update
+    @part = Part.find(params[:id])
+    
+    if @part.update_attributes(params[:part])
+      redirect_to part_path(params[:id]), :notice => "Information updated correctly."
+    else
+      render :edit
+    end
+    
+  end
 
   def new
     @part = Part.new
