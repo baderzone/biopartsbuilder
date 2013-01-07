@@ -58,7 +58,7 @@ namespace :deploy do
 				 ln -s #{shared_path}/config/partsbuilder.yml config/partsbuilder.yml"
 	end
 
-	task :pipeline_precompile, :roles => web, :except => { :no_release => true} do
+	task :pipeline_precompile, :roles => :web, :except => { :no_release => true} do
 		from = source.next_revision(current_revision)
 		if capture("cd #{latest_release} && #{source.local.log(from)} vendor/assets/ app/assets/ | wc -l").to_i > 0
 			run "cd #{current_path}; RAILS_ENV=production rake assets:precompile"
