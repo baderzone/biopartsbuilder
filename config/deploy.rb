@@ -64,7 +64,7 @@ namespace :deploy do
 			run "cd #{current_path}; RAILS_ENV=production rake assets:precompile"
 			run "cp -rf #{current_path}/public/assets #{shared_path}"
 		else
-			run "ln -s #{shared_path}/assets public/assets"
+			run "ln -s #{shared_path}/assets #{current_path}/public/assets"
 			logger.info "Skipping asset pre-compilation because there were no asset changes"
 		end
 	end
