@@ -59,4 +59,8 @@ class SequenceFileUploader < CarrierWave::Uploader::Base
 		"seq#{Time.now.to_i}.fasta"
   end
 
+	def cache_dir
+		"#{Rails.root}/tmp/uploads"
+	end
+
 end
