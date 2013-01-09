@@ -1,25 +1,30 @@
 <h3>Design your parts</h3>
-<%= form_tag({:controller => "auto_builds", :action => "create"}, :method => "post") do %>
-  <h5> Please Input Protein/Nucleotide Accession Number: </h5>
+<%= form_tag({:controller => "auto_builds", :action => "create"}, :method => "post", :multipart => true) do %>
+  <h5> 1. Please Input Protein/Nucleotide Accession Number: </h5>
   <table>
     <tr>
       <td><%= text_area_tag(:accession, "", :size => "50x10")%></td>
       <td>One id per line<br>e.g.<br>NP_539626.1<br>NP_459636.1<br>P29929.1</td>
     </tr>
-  </table>
+	</table>
+	<h5>Or Upload a Fasta File of Protein Sequences:</h5>
+	<%= file_field_tag(:sequence_file)%>
+	<p>Important: special format required, see <%= link_to 'description', {:action => :get_description_file, :name => 'description.txt', :type => 'text'}, {:style => 'color: #049cdb;'} %></p>
+  <br>
 
-  <h5> Select one protocol: </h5>
+  <h5> 2. Select one protocol: </h5>
   <table>
     <% @protocols.each do |protocol| %>
       <tr>
         <td width="20px"><%= radio_button_tag :protocol_id, protocol.id %></td>
-        <td><%= protocol.name %></td>
+				<td><%= protocol.name %></td>
+				<td>&nbsp;&nbsp;<%= link_to 'view', protocol_path(protocol.id), {:style => 'color: #049cdb;'} %></td>
       </tr>
     <% end %>
   </table>
   <br>
   
-  <h5> Input order information: </h5>
+  <h5> 3. Input order information: </h5>
   <table>
     <tr>
       <td width="100px"><%= label_tag :order_name %></td>

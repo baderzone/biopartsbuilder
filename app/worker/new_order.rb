@@ -8,7 +8,9 @@ class NewOrder
     # change job status
     job = Job.find(para['job_id'])
     job.change_status('running')
+    design_id_list = para['designs']
 
+		######################### Main Start ########################
     order_path = "#{PARTSBUILDER_CONFIG['program']['order_path']}"
     system "mkdir #{order_path}/#{para['order_id']}"
     result_path = "#{PARTSBUILDER_CONFIG['program']['order_path']}/#{para['order_id']}"
@@ -26,7 +28,7 @@ class NewOrder
     total_parts = 0
     total_bp = 0
 
-    para['designs'].each do |design_id|
+    design_id_list.each do |design_id|
       design = Design.find(design_id)
 
       design.construct.each do |construct|
@@ -51,6 +53,7 @@ class NewOrder
       ar.add(seq_file_name, "#{result_path}/#{seq_file_name}")
       ar.add(sum_file_name, "#{result_path}/#{sum_file_name}")
     end
+		########################## Main End #########################
 
     job.change_status('finished')
     # send email notice

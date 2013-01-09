@@ -6,8 +6,8 @@ class Part < ActiveRecord::Base
   attr_accessible :name, :sequence
 
   validates_presence_of :name
-
-  def self.find_by_sequence_accession(id)
+	
+	def self.find_by_sequence_accession(id)
     seq = Sequence.find_by_accession(id)
     if seq.nil?
       return nil

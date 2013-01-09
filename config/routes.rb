@@ -4,11 +4,15 @@ Partsbuilder::Application.routes.draw do
 
   get "auto_build/create"
 
-  get "home/index"
+	get "auto_builds/get_description_file"
+  
+	get "home/index"
   
   get "sequence/create"
   
   get "part/create"
+
+	get "parts/get_description_file"
 
   match "/orders/:id/get_zip_file", :to => "orders#get_zip_file" 
   match "/auth/:provider/callback" => "sessions#create"

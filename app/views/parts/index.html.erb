@@ -18,7 +18,7 @@
 					<td><%= link_to part.id, part_path(part.id), {:style => 'color: #049cdb;' } %></td>
           <td><%= part.name %></td>
           <td><%= part.sequence.accession %></td>
-          <td><%= part.sequence.organism.fullname %></td>
+					<td><%= begin; part.sequence.organism.fullname; rescue; "Unknown"; end %></td>
           <td><%= part.sequence.annotation %></td>
           <td><%= part.created_at %></td>
         </tr>
