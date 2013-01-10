@@ -50,7 +50,7 @@ class NewPart
 				end
 
 				# store retrieved data
-				if is_new_part_success
+				if is_new_part_success && (Sequence.find_by_accession(accession).nil?)
 					if ! org_name.empty?
 						organism = Organism.find_by_fullname(org_name) || Organism.create(:fullname => org_name, :name => org_abbr)
 						organism_id = organism.id
@@ -103,9 +103,9 @@ class NewPart
 							# when nucleotide
 							begin
 								ncbi = Bio::NCBI::REST.efetch(accession, {"db"=>"nucleotide", "rettype"=>"gb", "retmode" => "xml"})
-						    if ncbi.include?("Bad Gateway")
-						     	error_info << "NCBI is temporarily unavailable. Please try later! "
-								  is_new_part_success = false
+								if ncbi.include?("Bad Gateway")
+									error_info << "NCBI is temporarily unavailable. Please try later! "
+									is_new_part_success = false
 								end
 							rescue
 								error_info << "Retrieve #{accession} failed! "
@@ -151,9 +151,9 @@ class NewPart
 							# when protein
 							begin
 								ncbi = Bio::NCBI::REST.efetch(accession, {"db"=>"protein", "rettype"=>"gp", "retmode" => "xml"})
-						    if ncbi.include?("Bad Gateway")
-						     	error_info << "NCBI is temporarily unavailable. Please try later! "
-								  is_new_part_success = false
+								if ncbi.include?("Bad Gateway")
+									error_info << "NCBI is temporarily unavailable. Please try later! "
+									is_new_part_success = false
 								end
 							rescue
 								error_info << "Retrieve #{accession} failed! "
@@ -213,7 +213,7 @@ class NewPart
 			end
 		end
 		################### Main End #################
-		
+
 		# change job status
 		if is_new_part_success
 			job.change_status('finished')
