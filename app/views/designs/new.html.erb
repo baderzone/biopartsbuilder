@@ -1,7 +1,7 @@
 <h3>New design</h3>
 
 <%= simple_form_for(@design) do |f| %>
-  <h5> Select one protocol: </h5>
+  <h5> 1. Select one design standard: </h5>
   <table>
     <% @protocols.each do |protocol| %>
       <tr>
@@ -11,7 +11,7 @@
     <% end %>
   </table>
 
-  <h5> Select parts: </h5> 
+  <h5> 2. Select parts: </h5> 
   <b>Filter:</b><%= text_field_tag :search %>
   <div id="newDiv">
     <table class="tablesorter-default" id="sortable-table">

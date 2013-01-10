@@ -1,4 +1,4 @@
-<h3>Protocol <%= @protocol.name %></h3>
+<h3>Design standard <%= @protocol.name %></h3>
 <br>
 <b>Codon Optimization:</b>&nbsp;&nbsp;<%= @protocol.organism.fullname %><br><br>
 <b>External Prefix:</b>&nbsp;&nbsp;<%= @protocol.ext_prefix %><br><br>
@@ -14,5 +14,5 @@
 </div>
 <br>
 <b>Comment:</b>&nbsp;&nbsp;<%= @protocol.comment %><br><br>
-<%= link_to "Edit Protocol", edit_protocol_path(@protocol.id), {:style => 'color: #049cdb;'} %>
+<%= link_to "Edit Design Standard", edit_protocol_path(@protocol.id), {:style => 'color: #049cdb;'} %>
 <br><br>
