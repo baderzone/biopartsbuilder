@@ -30,6 +30,11 @@ Partsbuilder::Application.routes.draw do
   resources :auto_builds
 
   root :to => 'home#index'
+ 
+  namespace :admin do
+		root :to => "home#index"
+		resources :protocols, :home, :users
+	end
 
   mount Resque::Server, :at => "/resque"
   # The priority is based upon order of creation:

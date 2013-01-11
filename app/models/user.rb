@@ -1,18 +1,23 @@
 class User < ActiveRecord::Base
-  has_many :order
-  has_many :job
 
-  attr_accessible :email, :fullname, :provider, :uid, :order, :job
+	belongs_to :group
+	has_many :order
+	has_many :job
 
-  validates_presence_of :email
+	attr_accessible :email, :fullname, :provider, :uid, :group_id
+	attr_accessible :order, :job, :group
 
-  #utility method for creating an user at the first login
-  def self.create_with_omniauth(auth)
-    create! do |user|
-      user.uid = auth[:uid]
-      user.fullname = auth[:info][:name]
-      user.email = auth[:info][:email]
-      user.provider = auth[:provider]
-    end 
-  end 
+	validates_presence_of :email
+
+	#utility method for creating an user at the first login
+	def self.create_with_omniauth(auth)
+		create! do |user|
+			user.uid = auth[:uid]
+			user.fullname = auth[:info][:name]
+			user.email = auth[:info][:email]
+			user.provider = auth[:provider]
+			user.group_id = Group.find_by_name('user').id 
+		end
+	end 
+
 end

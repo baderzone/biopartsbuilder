@@ -1,59 +1,60 @@
 <ul class="nav">
-  <!-- Workspace menu -->
-  <li><a href="/auto_builds/new">AutoBuild</a><li>
-  <li class="dropdown">
-  <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
-    Parts
-    <b class="caret"></b>
-  </a>
-  <ul class="dropdown-menu">
-    <li><%= link_to 'View', parts_path %></li>
-    <li><%= link_to 'New', new_part_path %></li>	
-  </ul>
-  </li>
-  <li class="dropdown">
-  <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
-    Designs
-    <b class="caret"></b>
-  </a>
-  <ul class="dropdown-menu">
-    <li><%= link_to 'View', designs_path %></li>
-    <li><%= link_to 'New', new_design_path %></li>	
-  </ul>
-  </li>
-  <li class="dropdown">
-  <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
-    Orders
-    <b class="caret"></b>
-  </a>
-  <ul class="dropdown-menu">
-    <li><%= link_to 'View', orders_path %></li>
-    <li><%= link_to 'New', new_order_path %></li>	
-  </ul>
-  </li>
-  <li class="dropdown">
-  <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
-   Design Standards
-    <b class="caret"></b>
-  </a>
-  <ul class="dropdown-menu">
-    <li><%= link_to 'View', protocols_path %></li>
-    <li><%= link_to 'New', new_protocol_path %></li>	
-  </ul>
-  </li>
+	<!-- Workspace menu -->
+	<li><a href="/auto_builds/new">AutoBuild</a><li>
+
+	<li class="dropdown">
+	<a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+		Parts
+		<b class="caret"></b>
+	</a>
+	<ul class="dropdown-menu">
+		<li><%= link_to 'View', parts_path %></li>
+		<li><%= link_to 'New', new_part_path %></li>	
+	</ul>
+	</li>
+
+	<li class="dropdown">
+	<a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+		Designs
+		<b class="caret"></b>
+	</a>
+	<ul class="dropdown-menu">
+		<li><%= link_to 'View', designs_path %></li>
+		<li><%= link_to 'New', new_design_path %></li>	
+	</ul>
+	</li>
+
+	<li class="dropdown">
+	<a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+		Orders
+		<b class="caret"></b>
+	</a>
+	<ul class="dropdown-menu">
+		<li><%= link_to 'View', orders_path %></li>
+		<li><%= link_to 'New', new_order_path %></li>	
+	</ul>
+	</li>
 </ul>
 
-<ul class="nav pull-right">
-  <li><%= link_to 'Jobs', jobs_path %></li>
-  <li class="dropdown">
-  <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
-    Account
-    <b class="caret"></b>
-  </a>
-  <ul class="dropdown-menu">
-    <li><%= link_to 'Info', users_path %></li>
-    <li class="divider"></li>
-    <li><%= link_to 'Logout', signout_path %></li>
-  </ul>
-  </li>
+<ul class="nav pull-right">	
+	<li class="dropdown">
+	<a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+		Workspace
+		<b class="caret"></b>
+	</a>
+	<ul class="dropdown-menu">
+		<li><%= link_to 'Jobs', jobs_path %></li>
+		<li><%= link_to 'Design Standards', protocols_path %></li>
+		<li class="divider"></li>
+		<li><%= link_to 'Account Info', users_path %></li>
+		<li class="divider"></li>
+		<% if can? :manage, :admin %>
+			<li><%= link_to 'administration', admin_root_path %></li>
+			<li class="divider"></li>
+		<% end %>
+		<li><%= link_to 'Logout', signout_path %></li>
+	</ul>
+	</li>
 </ul>
+
+
