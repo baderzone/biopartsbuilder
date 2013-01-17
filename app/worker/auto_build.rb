@@ -270,10 +270,19 @@ class AutoBuild
 
 						# remove forbidden enzymes
 						begin
-							system "perl #{geneDesign_path}/Restriction_Site_Subtraction.pl -i #{process_path}/#{accession}_backtrans.fasta -o #{org_code} -s #{forbid_enzymes} -w #{process_path}/#{accession}_recode.fasta -t 10"
+							system "perl #{geneDesign_path}/Restriction_Site_Subtraction.pl -i #{process_path}/#{accession}_backtrans.fasta -o #{org_code} -s #{forbid_enzymes} -w #{process_path}/#{accession}_recode.fasta -t 10 > #{process_path}/#{accession}_recode.out"
 						rescue
 							error_info << "There is something wrong with restriction site substraction. Please contact administor! "
 							is_new_design_success = false
+						end
+
+						if is_new_design_success
+							recode_out = File.open("#{process_path}/#{accession}_recode.out", 'r')
+							if recode_out.read.include?('unable')
+								error_info << "There is something wrong with restriction site substraction. Please contact administor! "
+								is_new_design_success = false
+							end
+							recode_out.close
 						end
 
 						if is_new_design_success
