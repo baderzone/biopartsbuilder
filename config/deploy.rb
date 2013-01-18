@@ -61,7 +61,7 @@ namespace :deploy do
 	task :pipeline_precompile, :roles => :web, :except => { :no_release => true} do
 		from = source.next_revision(current_revision)
 		if capture("cd #{latest_release} && #{source.local.log(from)} vendor/assets/ app/assets/ | wc -l").to_i > 0
-			run "cd #{current_path}; RAILS_ENV=production rake assets:precompile"
+			run "cd #{current_path}; RAILS_ENV=production bundle exec rake assets:precompile"
 			run "cp -rf #{current_path}/public/assets #{shared_path}"
 		else
 			run "ln -s #{shared_path}/assets #{current_path}/public/assets"
@@ -72,7 +72,7 @@ namespace :deploy do
 	#restart resque workers
 	task :restart_workers, :roles => :db do
 		run "cd #{shared_path}/pids; if ps aux | awk '{print $2 }' | grep `tail -1 resque.pid` > /dev/null; then kill `tail -1 resque.pid`; else echo 'No resque worker of PartsBuilder running'; fi"
-		run "cd #{current_path}; PIDFILE=#{shared_path}/pids/resque.pid RAILS_ENV=production BACKGROUND=yes QUEUE=* rake resque:work"
+		run "cd #{current_path}; PIDFILE=#{shared_path}/pids/resque.pid RAILS_ENV=production BACKGROUND=yes QUEUE=* bundle exec rake resque:work"
 	end
 
 end
