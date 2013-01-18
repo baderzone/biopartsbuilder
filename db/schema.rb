@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130111190809) do
+ActiveRecord::Schema.define(:version => 20130118193434) do
 
   create_table "constructs", :force => true do |t|
     t.integer  "design_id"
@@ -22,12 +22,17 @@ ActiveRecord::Schema.define(:version => 20130111190809) do
     t.text     "comment"
   end
 
+  add_index "constructs", ["design_id"], :name => "index_constructs_on_design_id"
+
   create_table "designs", :force => true do |t|
     t.integer  "part_id"
     t.integer  "protocol_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
+
+  add_index "designs", ["part_id"], :name => "index_designs_on_part_id"
+  add_index "designs", ["protocol_id"], :name => "index_designs_on_protocol_id"
 
   create_table "groups", :force => true do |t|
     t.string   "name"
@@ -57,6 +62,10 @@ ActiveRecord::Schema.define(:version => 20130111190809) do
     t.text     "error_info"
   end
 
+  add_index "jobs", ["job_status_id"], :name => "index_jobs_on_job_status_id"
+  add_index "jobs", ["job_type_id"], :name => "index_jobs_on_job_type_id"
+  add_index "jobs", ["user_id"], :name => "index_jobs_on_user_id"
+
   create_table "orders", :force => true do |t|
     t.string   "name"
     t.integer  "user_id"
@@ -64,6 +73,9 @@ ActiveRecord::Schema.define(:version => 20130111190809) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "orders", ["user_id"], :name => "index_orders_on_user_id"
+  add_index "orders", ["vendor_id"], :name => "index_orders_on_vendor_id"
 
   create_table "organisms", :force => true do |t|
     t.string   "name"
@@ -95,6 +107,8 @@ ActiveRecord::Schema.define(:version => 20130111190809) do
     t.text     "comment"
   end
 
+  add_index "protocols", ["organism_id"], :name => "index_protocols_on_organism_id"
+
   create_table "sequences", :force => true do |t|
     t.string   "accession"
     t.integer  "organism_id"
@@ -104,6 +118,9 @@ ActiveRecord::Schema.define(:version => 20130111190809) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
+
+  add_index "sequences", ["organism_id"], :name => "index_sequences_on_organism_id"
+  add_index "sequences", ["part_id"], :name => "index_sequences_on_part_id"
 
   create_table "users", :force => true do |t|
     t.string   "uid"
