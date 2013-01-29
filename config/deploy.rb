@@ -18,9 +18,9 @@ set :scm, :git
 set :scm_username, "jhudeployer"
 
 #deploy information
-role :web, "54.235.254.95"                          # Your HTTP server, Apache/etc
-role :app, "54.235.254.95"                          # This may be the same as your `Web` server
-role :db,  "54.235.254.95", :primary => true        # This is where Rails migrations will run
+role :web, "54.235.171.60"                          # Your HTTP server, Apache/etc
+role :app, "54.235.171.60"                          # This may be the same as your `Web` server
+role :db,  "54.235.171.60", :primary => true        # This is where Rails migrations will run
 
 set :user, "deployer"
 set :use_sudo, false
@@ -30,7 +30,7 @@ set :deploy_to, "/home/deployer/applications/#{application}"
 set :rails_env, :production
 
 #unicorn setup
-set :unicorn_binary, "/home/deployer/.rbenv/shims/unicorn_rails"
+set :unicorn_binary, "bundle exec unicorn_rails"
 set :unicorn_config, "#{current_path}/config/unicorn.rb"
 set :unicorn_pid, "#{shared_path}/pids/unicorn.pid" 
 
