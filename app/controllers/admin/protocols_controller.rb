@@ -27,7 +27,7 @@ class Admin::ProtocolsController < ApplicationController
     @protocol = Protocol.new(params[:protocol])
 
     if @protocol.save
-      redirect_to @protocol, notice: 'New protocol created!'
+      redirect_to admin_protocol_path(@protocol), notice: 'New protocol created!'
     else
       render :new
     end
@@ -49,7 +49,7 @@ class Admin::ProtocolsController < ApplicationController
       params[:protocol]['check_enzymes'] = params[:protocol]['check_enzymes'].split("\r\n").join(':')
     end
     if @protocol.update_attributes(params[:protocol])
-      redirect_to protocol_path(@protocol), :notice => "Protocol updated"
+      redirect_to admin_protocol_path(@protocol), :notice => "Protocol updated"
     else
       render :edit, :id => @protocol, :flash => {:error => "Protocol update failed."}
     end

@@ -1,5 +1,5 @@
 <h3>Editing user</h3>
-<%= simple_form_for @user do |f| %>
+<%= simple_form_for [:admin,@user] do |f| %>
   <%= f.input :fullname %>
 	<%= f.association :group %>
 	<%= f.submit :class => 'btn btn-primary' %>
