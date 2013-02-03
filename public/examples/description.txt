@@ -1,11 +1,20 @@
-# The description line must be:
-# >part_name|accession_number|organism
-# If no accession number available, use an unique serial number instead.
-# Organism is optional, if no organism available, use: >part_name|accession_number
-# Organism prefer the full latin name. e.g. Saccharomyces cerevisiae, not yeast or Sce
+# The description line must be one of the followings:
+# >part_name|accession_number|organism|Any notes or comments you wish to add(free text)
+# >parts_name|accession_number|organism
+# >parts_name|accession_number
+# >parts_name|accession_number||notes or comments 
+#
+# Important: there can only be ONE > comment line for one sequence
+# Important: accession number is the unique identifier for sequence, if no accession number available, use an unique serial number instead (e.g. 4579034, cobD_L3A_v1).
+#
+# Organism: Use the full latin genus and species name. e.g. Saccharomyces cerevisiae, not yeast or Sce 
 #
 # Examples:
 
+>CDS_Ppu_camR_BAA03510.1|BAA03510.1|Pseudomonas putida | SIG055 Note: has VP16-NLS at C-term
+MDIKQSLLHAAMRLLSAKGRDGATMRPICAEVGVTPPTLYHHYGDLQGLHKAAIDETYRQVAEAYHGGTEERGPLKGIRD
+GWATFLQFAYSEPNMCRMLVQHIMAGEPPSMVADTLRGVADDLAQFHAQGRLTFPPREAAQLLWMGALGALTYALSREGA
+GYTQDLALQKAKLDITLVALFNIEEEGPADALDDFDLDMLPADALDDFDLDMLPADALDDFDLDMLPGMPKKKRKV
 >CDS_Sen_cobD_NP_459636|NP_459636|Salmonella enterica
 MALFNSAHGGNIREAATVLGISPDQLLDFSANINPLGMPVSVKRALIDNLDCIERYPDADYFHLHQALARHHQVPASWIL
 AGNGETESIFTVASGLKPRRAMIVTPGFAEYGRALAQSGCEIRRWSLREADGWQLTDAILEALTPDLDCLFLCTPNNPTG
@@ -23,3 +32,7 @@ LGAVVADIRLQAVSTVAGVAWVLSLGGTSTKASSVGTLAGNAVVPALITILEKLASLGTTMRGRDLDPSEIRALCRCETS
 SERPAAPRSAAIPGIHALGNADTVLGLGLAFAQVEAAALASYLHQVQALGANAIRLAPGHAFFVLGLCPETAAVAQSLAA
 SHGFRIAEQDPRNAIATCAGSKGCASAWMETKGMAERLVETAPELLDGSLTVHLSGCAKGCARPKPSELTLVGAPSGYGL
 VVNGAANGLPSAYTDENGMGSALARLGRLVRQNKDAGESAQSCLTRLGAARVSAAFEQG
+>CDS_Miv_cobA_201301070001|201301070001||note
+MVVYLVGAGPGDPELITLKAVNVLKKADVVLYDKPANEEILKYAEGAKLIYVGKQAGHHYKSQNEINTLLVEEAKENDLV
+VRLKGGDPFVFGRGGEEILALVEEGIDFELVPGVTSAIGVPTTIGLPVTHRGVATSFTVVTGHEDPTKCKKQVGWDFKAD
+TIVILMGIGNLAENTAEIMKHKDPETPVCVIENGTMEGQRIITGTLENIAGKDIKPPALVVLEMLSMFLKK

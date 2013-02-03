@@ -29,18 +29,21 @@ class NewPart
 				else
 					seq_descript_array = entry.definition.split('|')
 					if seq_descript_array.length == 2
-						part_name = seq_descript_array[0]
-						accession = seq_descript_array[1]
+						part_name = seq_descript_array[0].strip
+						accession = seq_descript_array[1].strip
 						seq = entry.seq.upcase
-					elsif seq_descript_array.length == 3
-						part_name = seq_descript_array[0]
-						accession = seq_descript_array[1]
+					elsif seq_descript_array.length >= 3
+						part_name = seq_descript_array[0].strip
+						accession = seq_descript_array[1].strip
 						seq = entry.seq.upcase
 						org_name = seq_descript_array[2]
-						if org_name.split(' ').length < 2
-							org_abbr = org_name
-						else
-							org_abbr = org_name.split(' ')[0][0].upcase + org_name.split(' ')[1][0,2].downcase
+						unless org_name.empty?
+							org_name.strip!
+							if org_name.split(' ').length < 2
+								org_abbr = org_name
+							else
+								org_abbr = org_name.split(' ')[0][0].upcase + org_name.split(' ')[1][0,2].downcase
+							end
 						end
 					else
 						is_new_part_success = false
