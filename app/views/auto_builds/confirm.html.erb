@@ -1,0 +1,49 @@
+<h3><i class="icon-info-sign">Please Check</i></h3>
+<% unless @errors.empty? %>
+  There are errors in your uploaded file: <br />
+  <% @errors.each do |key, value| %>
+    &nbsp;&nbsp;<%= value['error'] %> <br />
+  <% end %>
+  <br />
+  <%= link_to 'Go Back', new_auto_build_path, :class => 'btn btn-primary' %>
+  <br />
+<% else %>
+  <%= form_tag({:controller => "auto_builds", :action => "create"}, :method => "post", :multipart => true) do %>
+    <% if @accessions.nil? %>
+      <%= hidden_field_tag(:sequence_file, @seq_file) %>
+      <p>You want to design <b><%= @sequences.size %></b> parts. The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>. Parts to be designed:</p>
+      <table class="table table-striped">
+        <tr>
+          <th>Part Name</th>
+          <th>Accession Number</th>
+          <th>Organism</th>
+        </tr>
+        <% @sequences.each do |key, seq| %>
+          <tr>
+            <td><%= seq['part'] %></td>
+            <td><%= seq['accession'] %></td>
+            <td><%= seq['org'] %></td>
+          </tr>
+        <% end %>
+      </table>
+    <% else %>
+      <%= hidden_field_tag(:accession, @accession_origin) %>
+      <p>You want to design <b><%= @accessions.size %></b> parts. The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>. Parts to be designed:</p>
+      <% @accessions.each do |entry| %>
+        <p>&nbsp;&nbsp;<%= entry %></p>
+      <% end %>
+    <% end %>
+    <%= hidden_field_tag(:protocol_id, @protocol.id) %>
+    <%= hidden_field_tag(:order_name, @order) %>
+    <%= hidden_field_tag(:vendor_id, @vendor) %>
+    <br />
+    <table>
+      <tr>
+        <td><%= submit_tag("Correct, start design", :class => "btn btn-primary") %></td>
+        <td width="10%"></td>
+        <td><%= link_to "Incorrect, go back", new_auto_build_path, :class => "btn btn-danger" %></td>
+      </tr>
+    </table>
+  <% end %>
+<% end %>
+<br />

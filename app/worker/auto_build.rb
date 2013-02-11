@@ -450,7 +450,7 @@ class AutoBuild
 		end
 		# send email notice
 		order = Order.find(para['order_id'])
-		PartsbuilderMailer.finished_notice(order.user).deliver
+		PartsbuilderMailer.finished_notice(order.user, error_info).deliver
 
 	end 
 

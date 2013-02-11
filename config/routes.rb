@@ -3,6 +3,8 @@ Partsbuilder::Application.routes.draw do
   get "jobs/show"
 
   get "auto_build/create"
+  
+  get "auto_builds/confirm"
 
 	get "auto_builds/get_description_file"
   
@@ -17,6 +19,7 @@ Partsbuilder::Application.routes.draw do
   match "/orders/:id/get_zip_file", :to => "orders#get_zip_file" 
   match "/auth/:provider/callback" => "sessions#create"
   match "/signout" => "sessions#destroy", :as => :signout
+  match "/auto_builds/confirm" => "auto_builds#confirm", :via => :post
 
   resources :protocols
   resources :constructs
@@ -28,6 +31,7 @@ Partsbuilder::Application.routes.draw do
   resources :organisms
   resources :jobs
   resources :auto_builds
+  
 
   root :to => 'home#index'
  

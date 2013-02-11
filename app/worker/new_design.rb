@@ -165,7 +165,7 @@ class NewDesign
 		end
 		# send email notice
 		current_user = User.find(para['user_id'])
-		PartsbuilderMailer.finished_notice(current_user).deliver
+		PartsbuilderMailer.finished_notice(current_user, error_info).deliver
 
 	end
 

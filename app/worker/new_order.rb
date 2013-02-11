@@ -58,7 +58,7 @@ class NewOrder
     job.change_status('finished')
     # send email notice
     order = Order.find(para['order_id'])
-    PartsbuilderMailer.finished_notice(order.user).deliver
+    PartsbuilderMailer.finished_notice(order.user, nil).deliver
 
   end
 
