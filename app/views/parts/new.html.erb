@@ -1,6 +1,6 @@
 <h3>New part</h3>
 
-<%= form_tag({:controller => "parts", :action => "create"}, :method => "post", :multipart => true) do %>
+<%= form_tag({:controller => "parts", :action => "confirm"}, :method => "post", :multipart => true) do %>
 	<table>
 		<tr>
 			<td colspan='2'><%= label_tag(:accession, "Input Protein/Nucleotide Accession Number:") %></td>

@@ -5,13 +5,13 @@
     &nbsp;&nbsp;<%= value['error'] %> <br />
   <% end %>
   <br />
-  <%= link_to 'Go Back', new_auto_build_path, :class => 'btn btn-primary' %>
+  <%= link_to 'Go Back', new_part_path, :class => 'btn btn-primary' %>
   <br />
 <% else %>
-  <%= form_tag({:controller => "auto_builds", :action => "create"}, :method => "post", :multipart => true) do %>
+  <%= form_tag({:controller => "parts", :action => "create"}, :method => "post", :multipart => true) do %>
     <% if @accessions.nil? %>
       <%= hidden_field_tag(:sequence_file, @seq_file) %>
-      <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  <b><%= @sequences.size %></b> parts to be designed:</p>
+      <p><b><%= @sequences.size %></b> parts to be created.  They are:</p>
       <table class="table table-striped">
         <tr>
           <th>Part Name</th>
@@ -28,20 +28,17 @@
       </table>
     <% else %>
       <%= hidden_field_tag(:accession, @accession_origin) %>
-      <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  <b><%= @accessions.size %></b> parts to be designed:</p>
+      <p><b><%= @accessions.size %></b> parts to be created. They are:</p>
       <% @accessions.each do |entry| %>
         <p>&nbsp;&nbsp;<%= entry %></p>
       <% end %>
     <% end %>
-    <%= hidden_field_tag(:protocol_id, @protocol.id) %>
-    <%= hidden_field_tag(:order_name, @order) %>
-    <%= hidden_field_tag(:vendor_id, @vendor) %>
     <br />
     <table>
       <tr>
-        <td><%= submit_tag("Correct, design parts", :class => "btn btn-primary") %></td>
+        <td><%= submit_tag("Correct, create parts", :class => "btn btn-primary") %></td>
         <td width="10%"></td>
-        <td><%= link_to "Incorrect, go back", new_auto_build_path, :class => "btn btn-danger" %></td>
+        <td><%= link_to "Incorrect, go back", new_part_path, :class => "btn btn-danger" %></td>
       </tr>
     </table>
   <% end %>
