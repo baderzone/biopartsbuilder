@@ -12,8 +12,8 @@
         <th>Created_at</th>
       </tr>
     </thead>
-    <% @designs.each do |design| %>
-      <tbody>
+    <tbody>
+      <% @designs.each do |design| %>
         <tr>
           <td><%= design.id %></td>
           <td><%= design.part.name %></td>
@@ -21,8 +21,8 @@
           <td><%= link_to 'View', design_path(design.id), {:style => 'color: #049cdb;'} %></td>
           <td><%= design.created_at %></td>
         </tr>
-      </tbody>
-    <% end %>
+      <% end %>
+    </tbody>
   </table>
 </div>
 <br />
