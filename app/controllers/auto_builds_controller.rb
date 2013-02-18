@@ -61,8 +61,4 @@ class AutoBuildsController < ApplicationController
     end
   end
 
-  def get_description_file
-    send_file "public/examples/#{params[:name]}", :type => "#{params[:type]}", :disposition => 'inline'
-  end
-
 end
