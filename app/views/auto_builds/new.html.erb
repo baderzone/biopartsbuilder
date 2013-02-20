@@ -1,41 +1,46 @@
-<h3>Design your parts</h3>
+<div class="page-header">
+  <h3><i class="icon-play-circle"> </i>Design your parts</h3>
+</div>
 <%= form_tag({:controller => "auto_builds", :action => "confirm"}, :method => "post", :multipart => true) do %>
-  <h5> 1. Please Input Protein/Nucleotide Accession Number: </h5>
-  <table>
-    <tr>
-      <td><%= text_area_tag(:accession, "", :size => "50x10")%></td>
-      <td>One id per line<br>e.g.<br>NP_539626.1<br>NP_459636.1<br>P29929.1</td>
-    </tr>
-	</table>
-	<h5>Or Upload a Fasta File of Protein Sequences:</h5>
-	<%= file_field_tag(:sequence_file)%>
-	<p>Important: special format required, see <%= link_to 'description', {:controller => :parts, :action => :get_description_file}, {:style => 'color: #049cdb;'} %></p>
-  <br>
-
-  <h5> 2. Select one design standard: </h5>
-  <table>
-    <% @protocols.each do |protocol| %>
+  <div class="container">
+    <h5> 1. Please Input Protein/Nucleotide Accession Number: </h5>
+    <table>
       <tr>
-        <td width="20px"><%= radio_button_tag :protocol_id, protocol.id %></td>
-				<td><%= protocol.name %></td>
-				<td>&nbsp;&nbsp;<%= link_to 'view', protocol_path(protocol.id), {:style => 'color: #049cdb;'} %></td>
+        <td><%= text_area_tag(:accession, "", :size => "50x10")%></td>
+        <td>One id per line<br>e.g.<br>NP_539626.1<br>NP_459636.1<br>P29929.1</td>
       </tr>
-    <% end %>
-  </table>
-  <br>
-  
-  <h5> 3. Input order information: </h5>
-  <table>
-    <tr>
-      <td width="100px"><%= label_tag :order_name %></td>
-      <td><%= text_field_tag :order_name %></td>
-    </tr>
-    <tr>
-      <td width="100px"><%= label_tag :vendor_id, "Vendor" %></td>
-      <td><%= collection_select :order, :vendor_id, Vendor.all, :id, :name %></td>
-    </tr>
-  </table>
-  <br>
+    </table>
+    <h5>Or Upload a Fasta File of Protein Sequences:</h5>
+    <%= file_field_tag(:sequence_file)%>
+    <p>Important: special format required, see <%= link_to 'description', {:controller => :parts, :action => :get_description_file}, {:style => 'color: #049cdb;'} %></p>
+    <hr />
 
-  <%= submit_tag("Create Parts", :class => "btn btn-primary") %>
+    <h5> 2. Select one design standard: </h5>
+    <table>
+      <% @protocols.each do |protocol| %>
+        <tr>
+          <td width="20px"><%= radio_button_tag :protocol_id, protocol.id %></td>
+          <td><%= protocol.name %></td>
+          <td>&nbsp;&nbsp;<%= link_to 'view', protocol_path(protocol.id), {:style => 'color: #049cdb;'} %></td>
+        </tr>
+      <% end %>
+    </table>
+    <hr />
+
+    <h5> 3. Input order information: </h5>
+    <table>
+      <tr>
+        <td width="100px"><%= label_tag :order_name %></td>
+        <td><%= text_field_tag :order_name %></td>
+      </tr>
+      <tr>
+        <td width="100px"><%= label_tag :vendor_id, "Vendor" %></td>
+        <td><%= collection_select :order, :vendor_id, Vendor.all, :id, :name %></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="form-actions">
+    <%= submit_tag("Create Parts", :class => "btn btn-primary") %>
+  </div>
 <% end %>

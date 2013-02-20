@@ -1,12 +1,12 @@
-<h3>User Info</h3>
-
+<div class='page-header'>
+  <h3><i class='icon-book'> </i>User Info</h3>
+</div>
 <table class="table table-stripped">
   <tr>
     <th>Fullname</th>
     <th>Email</th>
     <th>Group</th>
     <th>Provider</th>
-    <th></th>
   </tr>
 
   <tr>
@@ -14,9 +14,9 @@
     <td><%= @user.email %></td>
     <td><%= @user.group.name %></td>
     <td><%= @user.provider %></td>
-    <td><%= link_to 'Edit', edit_user_path(@user), {:style => 'color: #049cdb;'} %></td>
   </tr>
 </table>
-
-<br />
+<div class='form-actions'>
+  <%= link_to 'Edit', edit_user_path(@user), :class => 'btn btn-primary' %>
+</div>
 <br />

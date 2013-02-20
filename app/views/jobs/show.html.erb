@@ -1,14 +1,20 @@
-<h3>Job status</h3>
-<br>
-<i>Refresh this page to check your job status or wait for the email notice</i>
-<br><br>
-<b>Type: </b>&nbsp;&nbsp;<%= @job.job_type.name %><br><br>
-<b>Status: </b>&nbsp;&nbsp;<span class="label <%= get_status_label_style(@job.job_status.name)%>"><%= @job.job_status.name %></span><br><br>
-<b>Errors: </b>&nbsp;&nbsp;<%= @job.error_info || 'none' %><br><br>
-<b>User: </b>&nbsp;&nbsp;<%= @job.user.fullname %><br><br>
-<b>Created_at: </b>&nbsp;&nbsp;<%= @job.created_at %><br><br>
-<b>Updated_at: </b>&nbsp;&nbsp;<%= @job.updated_at %><br><br>
+<div class='page-header'>
+  <h3><i class='icon-file'> </i>Job status</h3>
+</div>
+<div class='container'>
+  <i class='icon-info-sign'> Refresh this page to check your job status or wait for the email notice</i>
+  <br><br>
+  <b>Type: </b>&nbsp;&nbsp;<%= @job.job_type.name %><br><br>
+  <b>Status: </b>&nbsp;&nbsp;<span class="label <%= get_status_label_style(@job.job_status.name)%>"><%= @job.job_status.name %></span><br><br>
+  <b>Errors: </b>&nbsp;&nbsp;<%= @job.error_info || 'none' %><br><br>
+  <b>User: </b>&nbsp;&nbsp;<%= @job.user.fullname %><br><br>
+  <b>Created_at: </b>&nbsp;&nbsp;<%= @job.created_at %><br><br>
+  <b>Updated_at: </b>&nbsp;&nbsp;<%= @job.updated_at %><br><br>
+</div>
+
 <% if @job.job_status.name == 'finished' %>
-  <%= link_to 'Check Results', "/#{@job.job_type.name}s", :class => "btn btn-warning" %>
+  <div class='form-actions'>
+    <%= link_to 'Check Results', "/#{@job.job_type.name}s", :class => "btn btn-warning" %>
+  </div>
 <% end %>
-<br><br><br>
+<br />

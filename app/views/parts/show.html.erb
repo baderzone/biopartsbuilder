@@ -1,14 +1,16 @@
-<p id="notice"><%= notice %></p>
-
-<p>
+<div class="page-header">
+  <h3><i class="icon-file"> </i>Part <%= @part.id %></h3>
+</div>
+<div class="container">
+  <p>
   <b>Name:</b> <%= @part.name %> 
-	<br><br>
-	<b>Sequence:</b>
-	<div id="seq">
-	  <%= @part.sequence.seq%>
-	</div>
-</p>
-
-
-<%= link_to 'Edit', edit_part_path(@part), {:style => 'color: #049cdb;'} %> |
-<%= link_to 'Back', parts_path %>
+  <br><br>
+  <b>Sequence:</b>
+  <div id="seq">
+    <%= @part.sequence.seq%>
+  </div>
+  </p>
+</div>
+<div class="form-actions">
+  <%= link_to 'Edit', edit_part_path(@part), :class => 'btn btn-primary' %>
+</div>

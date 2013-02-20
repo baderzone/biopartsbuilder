@@ -1,4 +1,6 @@
-<h3>New order</h3>
+<div class='page-header'>
+  <h3><i class='icon-play-circle'> </i>New order</h3>
+</div>
 
 <%= form_tag({:controller => "orders", :action => "create"}, :method => "post") do %>
   <table>
@@ -11,6 +13,7 @@
       <td><%= collection_select :order, :vendor_id, Vendor.all, :id, :name %></td>
     </tr>
   </table>
+  <hr />
   <h5> Select designs: </h5> 
   <b>Filter:</b><%= text_field_tag :search %>
   <div id="newDiv">
@@ -35,7 +38,8 @@
       </tbody>
     </table>
   </div>
-  <br>
-  <%= submit_tag "Create Order", :class => "btn btn-primary" %>
+  <div class='form-actions'>
+    <%= submit_tag "Create Order", :class => "btn btn-primary" %>
+  </div>
 <% end %>
 

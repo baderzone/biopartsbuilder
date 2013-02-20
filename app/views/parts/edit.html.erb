@@ -1,5 +1,11 @@
-<h3>Editing part</h3>
-<%= simple_form_for @part do |f| %>
-  <%= f.input :name %>
-  <%= f.submit :class => 'btn btn-primary' %>
+<div class="page-header">
+  <h3><i class="icon-play-circle"> </i>Editing part</h3>
+</div>
+<%= simple_form_for @part  do |f| %>
+  <div class="container">
+    <%= f.input :name %>
+  </div>
+  <div class='form-actions'>
+    <%= f.submit :class => 'btn btn-primary' %>
+  </div>
 <% end %>

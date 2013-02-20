@@ -1,25 +1,26 @@
-<h3>User Info</h3>
-
+<div class='page-header'>
+  <h3><i class='icon-book'> </i>Users</h3>
+</div>
 <table class="table table-stripped">
-	<tr>
-		<th>#</th>
-		<th>Fullname</th>
-		<th>Email</th>
-		<th>Group</th>
-		<th>Provider</th>
-		<th></th>
-	</tr>
+  <tr>
+    <th>#</th>
+    <th>Fullname</th>
+    <th>Email</th>
+    <th>Group</th>
+    <th>Provider</th>
+    <th></th>
+  </tr>
 
-	<% @users.each do |user| %>
-		<tr>
-			<td><%= user.id %></td>
-			<td><%= user.fullname %></td>
-			<td><%= user.email %></td>
-			<td><%= user.group.name %></td>
-			<td><%= user.provider %></td>
-			<td><%= link_to 'Edit', edit_admin_user_path(user.id), {:style => 'color: #049cdb;'} %></td>
-		</tr>
-	<% end %>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.id %></td>
+      <td><%= user.fullname %></td>
+      <td><%= user.email %></td>
+      <td><%= user.group.name %></td>
+      <td><%= user.provider %></td>
+      <td><%= link_to 'Edit', edit_admin_user_path(user.id), {:style => 'color: #049cdb;'} %></td>
+    </tr>
+  <% end %>
 </table>
 
 <br />

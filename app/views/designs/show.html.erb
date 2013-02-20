@@ -1,7 +1,8 @@
-<h3>Designed parts for <%= @design.part.name %></h3>
-<br>
+<div class="page-header">
+  <h3><i class='icon-file'> </i><%= @design.part.name %></h3>
+</div>
 <h5>Protocol: <%= @design.protocol.name %></h5>
-<br>
+
 <% @design.construct.each do |construct| %>
   <b><%= construct.name %></b><br>
   <div id="construct">

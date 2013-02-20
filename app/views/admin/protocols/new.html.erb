@@ -1,4 +1,6 @@
-<h3>New design standard</h3>
+<div class='page-header'>
+  <h3><i class='icon-file'> </i>New design standard</h3>
+</div>
 <%= form_for [:admin,@protocol] do |f| %>
   <table>
     <tr>
@@ -50,9 +52,8 @@
       <td><%= f.text_area :comment, :rows => 5 %></td>
       <td></td>
     </tr>
-    <tr>
-      <td colspan="2" align="right"><br><%= f.submit :class => "btn btn-primary" %></td>
-      <td>&nbsp;</td>
-    </tr>
-    </table>
-  <% end %>
+  </table>
+  <div class='form-actions'>
+    <%= f.submit :class => "btn btn-primary" %>
+  </div>
+<% end %>

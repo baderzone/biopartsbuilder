@@ -72,7 +72,7 @@ class PartsController < ApplicationController
 	end
 
 	def get_description_file
-		send_file "public/examples/description", :type => "text, :disposition => 'inline'
+		send_file "public/examples/description.txt", :type => "text", :disposition => 'inline'
 	end
 
 end

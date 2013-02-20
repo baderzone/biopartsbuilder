@@ -1,46 +1,59 @@
-<h3><i class="icon-info-sign">Please Check</i></h3>
+<div class="page-header">
+  <h3><i class="icon-info-sign"> Please Check</i></h3>
+</div>
 <% unless @errors.empty? %>
-  There are errors in your uploaded file.  Please note that the description line must follow the format: <b>>part_name|accession_number|organism|comments</b>.  Organism and comments are optional. One sequence can only have one description line.  Errors detected in your uploaded file are:<br /><br />
-  <% @errors.each do |key, value| %>
-    &nbsp;&nbsp;<%= value['error'] %> <br />
-  <% end %>
-  <br />
-  <%= link_to 'Go Back', new_part_path, :class => 'btn btn-primary' %>
+  <div class="container">
+    <p style="color:red">There are errors in your uploaded file.</p>
+    <p>Please note that the description line must follow the format: <b>>part_name|accession_number|organism|comments</b>.  Organism and comments are optional. One sequence can only have one description line.</p>
+    <hr />
+    <p><b>Errors:</b></p>
+    <% @errors.each do |key, value| %>
+      &nbsp;&nbsp;<%= value['error'] %> <br />
+    <% end %>
+  </div>
+  <div class="form-actions">
+    <%= link_to 'Go Back', new_part_path, :class => 'btn btn-primary' %>
+  </div>
   <br />
 <% else %>
   <%= form_tag({:controller => "parts", :action => "create"}, :method => "post", :multipart => true) do %>
-    <% if @accessions.nil? %>
-      <%= hidden_field_tag(:sequence_file, @seq_file) %>
-      <p><b><%= @sequences.size %></b> parts to be created.  They are:</p>
-      <table class="table table-striped">
-        <tr>
-          <th>Part Name</th>
-          <th>Accession Number</th>
-          <th>Organism</th>
-        </tr>
-        <% @sequences.each do |key, seq| %>
+    <div class="container">
+      <% if @accessions.nil? %>
+        <%= hidden_field_tag(:sequence_file, @seq_file) %>
+        <p><b><%= @sequences.size %></b> parts to be created.  They are:</p>
+        <hr />
+        <table class="table table-striped">
           <tr>
-            <td><%= seq['part'] %></td>
-            <td><%= seq['accession'] %></td>
-            <td><%= seq['org'] %></td>
+            <th>Part Name</th>
+            <th>Accession Number</th>
+            <th>Organism</th>
           </tr>
+          <% @sequences.each do |key, seq| %>
+            <tr>
+              <td><%= seq['part'] %></td>
+              <td><%= seq['accession'] %></td>
+              <td><%= seq['org'] %></td>
+            </tr>
+          <% end %>
+        </table>
+      <% else %>
+        <%= hidden_field_tag(:accession, @accession_origin) %>
+        <p><b><%= @accessions.size %></b> parts to be created. They are:</p>
+        <hr />
+        <% @accessions.each do |entry| %>
+          <p>&nbsp;&nbsp;<%= entry %></p>
         <% end %>
-      </table>
-    <% else %>
-      <%= hidden_field_tag(:accession, @accession_origin) %>
-      <p><b><%= @accessions.size %></b> parts to be created. They are:</p>
-      <% @accessions.each do |entry| %>
-        <p>&nbsp;&nbsp;<%= entry %></p>
       <% end %>
-    <% end %>
-    <br />
-    <table>
-      <tr>
-        <td><%= submit_tag("Correct, create parts", :class => "btn btn-primary") %></td>
-        <td width="10%"></td>
-        <td><%= link_to "Incorrect, go back", new_part_path, :class => "btn btn-danger" %></td>
-      </tr>
-    </table>
+    </div>
+    <div class="form-actions">
+      <table>
+        <tr>
+          <td><%= submit_tag("Correct, create parts", :class => "btn btn-primary") %></td>
+          <td width="10%"></td>
+          <td><%= link_to "Incorrect, go back", new_part_path, :class => "btn btn-danger" %></td>
+        </tr>
+      </table>
+    </div>
   <% end %>
 <% end %>
 <br />
