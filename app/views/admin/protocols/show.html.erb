@@ -1,22 +1,19 @@
-<div class='page-header'>
-  <h3><i class='icon-file'> </i><%= @protocol.name %></h3>
+<h2><i class='icon-file'> </i><%= @protocol.name %></h2>
+<hr />
+<b>Codon Optimization:</b>&nbsp;&nbsp;<%= @protocol.organism.fullname %><br><br>
+<b>External Prefix:</b>&nbsp;&nbsp;<%= @protocol.ext_prefix %><br><br>
+<b>External Suffix:</b>&nbsp;&nbsp;<%= @protocol.ext_suffix %><br><br>
+<b>Internal Prefix:</b>&nbsp;&nbsp;<%= @protocol.int_prefix %><br><br>
+<b>Internal Suffix:</b>&nbsp;&nbsp;<%= @protocol.int_suffix %><br><br>
+<b>Size Restriction:</b>&nbsp;&nbsp;<%= @protocol.construct_size %><br><br>
+<b>Forbidden enzymes:</b>&nbsp;&nbsp;<%= @protocol.forbid_enzymes %><br><br>
+<b>Check enzymes:</b>&nbsp;&nbsp;<%= @protocol.check_enzymes %><br><br>
+<b>Overlap:</b>
+<div id="overlapDiv">
+  <%= @protocol.overlap %>
 </div>
-<div class='container'>
-  <b>Codon Optimization:</b>&nbsp;&nbsp;<%= @protocol.organism.fullname %><br><br>
-  <b>External Prefix:</b>&nbsp;&nbsp;<%= @protocol.ext_prefix %><br><br>
-  <b>External Suffix:</b>&nbsp;&nbsp;<%= @protocol.ext_suffix %><br><br>
-  <b>Internal Prefix:</b>&nbsp;&nbsp;<%= @protocol.int_prefix %><br><br>
-  <b>Internal Suffix:</b>&nbsp;&nbsp;<%= @protocol.int_suffix %><br><br>
-  <b>Size Restriction:</b>&nbsp;&nbsp;<%= @protocol.construct_size %><br><br>
-  <b>Forbidden enzymes:</b>&nbsp;&nbsp;<%= @protocol.forbid_enzymes %><br><br>
-  <b>Check enzymes:</b>&nbsp;&nbsp;<%= @protocol.check_enzymes %><br><br>
-  <b>Overlap:</b>
-  <div id="overlapDiv">
-    <%= @protocol.overlap %>
-  </div>
-  <br>
-  <b>Comment:</b>&nbsp;&nbsp;<%= @protocol.comment %><br><br>
-</div>
+<br>
+<b>Comment:</b>&nbsp;&nbsp;<%= @protocol.comment %><br><br>
 <div class='form-actions'>
   <%= link_to "Edit Design Standard", edit_admin_protocol_path(@protocol.id), :class => 'btn btn-primary' %>
 </div>

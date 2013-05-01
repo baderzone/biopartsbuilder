@@ -15,6 +15,7 @@
 //= require twitter/bootstrap
 //= require jquery-tablesorter
 //= require jquery.quicksearch
+//= require_tree .
 
 jQuery(document).ready(function($){
 		$("#sortable-table").tablesorter();
@@ -22,4 +23,3 @@ jQuery(document).ready(function($){
 jQuery(document).ready(function($){
 		$("#search").quicksearch('table#sortable-table tbody tr');
 		});
-//= require_tree .

@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
 
   def index
-    @orders = current_user.order.order("created_at DESC")
+    @orders = current_user.order.paginate(:page => params[:page], :per_page => 10).order("id DESC")
   end
 
   def show

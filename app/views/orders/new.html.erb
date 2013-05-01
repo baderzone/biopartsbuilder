@@ -1,6 +1,5 @@
-<div class='page-header'>
-  <h3><i class='icon-play-circle'> </i>New order</h3>
-</div>
+<h2><i class='icon-play-circle'> </i>New order</h2>
+<hr />
 
 <%= form_tag({:controller => "orders", :action => "create"}, :method => "post") do %>
   <table>
@@ -17,7 +16,7 @@
   <h5> Select designs: </h5> 
   <b>Filter:</b><%= text_field_tag :search %>
   <div id="newDiv">
-    <table class="tablesorter-default" id="sortable-table">
+    <table class="table table-bordered table-stripped" id="sortable-table">
       <thead>
         <tr>
           <th></th>

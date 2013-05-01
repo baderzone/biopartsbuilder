@@ -1,31 +1,28 @@
-<div class="page-header">
-  <h3><i class="icon-book"> </i>Designs</h3>
-</div>
-<b>Filter:</b><%= text_field_tag :search %>
-<div id="indexDiv">
-  <table class="tablesorter-default" id="sortable-table">
-    <thead>
+<h2><i class="icon-book"> </i>Designs</h2>
+<hr />
+<%= will_paginate @designs %>
+<table class="table table-bordered table-stripped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Part</th>
+      <th>Design Standard</th>
+      <th>Result</th>
+      <th>Created_at</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @designs.each do |design| %>
       <tr>
-        <th>#</th>
-        <th>Part</th>
-        <th>Design Standard</th>
-        <th>Result</th>
-        <th>Created_at</th>
+        <td><%= design.id %></td>
+        <td><%= design.part.name %></td>
+        <td><%= design.protocol.name %></td>
+        <td><%= link_to 'View', design_path(design.id), {:style => 'color: #049cdb;'} %></td>
+        <td><%= l design.created_at.in_time_zone('EST') %></td>
       </tr>
-    </thead>
-    <tbody>
-      <% @designs.each do |design| %>
-        <tr>
-          <td><%= design.id %></td>
-          <td><%= design.part.name %></td>
-          <td><%= design.protocol.name %></td>
-          <td><%= link_to 'View', design_path(design.id), {:style => 'color: #049cdb;'} %></td>
-          <td><%= design.created_at %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+    <% end %>
+  </tbody>
+</table>
 <div class="form-actions">
   <%= link_to 'New Design', new_design_path, :class => 'btn btn-primary' %>
 </div>

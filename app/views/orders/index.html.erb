@@ -1,9 +1,7 @@
-<div class='page-header'>
-  <h3><i class='icon-book'> </i>Orders</h3>
-</div>
-
-<b>Filter:</b><%= text_field_tag :search %>
-<table class="tablesorter-default" id="sortable-table">
+<h2><i class='icon-book'> </i>Orders</h2>
+<hr />
+<%= will_paginate @orders %>
+<table class="table table-bordered table-stripped">
   <thead>
     <tr>
       <th>#</th>
@@ -22,7 +20,7 @@
         <td><%= order.user.fullname %></td>
         <td><%= order.vendor.name %></td>
         <td><%= link_to "Download", {:action => :get_zip_file, :id => order.id}, {:style => 'color: #049cdb;'} %></td>
-        <td><%= order.created_at %></td>
+        <td><%= l order.created_at.in_time_zone('EST') %></td>
       </tr>
     <% end %>
   </tbody>

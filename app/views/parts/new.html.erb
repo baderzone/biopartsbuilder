@@ -1,33 +1,30 @@
-<div class="page-header">
-  <h3><i class="icon-play-circle"> </i>New part</h3>
-</div>
+<h2><i class="icon-play-circle"> </i>New part</h2>
+<hr />
 <%= form_tag({:controller => "parts", :action => "confirm"}, :method => "post", :multipart => true) do %>
-  <div class="container">
-    <table>
-      <tr>
-        <td colspan='2'><%= label_tag(:accession, "Input Protein/Nucleotide Accession Number:") %></td>
-      </tr>
-      <tr>
-        <td><%= text_area_tag(:accession, "", :size => "50x10")%></td>
-        <td>One id per line<br>e.g.<br>NP_539626.1<br>NP_459636.1<br>P29929.1</td>
-      </tr>
-      <tr>
-        <td colspan='2'><hr /></td>
-      </tr>
-      <tr>
-        <td colspan='2'><b>Or Upload a Fasta File of Protein Sequences:</b></td>
-      </tr>
-      <tr>
-        <td colspan='2'><%= file_field_tag(:sequence_file)%></td>
-      </tr>
-      <tr>
-        <td colspan='2'>Important: special format required, see <%= link_to 'description', {:action => :get_description_file}, {:style => 'color: #049cdb;'} %></td>
-      </tr>
-      <tr>
-        <td colspan='2'>&nbsp;</td>
-      </tr>
-    </table>
-  </div>
+  <table>
+    <tr>
+      <td colspan='2'><%= label_tag(:accession, "Input Protein/Nucleotide Accession Number:") %></td>
+    </tr>
+    <tr>
+      <td><%= text_area_tag(:accession, "", :size => "50x10")%></td>
+      <td>One id per line<br>e.g.<br>NP_539626.1<br>NP_459636.1<br>P29929.1</td>
+    </tr>
+    <tr>
+      <td colspan='2'><hr /></td>
+    </tr>
+    <tr>
+      <td colspan='2'><b>Or Upload a Fasta File of Protein Sequences:</b></td>
+    </tr>
+    <tr>
+      <td colspan='2'><%= file_field_tag(:sequence_file)%></td>
+    </tr>
+    <tr>
+      <td colspan='2'>Important: special format required, see <%= link_to 'description', {:action => :get_description_file}, {:style => 'color: #049cdb;'} %></td>
+    </tr>
+    <tr>
+      <td colspan='2'>&nbsp;</td>
+    </tr>
+  </table>
   <div class="form-actions">
     <%= submit_tag("Create Parts", :class => "btn btn-primary") %>
   </div>

@@ -1,11 +1,8 @@
-<div class='page-header'>
-  <h3><i class='icon-play-circle'> </i>Editing user</h3>
-</div>
+<h2><i class='icon-play-circle'> </i>Editing user</h2>
+<hr />
 <%= simple_form_for [:admin,@user] do |f| %>
-  <div class='container'>
-    <%= f.input :fullname %>
-    <%= f.association :group %>
-  </div>
+  <%= f.input :fullname %>
+  <%= f.association :group %>
   <div class='form-actions'>
     <%= f.submit :class => 'btn btn-primary' %>
   </div>

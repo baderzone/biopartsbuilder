@@ -1,6 +1,6 @@
 class ProtocolsController < ApplicationController
   def index
-    @protocols = Protocol.all
+    @protocols = Protocol.paginate(:page => params[:page], :per_page => 10).order('id DESC')
   end
 
   def show

@@ -31,6 +31,7 @@ gem 'jquery-rails'
 gem 'simple_form'
 gem 'carrierwave'
 gem 'jquery-tablesorter'
+gem 'will_paginate', '~> 3.0'
 
 #bio gems
 gem 'bio'

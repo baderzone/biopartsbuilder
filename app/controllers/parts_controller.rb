@@ -1,6 +1,6 @@
 class PartsController < ApplicationController
 	def index
-		@parts = Part.all
+		@parts = Part.paginate(:page => params[:page], :per_page => 10).order('id DESC')
 	end
 
 	def show
@@ -27,7 +27,7 @@ class PartsController < ApplicationController
 	end
 
 	def confirm
-		if params[:accession].empty? && params[:sequence_file].nil?
+    if params[:accession].empty? && params[:sequence_file].nil?
 			redirect_to new_part_path, :alert => "Please input a list of accession numbers OR upload a FASTA file"
 		else
 			@errors = Hash.new
