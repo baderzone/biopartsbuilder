@@ -1,6 +1,7 @@
 <div class="page-header">
   <h2><i class="icon-play-circle"> </i>Design your parts</h2>
 </div>
+
 <%= form_tag({:controller => "auto_builds", :action => "confirm"}, :method => "post", :multipart => true) do %>
   <h5> 1. Please Input Protein/Nucleotide Accession Number: </h5>
   <table>
@@ -11,7 +12,7 @@
   </table>
   <h5>Or Upload a Fasta File of Protein Sequences:</h5>
   <%= file_field_tag(:sequence_file)%>
-  <p>Important: special format required, see <%= link_to 'description', {:controller => :parts, :action => :get_description_file}, {:style => 'color: #049cdb;'} %></p>
+  <p>Important: special format required, see <%= link_to 'description', {:controller => :parts, :action => :get_description_file} %></p>
   <hr />
 
   <h5> 2. Select one design standard: </h5>
@@ -20,7 +21,7 @@
       <tr>
         <td width="20px"><%= radio_button_tag :protocol_id, protocol.id %></td>
         <td><%= protocol.name %></td>
-        <td>&nbsp;&nbsp;<%= link_to 'view', protocol_path(protocol.id), {:style => 'color: #049cdb;'} %></td>
+        <td>&nbsp;&nbsp;<%= link_to 'view', protocol_path(protocol.id) %></td>
       </tr>
     <% end %>
   </table>

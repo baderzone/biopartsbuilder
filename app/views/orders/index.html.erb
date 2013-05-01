@@ -19,7 +19,7 @@
         <td><%= order.name %></td>
         <td><%= order.user.fullname %></td>
         <td><%= order.vendor.name %></td>
-        <td><%= link_to "Download", {:action => :get_zip_file, :id => order.id}, {:style => 'color: #049cdb;'} %></td>
+        <td><%= link_to "Download", {:action => :get_zip_file, :id => order.id} %></td>
         <td><%= l order.created_at.in_time_zone('EST') %></td>
       </tr>
     <% end %>

@@ -11,7 +11,7 @@ class Ability
       can :manage, :all
       cannot :manage, :admin
     else
-      can :manage, :home
+      can :read, :home
     end
   end
 end

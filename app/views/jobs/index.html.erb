@@ -15,7 +15,7 @@
   <tbody>
     <% @jobs.each do |job| %>
       <tr>
-        <td><%= link_to job.id, job_path(job.id), {:style => 'color: #049cdb;'} %></td>
+        <td><%= link_to job.id, job_path(job.id) %></td>
         <td><span class="label <%= get_status_label_style(job.job_status.name)%>"><%= job.job_status.name %></span></td>
         <td><span class="<%= get_type_style(job.job_type.name)%>"><%= job.job_type.name %></span></td>
         <td><%= job.error_info || 'none' %></td>

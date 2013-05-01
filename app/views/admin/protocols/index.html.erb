@@ -19,7 +19,7 @@
     <% @protocols.each do |protocol| %>
       <tr>
         <td><%= protocol.id %></td>
-        <td><%= link_to protocol.name, admin_protocol_path(protocol.id), {:style => 'color: #049cdb;'} %></td>
+        <td><%= link_to protocol.name, admin_protocol_path(protocol.id) %></td>
         <td><%= protocol.ext_prefix %></td>
         <td><%= protocol.ext_suffix %></td>
         <td><%= protocol.int_prefix %></td>
