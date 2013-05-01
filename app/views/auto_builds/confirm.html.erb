@@ -2,52 +2,48 @@
   <h3><i class="icon-info-sign"> Please Check</i></h3>
 </div>
 <% unless @errors.empty? %>
-  <div class="container">
-    <p style="color:red">There are errors in your uploaded file.</p>
-    <p>Please note that the description line must follow the format: <b>>part_name|accession_number|organism|comments</b>.  Organism and comments are optional. One sequence can only have one description line.<p>
-    <hr />
-    <p><b>Errors:</b></p>
-    <% @errors.each do |key, value| %>
-      &nbsp;&nbsp;<%= value['error'] %> <br />
-    <% end %>
-  </div>
+  <p style="color:red">There are errors in your uploaded file.</p>
+  <p>Please note that the description line must follow the format: <b>>part_name|accession_number|organism|comments</b>.  Organism and comments are optional. One sequence can only have one description line.<p>
+  <hr />
+  <p><b>Errors:</b></p>
+  <% @errors.each do |key, value| %>
+    &nbsp;&nbsp;<%= value['error'] %> <br />
+  <% end %>
   <div class="form-actions">
     <%= link_to 'Go Back', new_auto_build_path, :class => 'btn btn-primary' %>
   </div>
   <br />
 <% else %>
   <%= form_tag({:controller => "auto_builds", :action => "create"}, :method => "post", :multipart => true) do %>
-    <div class="container">
-      <% if @accessions.nil? %>
-        <%= hidden_field_tag(:sequence_file, @seq_file) %>
-        <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  <b><%= @sequences.size %></b> parts to be designed:</p>
-        <hr />
-        <table class="table table-striped">
+    <% if @accessions.nil? %>
+      <%= hidden_field_tag(:sequence_file, @seq_file) %>
+      <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  <b><%= @sequences.size %></b> parts to be designed:</p>
+      <hr />
+      <table class="table table-striped">
+        <tr>
+          <th>Part Name</th>
+          <th>Accession Number</th>
+          <th>Organism</th>
+        </tr>
+        <% @sequences.each do |key, seq| %>
           <tr>
-            <th>Part Name</th>
-            <th>Accession Number</th>
-            <th>Organism</th>
+            <td><%= seq['part'] %></td>
+            <td><%= seq['accession'] %></td>
+            <td><%= seq['org'] %></td>
           </tr>
-          <% @sequences.each do |key, seq| %>
-            <tr>
-              <td><%= seq['part'] %></td>
-              <td><%= seq['accession'] %></td>
-              <td><%= seq['org'] %></td>
-            </tr>
-          <% end %>
-        </table>
-      <% else %>
-        <%= hidden_field_tag(:accession, @accession_origin) %>
-        <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  <b><%= @accessions.size %></b> parts to be designed:</p>
-        <hr />
-        <% @accessions.each do |entry| %>
-          <p>&nbsp;&nbsp;<%= entry %></p>
         <% end %>
+      </table>
+    <% else %>
+      <%= hidden_field_tag(:accession, @accession_origin) %>
+      <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  <b><%= @accessions.size %></b> parts to be designed:</p>
+      <hr />
+      <% @accessions.each do |entry| %>
+        <p>&nbsp;&nbsp;<%= entry %></p>
       <% end %>
-      <%= hidden_field_tag(:protocol_id, @protocol.id) %>
-      <%= hidden_field_tag(:order_name, @order) %>
-      <%= hidden_field_tag(:vendor_id, @vendor) %>
-    </div>
+    <% end %>
+    <%= hidden_field_tag(:protocol_id, @protocol.id) %>
+    <%= hidden_field_tag(:order_name, @order) %>
+    <%= hidden_field_tag(:vendor_id, @vendor) %>
     <div class="form-actions">
       <table>
         <tr>
