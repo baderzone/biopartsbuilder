@@ -7,7 +7,7 @@
       <th>#</th>
       <th>Part</th>
       <th>Design Standard</th>
-      <th>Result</th>
+      <th>Designed Constructs</th>
       <th>Created_at</th>
     </tr>
   </thead>
@@ -15,9 +15,9 @@
     <% @designs.each do |design| %>
       <tr>
         <td><%= design.id %></td>
-        <td><%= design.part.name %></td>
-        <td><%= design.protocol.name %></td>
-        <td><%= link_to 'View', design_path(design.id) %></td>
+        <td><%= link_to design.part.name, part_path(design.part_id) %></td>
+        <td><%= link_to design.protocol.name, protocol_path(design.protocol_id) %></td>
+        <td><%= link_to 'View', part_design_path(design.part_id, design.id) %></td>
         <td><%= l design.created_at.in_time_zone('EST') %></td>
       </tr>
     <% end %>

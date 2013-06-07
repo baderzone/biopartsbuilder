@@ -2,30 +2,35 @@
 <hr />
 
 <%= form_tag({:controller => "parts", :action => "confirm"}, :method => "post", :multipart => true) do %>
-  <table>
-    <tr>
-      <td colspan='2'><%= label_tag(:accession, "Input Protein/Nucleotide Accession Number:") %></td>
-    </tr>
-    <tr>
-      <td><%= text_area_tag(:accession, "", :size => "50x10")%></td>
-      <td>One id per line<br>e.g.<br>NP_539626.1<br>NP_459636.1<br>P29929.1</td>
-    </tr>
-    <tr>
-      <td colspan='2'><hr /></td>
-    </tr>
-    <tr>
-      <td colspan='2'><b>Or Upload a Fasta File of Protein Sequences:</b></td>
-    </tr>
-    <tr>
-      <td colspan='2'><%= file_field_tag(:sequence_file)%></td>
-    </tr>
-    <tr>
-      <td colspan='2'>Important: special format required, see <%= link_to 'description', {:action => :get_description_file} %></td>
-    </tr>
-    <tr>
-      <td colspan='2'>&nbsp;</td>
-    </tr>
-  </table>
+
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#ncbi" data-toggle="tab">NCBI</a></li>
+    <li><a href="#file" data-toggle="tab">Fasta File</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="ncbi">
+      <table>
+        <tr>
+          <td colspan='2'><b>Input Protein/Nucleotide Accession Number:</b></td>
+        </tr>
+        <tr>
+          <td><%= text_area_tag(:accession, "", :size => "50x10")%></td>
+          <td>One id per line<br>e.g.<br>NP_539626.1<br>NP_459636.1<br>P29929.1</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tab-pane" id="file">
+      <p><b>Upload a Fasta File of Protein Sequences (only .fasta and .txt allowed):</b></p>
+      <%= file_field_tag(:sequence_file)%>
+      <br /><br />
+      <p class="text-error">Important: The description line must use the following format:</p>
+      <p><b>></b> part_name <b>|</b> part_type <b>|</b> accession_number <b>|</b> organism(optional)<b> | </b>comments(optional)</p> 
+      <p>Only one description line is allowed for one sequence</p>
+      <p> Check more details and examples: <%= link_to 'description', {:action => :get_description_file} %></p>
+    </div>
+  </div>
   <div class="form-actions">
     <%= submit_tag("Create Parts", :class => "btn btn-primary") %>
   </div>

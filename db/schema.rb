@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130118193434) do
+ActiveRecord::Schema.define(:version => 20130606194041) do
 
   create_table "constructs", :force => true do |t|
     t.integer  "design_id"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20130118193434) do
     t.integer  "protocol_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.text     "comment"
   end
 
   add_index "designs", ["part_id"], :name => "index_designs_on_part_id"
@@ -89,6 +90,7 @@ ActiveRecord::Schema.define(:version => 20130118193434) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.text     "comment"
   end
 
   create_table "protocols", :force => true do |t|

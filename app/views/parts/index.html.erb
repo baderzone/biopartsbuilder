@@ -15,8 +15,8 @@
   <tbody>
     <% @parts.each do |part| %>
       <tr>
-        <td><%= link_to part.id, part_path(part.id) %></td>
-        <td><%= part.name %></td>
+        <td><%= part.id %></td>
+        <td><%= link_to part.name, part_path(part.id) %></td>
         <td><%= part.sequence.accession %></td>
         <td><%= begin; part.sequence.organism.fullname; rescue; "Unknown"; end %></td>
         <td><%= part.sequence.annotation %></td>

@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
 
 	belongs_to :group
-	has_many :order
-	has_many :job
+	has_many :orders
+	has_many :jobs
 
 	attr_accessible :email, :fullname, :provider, :uid, :group_id
 	attr_accessible :order, :job, :group

@@ -1,18 +1,18 @@
 Partsbuilder::Application.routes.draw do
-  
+
   get "jobs/show"
 
   get "auto_build/create"
-  
-	get "auto_builds/get_description_file"
-  
-	get "home/index"
-  
+
+  get "auto_builds/get_description_file"
+
+  get "home/index"
+
   get "sequence/create"
-  
+
   get "part/create"
 
-	get "parts/get_description_file"
+  get "parts/get_description_file"
 
   match "/orders/:id/get_zip_file", :to => "orders#get_zip_file" 
   match "/auth/:provider/callback" => "sessions#create"
@@ -23,21 +23,23 @@ Partsbuilder::Application.routes.draw do
   resources :protocols
   resources :constructs
   resources :orders
-  resources :designs
   resources :users
-  resources :parts
+  resources :designs
+  resources :parts do
+    resources :designs
+  end
   resources :sequences
   resources :organisms
   resources :jobs
   resources :auto_builds
-  
+
 
   root :to => 'home#index'
- 
+
   namespace :admin do
-		root :to => "home#index"
-		resources :protocols, :home, :users
-	end
+    root :to => "home#index"
+    resources :protocols, :home, :users
+  end
 
   mount Resque::Server, :at => "/resque"
   # The priority is based upon order of creation:

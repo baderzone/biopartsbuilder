@@ -1,5 +1,5 @@
 class Vendor < ActiveRecord::Base
-  has_many :order
+  has_many :orders
 
   attr_accessible :name
 

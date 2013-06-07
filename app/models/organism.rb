@@ -1,6 +1,6 @@
 class Organism < ActiveRecord::Base
-  has_many :sequence
-  has_many :protocol
+  has_many :sequences
+  has_many :protocols
   
   attr_accessible :code, :fullname, :name
 

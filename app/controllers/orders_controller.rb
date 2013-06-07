@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
 
   def index
-    @orders = current_user.order.paginate(:page => params[:page], :per_page => 10).order("id DESC")
+    @orders = current_user.orders.paginate(:page => params[:page], :per_page => 10).order("id DESC")
   end
 
   def show
@@ -23,7 +23,7 @@ class OrdersController < ApplicationController
       
         @job = Job.create(:job_type_id => JobType.find_by_name('order').id, :user_id => current_user.id, :job_status_id => JobStatus.find_by_name('submitted').id)
         worker_params = {:order_id => @order.id, :designs => params[:design_id], :job_id => @job.id}
-        Resque.enqueue(NewOrder, worker_params)
+        Resque.enqueue(OrderWorker, worker_params)
         redirect_to job_path(@job.id), :notice => "Order submitted!"
       
       else

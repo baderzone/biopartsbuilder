@@ -1,5 +1,5 @@
 class JobType < ActiveRecord::Base
-  has_many :job
+  has_many :jobs
   
   attr_accessible :name
 end

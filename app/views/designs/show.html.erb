@@ -3,7 +3,7 @@
 </div>
 <h5>Design Standard: <%= @design.protocol.name %></h5>
 
-<% @design.construct.each do |construct| %>
+<% @design.constructs.each do |construct| %>
   <b><%= construct.name %></b><br>
   <div id="construct">
     <%= construct.seq %>
