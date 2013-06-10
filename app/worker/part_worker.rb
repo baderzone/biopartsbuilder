@@ -1,9 +1,9 @@
 require 'csv'
 
 class PartWorker
-  @queue = :partsbuilder_new_part_queue
+  include Sidekiq::Worker
 
-  def self.perform(params)
+  def perform(params)
 
     # change job status
     job = Job.find(params['job_id'])

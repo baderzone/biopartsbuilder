@@ -71,7 +71,7 @@ class PartsController < ApplicationController
         worker_params = {:job_id => @job.id, :accessions => nil, :user_id => current_user.id, :seq_file => params[:sequence_file]}
       end
 
-      Resque.enqueue(PartWorker, worker_params)
+      PartWorker.perform_async(worker_params)
       redirect_to job_path(@job.id), :notice => "Parts submitted!"
     end 
   end

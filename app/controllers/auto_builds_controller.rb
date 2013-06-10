@@ -61,7 +61,7 @@ class AutoBuildsController < ApplicationController
           worker_params = {:job_id => @job.id, :accession => "none", :seq_file => params[:sequence_file], :order_id => @order.id, :protocol_id => params[:protocol_id]}
         end
         
-        Resque.enqueue(AutoBuild, worker_params)
+        AutoBuild.perform_async(worker_params)
         redirect_to job_path(@job.id), :notice => "AutoBuild submitted!"
       else
         render :new, :flash => {:error => "AutoBuild failed. Please try again or contact administrator!" }

@@ -1,7 +1,7 @@
 class DesignWorker
-  @queue = :partsbuilder_new_design_queue
+  include Sidekiq::Worker
 
-  def self.perform(para)
+  def perform(para)
 
     # change job status
     job = Job.find(para['job_id'])

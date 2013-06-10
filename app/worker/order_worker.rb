@@ -1,7 +1,7 @@
 class OrderWorker
-  @queue = :partsbuilder_new_order_queue
+  include Sidekiq::Worker
 
-  def self.perform(params)
+  def perform(params)
     # change job status
     job = Job.find(params['job_id'])
     job.change_status('running')
