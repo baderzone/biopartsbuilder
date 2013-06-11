@@ -1,8 +1,8 @@
 require 'csv'
-require 'bio'
 
 class BioOrder
-  def initialize(path, order_id, design_ids)
+  
+  def self.store(path, order_id, design_ids)
     # parameters
     order_path = "#{path}/#{order_id}"
     system "mkdir #{order_path}"
@@ -46,11 +46,8 @@ class BioOrder
       ar.add(seq_file_name, "#{order_path}/#{seq_file_name}")
       ar.add(sum_file_name, "#{order_path}/#{sum_file_name}")
     end
-    @@order = "#{order_path}/#{zip_file_name}"
-  end
-
-  def to_s
-    @@order
+    
+   return "#{order_path}/#{zip_file_name}"
   end
 
 end

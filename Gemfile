@@ -50,7 +50,10 @@ gem 'xml-simple'
 # Use puma as the app server
 gem 'puma'
 gem 'foreman'
+
 gem 'sidekiq'
+gem 'sinatra', require: false
+gem 'slim'
 
 # Deploy with Capistrano
 gem 'capistrano'

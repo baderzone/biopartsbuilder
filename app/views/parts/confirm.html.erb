@@ -39,11 +39,11 @@
       </table>
 
     <% else %>
-      <%= hidden_field_tag('accession[]', @accessions) %>
       <p><b><%= @accessions.size %></b> parts to be created. They are:</p>
       <hr />
       <% @accessions.each do |entry| %>
         <p>&nbsp;&nbsp;<%= entry %></p>
+        <%= hidden_field_tag('accession[]', entry) %>
       <% end %>
     <% end %>
 

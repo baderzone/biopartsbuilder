@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Partsbuilder::Application.routes.draw do
 
   get "jobs/show"
@@ -41,6 +43,7 @@ Partsbuilder::Application.routes.draw do
     resources :protocols, :home, :users
   end
 
+  mount Sidekiq::Web, at: '/sidekiq'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

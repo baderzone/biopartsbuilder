@@ -5,11 +5,13 @@ class OrderWorker
     # change job status
     job = Job.find(params['job_id'])
     job.change_status('running')
-    design_ids = params['designs']
+    
     # create order files
+    design_ids = params['designs']
     order = Order.find(params['order_id'])
     path = "#{PARTSBUILDER_CONFIG['program']['order_path']}"
-    file = BioOrder.new(path, order.id, design_ids).to_s
+    file = BioOrder.store(path, order.id, design_ids)
+    
     # change job status and send email notice
     job.change_status('finished')
     PartsbuilderMailer.finished_notice(order.user, nil).deliver

@@ -1,9 +1,89 @@
-require 'bio'
-
 class BioDesign
 
-  def initialize(protein_file, processing_path, protocol)
-    @@design = {construct:nil, comment:nil, error:nil}
+  def create_designs(part_ids, processing_path, protocol, type)
+    designs = Array.new
+    error = String.new
+
+    part_ids.each do |part_id|
+      design = Design.find_by_part_id_and_protocol_id(part_id, protocol.id)
+
+      if design.nil? || type.eql?('update')
+        # creat new design
+        part = Part.find(part_id)
+        protein_file = "#{PARTSBUILDER_CONFIG['program']['part_fasta_path']}/#{part.sequence.accession}.fasta"
+        biodesign = golden_gate(protein_file, processing_path, protocol)
+        if biodesign[:error].nil?
+          biodesign[:part_id] = part.id
+          biodesign[:part_name] = part.name
+          designs << biodesign
+        else
+          error << "#{part.name}: #{biodesign[:error]}"
+          return designs, error
+        end
+      
+      else
+        # retrieve exist designs
+        constructs = Hash.new
+        cnt = 0
+        design.constructs.each do |c|
+          cnt += 1
+          constructs[cnt] = c.seq 
+        end
+        designs << {construct: constructs, comment: design.comment, part_id: design.part_id, part_name: design.part.name, error: nil}
+      end
+    end
+
+    return designs, error
+  end
+
+  def store(designs, protocol, type)
+    # parameters
+    design_ids = Array.new
+    construct_suf = '_CO'
+    case protocol.organism_id
+    when 1
+      construct_suf += 'y' 
+    when 2
+      construct_suf += 'e' 
+    when 3
+      construct_suf += 'h' 
+    when 4
+      construct_suf += 'w' 
+    when 5
+      construct_suf += 'f' 
+    when 6
+      construct_suf += 'b' 
+    else
+      construct_suf = ''
+    end 
+
+    designs.each do |entry|
+      design = Design.find_by_part_id_and_protocol_id(entry[:part_id], protocol.id)
+      if design && type.eql?('update')
+        # update record
+        design.constructs.each {|c| c.destroy}
+        entry[:construct].each do |i, seq|
+          construct_name = entry[:part_name] + construct_suf + "_#{i}"
+          design.constructs.create(:name => construct_name, :seq => seq)
+        end
+
+      elsif design.nil?
+        # create new records
+        design = Design.create(:part_id => entry[:part_id], :protocol_id => protocol.id, :comment => entry[:comment])
+        entry[:construct].each do |i, seq|
+          construct_name = entry[:part_name] + construct_suf + "_#{i}"
+          design.constructs.create(:name => construct_name, :seq => seq)
+        end
+      end 
+      design_ids << design.id
+    end
+
+    return design_ids
+  end
+
+  private
+  def golden_gate(protein_file, processing_path, protocol)
+    design = {construct:nil, comment:nil, error:nil}
     protein_filename = protein_file.split('/')[-1].chomp('.fasta') 
     back_trans_out = "#{processing_path}/#{protein_filename}_backtrans.fasta"
     remove_enz_out = "#{processing_path}/#{protein_filename}_recode.fasta"
@@ -14,14 +94,16 @@ class BioDesign
     if flag
       flag = remove_enz(back_trans_out, remove_enz_out, remove_enz_log, protocol.organism_id, protocol.forbid_enzymes)
     else
-      return @@design[:error] = 'Reverse translation failed!'
+      design[:error] = 'Reverse translation failed!'
+      return design
     end
     # retrieve recode sequence
     sequence = String.new
     if flag 
       Bio::FastaFormat.open(remove_enz_out).each {|entry| sequence = entry.seq}
     else
-      return @@design[:error] = 'Restriction enzyme substraction failed!'
+      design[:error] = 'Restriction enzyme substraction failed!'
+      return design
     end
     # check enzyme sites
     if !protocol.check_enzymes.nil? && !protocol.check_enzymes.empty?
@@ -30,20 +112,22 @@ class BioDesign
         check_re = check_enz(sequence, enz)
         comments << "#{enz} site found at #{check_re}." if check_re
       end
-      @@design[:comment] = comments.join(' ') unless comments.empty?
+      design[:comment] = comments.join(' ') unless comments.empty?
     end
     # create constructs
     sequence = protocol.ext_prefix + sequence + protocol.ext_suffix
     if sequence.size <= protocol.construct_size
-      @@design[:construct] = {1 => sequence}
+      design[:construct] = {1 => sequence}
     else
       constructs = creat_frag(protocol.int_prefix, protocol.int_suffix, protocol.construct_size, sequence, protocol.overlap.split(','))
       if constructs 
-        @@design[:construct] = constructs
+        design[:construct] = constructs
       else
-        @@design[:error] = 'Fragment creation failed!'
+        design[:error] = 'Fragment creation failed!'
       end
     end
+
+    return design
   end
 
   def back_trans(in_file, out_file, org_code)
@@ -63,7 +147,7 @@ class BioDesign
   end
 
   def check_enz(sequence, enzyme)
-    out = `python restriction_enz_site.py -seq #{sequence} -e #{enzyme}`
+    out = `python enz_site.py -seq #{sequence} -e #{enzyme}`
     if out.empty? || out.include?('false')
       return false
     else
@@ -110,11 +194,6 @@ class BioDesign
     return construct
   end
 
-  def to_s
-    @@design
-  end
-
-  private
   def create_overlap(allowed_overlaps, seq_left, seq_right)
     ol_size = allowed_overlaps[0].size
     shift = 0

@@ -22,23 +22,25 @@
       <table class="table table-striped">
         <tr>
           <th>Part Name</th>
+          <th>Part Type</th>
           <th>Accession Number</th>
           <th>Organism</th>
         </tr>
-        <% @sequences.each do |key, seq| %>
+        <% @sequences.each do |seq| %>
           <tr>
             <td><%= seq['part'] %></td>
+            <td><%= seq['type'] %></td>
             <td><%= seq['accession'] %></td>
             <td><%= seq['org'] %></td>
           </tr>
         <% end %>
       </table>
     <% else %>
-      <%= hidden_field_tag(:accession, @accession_origin) %>
       <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  <b><%= @accessions.size %></b> parts to be designed:</p>
       <hr />
       <% @accessions.each do |entry| %>
         <p>&nbsp;&nbsp;<%= entry %></p>
+        <%= hidden_field_tag('accession[]', entry) %>
       <% end %>
     <% end %>
     <%= hidden_field_tag(:protocol_id, @protocol.id) %>

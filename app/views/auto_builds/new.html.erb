@@ -3,16 +3,32 @@
 </div>
 
 <%= form_tag({:controller => "auto_builds", :action => "confirm"}, :method => "post", :multipart => true) do %>
-  <h5> 1. Please Input Protein/Nucleotide Accession Number: </h5>
-  <table>
-    <tr>
-      <td><%= text_area_tag(:accession, "", :size => "50x10")%></td>
-      <td>One id per line<br>e.g.<br>NP_539626.1<br>NP_459636.1<br>P29929.1</td>
-    </tr>
-  </table>
-  <h5>Or Upload a Fasta File of Protein Sequences:</h5>
-  <%= file_field_tag(:sequence_file)%>
-  <p>Important: special format required, see <%= link_to 'description', {:controller => :parts, :action => :get_description_file} %></p>
+
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#ncbi" data-toggle="tab">NCBI</a></li>
+    <li><a href="#file" data-toggle="tab">Fasta File</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="ncbi">
+      <h5> 1. Please Input Protein/Nucleotide Accession Number: </h5>
+      <table>
+        <tr>
+          <td><%= text_area_tag(:accession, "", :size => "50x10")%></td>
+          <td>One id per line<br>e.g.<br>NP_058651.3<br>YP_491843.1<br>P29929.1</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tab-pane" id="file">
+      <h5>1. Upload a Fasta File of Protein Sequences:</h5>
+      <%= file_field_tag(:sequence_file)%>
+      <p class="text-error">Important: The description line must use the following format:</p>
+      <p><b>></b> part_name <b>|</b> part_type <b>|</b> accession_number <b>|</b> organism(optional)<b> | </b>comments(optional)</p>
+      <p>Only one description line is allowed for one sequence</p>
+      <p>Check more details and examples: <%= link_to 'description', {:controller => :parts, :action => :get_description_file} %></p>
+    </div>
+  </div>
   <hr />
 
   <h5> 2. Select one design standard: </h5>

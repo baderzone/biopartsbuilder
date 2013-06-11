@@ -49,6 +49,15 @@ class Admin::ProtocolsController < ApplicationController
       params[:protocol]['check_enzymes'] = params[:protocol]['check_enzymes'].split("\r\n").join(':')
     end
     if @protocol.update_attributes(params[:protocol])
+      designs = Design.find_all_by_protocol_id(@protocol.id)
+      if !designs.nil?
+        part_ids = Array.new
+        designs.each do |d|
+          part_ids << d.part_id
+        end
+        worker_params = {:protocol_id => @protocol.id, :part_id => part_ids}
+        UpdateDesign.perform_async(worker_params)
+      end
       redirect_to admin_protocol_path(@protocol), :notice => "Protocol updated"
     else
       render :edit, :id => @protocol, :flash => {:error => "Protocol update failed."}

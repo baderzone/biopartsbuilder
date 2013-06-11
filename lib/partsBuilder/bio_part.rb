@@ -1,19 +1,84 @@
 require 'xmlsimple'
-require 'bio'
 
 class BioPart
 
-  def initialize(entry, type)
+  def retrieve(input, type)
+    bioparts = Array.new
+    error = String.new
+
     case type
     when 'fasta'
-      @@part = create_from_fasta(entry)
-    when 'accession'
-      @@part = create_from_ncbi(entry)
-    else
-      @@part = {error: "wrong type: #{type}. Can only be fasta or accession."}
+      in_file = Bio::FastaFormat.open(input, 'r')
+      in_file.each do |entry|
+        biopart = create_from_fasta(entry)
+        bioparts << biopart
+      end 
+      in_file.close
+    when 'ncbi'
+      input.each do |entry|
+        sequence = Sequence.find_by_accession(entry)
+        if sequence.nil?
+          # create new sequence
+          biopart = create_from_ncbi(entry)
+          if biopart[:error].nil?
+            bioparts << biopart
+          else
+            error = biopart[:error]
+            return bioparts, error
+          end
+        else
+          # retrieve exist data
+          bioparts << {name: sequence.part.name, type: sequence.part.name.split('_')[0], seq: sequence.seq, accession_num: sequence.accession, org_latin: sequence.organism.fullname, org_abbr: sequence.organism.name, comment: sequence.part.comment} 
+        end 
+      end 
     end
+
+    return bioparts, error 
   end
 
+  def check(bioparts)
+    error = String.new
+    bioparts.each do |entry|
+      exist_seq = Sequence.find_by_accession(entry[:accession_num])
+      if !exist_seq.nil?
+        if exist_seq.seq != entry[:seq]
+          error = "Part '#{entry[:accession_num]}' with different sequence found!  Please check if the data is correct. Accession number must be unique (one sequence, one number). The sequence of part found in the database is: #{exist_seq.seq}. The sequence of your part is: #{entry[:seq]}"
+          return error
+        end
+      end
+    end
+
+    return error
+  end
+
+  def store(bioparts)
+    part_ids = Array.new
+
+    bioparts.each do |entry|
+      if ! entry[:org_latin].nil?
+        organism = Organism.find_by_fullname(entry[:org_latin],) || Organism.create(:fullname => entry[:org_latin], :name => entry[:org_abbr])
+      end
+      sequence = Sequence.find_by_accession(entry[:accession_num])
+      if sequence.nil?
+        part = Part.create(:name => entry[:name].gsub(/__/, '_'), :comment => entry[:comment])
+        part.create_sequence(:accession => entry[:accession_num], :organism => organism, :seq => entry[:seq], :annotation => entry[:type])
+        part_ids << part.id
+
+        # create protein fasta file for GeneDesign
+        fasta_seq = Bio::Sequence.new(entry[:seq])
+        f = File.new("#{PARTSBUILDER_CONFIG['program']['part_fasta_path']}/#{entry[:accession_num]}.fasta", 'w')
+        f.print fasta_seq.output(:fasta, :header => part.name, :width => 80)
+        f.close
+      else
+        part_ids << sequence.part.id
+      end
+    end
+
+    return part_ids
+  end
+
+
+  private
   def create_from_fasta(entry)
     part = {name: nil, type: nil, seq: nil, accession_num: nil, org_latin: nil, org_abbr: nil, comment: nil}
     descriptions = entry.definition.split('|')
@@ -99,11 +164,6 @@ class BioPart
     return part
   end
 
-  def to_s
-    @@part
-  end
-
-  private
   def get_value(hash, *path)
     if hash.class == Hash
       path.inject(hash) { |obj, item| obj[item] || break }
