@@ -1,7 +1,7 @@
 require "bundler/capistrano"
+require 'sidekiq/capistrano'
+require 'puma/capistrano'
 
-#set :bundle_flags, "--deployment --quiet --binstubs --shebang ruby-local-exec"
-#set (:bundle_cmd) { "/home/deployer/.rbenv/shims/bundle" }
 set :default_environment, {
 	'PATH' => "$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 }
@@ -29,27 +29,7 @@ set :deploy_to, "/home/deployer/applications/#{application}"
 
 set :rails_env, :production
 
-#unicorn setup
-set :unicorn_binary, "bundle exec unicorn_rails"
-set :unicorn_config, "#{current_path}/config/unicorn.rb"
-set :unicorn_pid, "#{shared_path}/pids/unicorn.pid" 
-
 namespace :deploy do
-	#start task
-	task :start, :roles => :app, :except => { :no_release => true } do
-		run "cd #{current_path} && #{try_sudo} #{unicorn_binary} -c #{unicorn_config} -E #{rails_env} -D"
-	end
-
-	#stop task
-	task :stop, :roles => :app, :except => { :no_release => true } do
-		run "if ps aux | awk '{print $2 }' | grep `cat #{unicorn_pid}` > /dev/null; then kill `cat #{unicorn_pid}`; else echo 'Unicorn was already shutdown'; fi"
-	end
-
-	#restart task
-	task :restart, :roles => :app, :except => { :no_release => true } do
-		stop
-		start
-	end
 
 	#linking data directory
 	task :config_symlink do
@@ -69,17 +49,10 @@ namespace :deploy do
 		end
 	end
 
-	#restart resque workers
-	task :restart_workers, :roles => :db do
-		run "cd #{shared_path}/pids; if ps aux | awk '{print $2 }' | grep `tail -1 resque.pid` > /dev/null; then kill `tail -1 resque.pid`; else echo 'No resque worker of PartsBuilder running'; fi"
-		run "cd #{current_path}; PIDFILE=#{shared_path}/pids/resque.pid RAILS_ENV=production BACKGROUND=yes QUEUE=* bundle exec rake resque:work"
-	end
-
 end
 
 after "deploy:create_symlink", "deploy:config_symlink"
 after "deploy:stop", "deploy:pipeline_precompile"
-after "deploy:pipeline_precompile", "deploy:restart_workers"
 
 # remove old releases
 after "deploy", "deploy:cleanup"
