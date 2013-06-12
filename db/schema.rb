@@ -11,7 +11,33 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130606194041) do
+ActiveRecord::Schema.define(:version => 20130612152230) do
+
+  create_table "annotations", :force => true do |t|
+    t.integer  "chromosome_id"
+    t.integer  "start"
+    t.integer  "end"
+    t.integer  "feature_id"
+    t.string   "strand"
+    t.string   "systematic_name"
+    t.string   "gene_name"
+    t.string   "ontology_term"
+    t.string   "dbxref"
+    t.text     "description"
+    t.string   "orf_classification"
+    t.datetime "gff_created_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  create_table "chromosomes", :force => true do |t|
+    t.string   "name"
+    t.integer  "organism_id"
+    t.text     "seq"
+    t.string   "genome_version"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
 
   create_table "constructs", :force => true do |t|
     t.integer  "design_id"
@@ -34,6 +60,13 @@ ActiveRecord::Schema.define(:version => 20130606194041) do
 
   add_index "designs", ["part_id"], :name => "index_designs_on_part_id"
   add_index "designs", ["protocol_id"], :name => "index_designs_on_protocol_id"
+
+  create_table "features", :force => true do |t|
+    t.string   "name"
+    t.text     "definition"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "groups", :force => true do |t|
     t.string   "name"
