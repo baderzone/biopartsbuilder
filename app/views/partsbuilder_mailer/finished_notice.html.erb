@@ -4,15 +4,15 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <b>Dear <%= @user.fullname %></b><br><br>
+    <b>Dear <%= @user.fullname %></b><br /><br />
     <% if @error.nil? || @error.empty? %>
-      Your PartsBuilder job is finished.  Please go to <a href="http://www.biopartsbuilder.org" target="_blank">http://www.biopartsbuilder.org</a> to view results.<br><br>
+      Your PartsBuilder job is finished.  Please go to <a href="http://www.biopartsbuilder.org" target="_blank">http://www.biopartsbuilder.org</a> to view results.<br /><br />
     <% else %>
-      There is something wrong when handling your data. The error information is "<%= @error%>".  Please go to <a href="http://www.biopartsbuilder.org" target="_blank">http://www.biopartsbuilder.org</a> to check your jobs.<br><br>
+      There is something wrong when handling your data. The error information is "<%= @error%>".  Please go to <a href="http://www.biopartsbuilder.org" target="_blank">http://www.biopartsbuilder.org</a> to check your jobs.<br /><br />
     <% end %>
-    Thanks for using PartsBuilder<br>
-    Bader Group<br><br>
-    ==================================================<br>
+    Thanks for using PartsBuilder<br />
+    Bader Group<br /><br />
+    ==================================================<br />
     PartsBuilder is developed and maintained by Dr. Joel Bader's group at John Hopkins University.  To know more about our group, please visit <a href="http://www.baderlab.com" target="_blank">http://www.baderlab.com</a>
   </body>
 </html>

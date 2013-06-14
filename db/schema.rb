@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130612152230) do
+ActiveRecord::Schema.define(:version => 20130613193446) do
 
   create_table "annotations", :force => true do |t|
     t.integer  "chromosome_id"
@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(:version => 20130612152230) do
     t.string   "dbxref"
     t.text     "description"
     t.string   "orf_classification"
-    t.datetime "gff_created_at"
+    t.date     "gff_created_at"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
   end
@@ -140,9 +140,11 @@ ActiveRecord::Schema.define(:version => 20130612152230) do
     t.integer  "organism_id"
     t.string   "check_enzymes"
     t.text     "comment"
+    t.integer  "user_id"
   end
 
   add_index "protocols", ["organism_id"], :name => "index_protocols_on_organism_id"
+  add_index "protocols", ["user_id"], :name => "index_protocols_on_user_id"
 
   create_table "sequences", :force => true do |t|
     t.string   "accession"

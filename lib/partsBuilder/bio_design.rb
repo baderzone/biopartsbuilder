@@ -10,8 +10,7 @@ class BioDesign
       if design.nil? || type.eql?('update')
         # creat new design
         part = Part.find(part_id)
-        protein_file = "#{PARTSBUILDER_CONFIG['program']['part_fasta_path']}/#{part.sequence.accession}.fasta"
-        biodesign = golden_gate(protein_file, processing_path, protocol)
+        biodesign = golden_gate(part.sequence.accession, processing_path, protocol, part.sequence.organism_id)
         if biodesign[:error].nil?
           biodesign[:part_id] = part.id
           biodesign[:part_name] = part.name
@@ -20,7 +19,7 @@ class BioDesign
           error << "#{part.name}: #{biodesign[:error]}"
           return designs, error
         end
-      
+
       else
         # retrieve exist designs
         constructs = Hash.new
@@ -82,21 +81,39 @@ class BioDesign
   end
 
   private
-  def golden_gate(protein_file, processing_path, protocol)
+  def golden_gate(accession_number, processing_path, protocol, part_organism_code)
     design = {construct:nil, comment:nil, error:nil}
-    protein_filename = protein_file.split('/')[-1].chomp('.fasta') 
-    back_trans_out = "#{processing_path}/#{protein_filename}_backtrans.fasta"
-    remove_enz_out = "#{processing_path}/#{protein_filename}_recode.fasta"
-    remove_enz_log = "#{processing_path}/#{protein_filename}_recode.log"
+    part_file = "#{PARTSBUILDER_CONFIG['program']['part_fasta_path']}/#{accession_number}.fasta"
+    back_trans_out = "#{processing_path}/#{accession_number}_backtrans.fasta"
+    remove_enz_out = "#{processing_path}/#{accession_number}_recode.fasta"
+    remove_enz_log = "#{processing_path}/#{accession_number}_recode.log"
+
     # reverse translation
-    flag = back_trans(protein_file, back_trans_out, protocol.organism_id)
+    if protocol.organism.blank?
+      back_trans_out = part_file
+      flag = true
+    else
+      flag = back_trans(protein_file, back_trans_out, protocol.organism_id)
+    end
+
     # remove forbidden enzymes
     if flag
-      flag = remove_enz(back_trans_out, remove_enz_out, remove_enz_log, protocol.organism_id, protocol.forbid_enzymes)
+      if protocol.forbid_enzymes.blank?
+        remove_enz_out = back_trans_out
+        flag = true
+      else
+        if protocol.organism_id.blank?
+          org_code = part_organism_code # no codon optimization performed when protocol.organism_id is empty
+        else
+          org_code = protocol.organism_id # codon organism
+        end
+        flag = remove_enz(back_trans_out, remove_enz_out, remove_enz_log, org_code, protocol.forbid_enzymes)
+      end
     else
-      design[:error] = 'Reverse translation failed!'
+      design[:error] = 'Reverse translation failed! Please check if the input sequence is protein sequence'
       return design
     end
+
     # retrieve recode sequence
     sequence = String.new
     if flag 
@@ -105,8 +122,9 @@ class BioDesign
       design[:error] = 'Restriction enzyme substraction failed!'
       return design
     end
+
     # check enzyme sites
-    if !protocol.check_enzymes.nil? && !protocol.check_enzymes.empty?
+    if !protocol.check_enzymes.blank?
       comments = Array.new
       protocol.check_enzymes.split(':').each do |enz|
         check_re = check_enz(sequence, enz)
@@ -114,9 +132,20 @@ class BioDesign
       end
       design[:comment] = comments.join(' ') unless comments.empty?
     end
+
     # create constructs
+    if protocol.construct_size.blank?
+      max_size = 1e100
+    else
+      max_size = protocol.construct_size
+    end
+    ext_prefix = '' if protocol.ext_prefix.nil?
+    ext_suffix = '' if protocol.ext_suffix.nil?
+    int_prefix = '' if protocol.int_prefix.nil?
+    int_suffix = '' if protocol.int_suffix.nil?
+
     sequence = protocol.ext_prefix + sequence + protocol.ext_suffix
-    if sequence.size <= protocol.construct_size
+    if sequence.size <= max_size
       design[:construct] = {1 => sequence}
     else
       constructs = creat_frag(protocol.int_prefix, protocol.int_suffix, protocol.construct_size, sequence, protocol.overlap.split(','))
@@ -131,10 +160,21 @@ class BioDesign
   end
 
   def back_trans(in_file, out_file, org_code)
-    system "perl lib/geneDesign/Reverse_Translate.pl -i #{in_file} -o #{org_code} -w #{out_file}"
+    sequence = String.new 
+    Bio::FastaFormat.open(infile).each {|entry| sequence = entry.seq}
+    if Bio::Sequence.auto(sequence).moltype == Bio::Sequence::NA
+      return false
+    else
+      system "perl lib/geneDesign/Reverse_Translate.pl -i #{in_file} -o #{org_code} -w #{out_file}"
+    end
   end
 
   def remove_enz(in_file, out_file, log_file, org_code, forbid_enz)
+    sequence = String.new 
+    Bio::FastaFormat.open(infile).each {|entry| sequence = entry.seq}
+    if Bio::Sequence.auto(sequence).moltype == Bio::Sequence::AA
+      return false
+    end
     if system "perl lib/geneDesign/Restriction_Site_Subtraction.pl -i #{in_file} -o #{org_code} -s #{forbid_enz} -w #{out_file} -t 10 > #{log_file}"
       if File.open(log_file, 'r').read.include?('unable')
         return false

@@ -2,12 +2,16 @@
 <hr />
 
 <% unless @errors.empty? %>
-  <p style="color:red">There are errors in your uploaded file.</p>
-  <p>Please note that the description line must follow the format: <b>>part_name|part_type|accession_number|organism|comments</b>.  Organism and comments are optional. One sequence can only have one description line.</p>
-  <hr />
-  <p><b>Errors:</b></p>
-  <% @errors.each do |entry| %>
-    &nbsp;&nbsp;<%= entry %> <br />
+  <% if !@sequences.nil? %>
+    <p style="color:red">There are errors in your uploaded file.</p>
+    <p>Please note that the description line must follow the format: <b>>part_name|part_type|accession_number|organism|comments</b>.  Organism and comments are optional. One sequence can only have one description line.</p>
+    <hr />
+    <p><b>Errors:</b></p>
+    <% @errors.each do |entry| %>
+      &nbsp;&nbsp;<%= entry %> <br />
+    <% end %>
+  <% else %>
+    <p style="color:red">Error: <%= @errors[0] %></p>
   <% end %>
   <div class="form-actions">
     <%= link_to 'Go Back', new_part_path, :class => 'btn btn-primary' %>
@@ -38,13 +42,37 @@
         <% end %>
       </table>
 
-    <% else %>
+    <% elsif !@accessions.nil? %>
       <p><b><%= @accessions.size %></b> parts to be created. They are:</p>
       <hr />
       <% @accessions.each do |entry| %>
         <p>&nbsp;&nbsp;<%= entry %></p>
         <%= hidden_field_tag('accession[]', entry) %>
       <% end %>
+
+    <% else %>
+      <p>Your selection is: <%= @organism.fullname %>_<%= @chromosome.name %>, feature: <%= @feature.name %>, position: <%= @start %>-<%= @end %>, strand: <%= @strand %></p>
+      <p><b><%= @parts.size %></b> parts are found to meet your requirements.  They are: </p>
+      <table class="table table-striped">
+        <tr>
+          <th>Part Name</th>
+          <th>Part Type</th>
+          <th>Strand</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Description</th>
+        </tr>
+        <% @parts.each do |p| %>
+          <tr>
+            <td><%= p.systematic_name %></td>
+            <td><%= p.feature.name %></td>
+            <td><%= p.strand %></td>
+            <td><%= p.start %></td>
+            <td><%= p.end %></td>
+            <td><%= p.description %></td>
+          </tr>
+        <% end %>
+      </table>
     <% end %>
 
     <div class="form-actions">

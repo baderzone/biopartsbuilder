@@ -6,13 +6,11 @@
     <tr>
       <th>#</th>
       <th>Name</th>
-      <th>External Prefix</th>
-      <th>External Suffix</th>
-      <th>Internal Prefix</th>
-      <th>Internal Suffix</th>
-      <th>Size Restriction</th>
+      <th>Codon Optimization</th>
       <th>Forbidden enzymes</th>
       <th>Check enzymes</th>
+      <th>Size Restriction</th>
+      <th>Created at</th>
     </tr>
   </thead>
   <tbody>
@@ -20,13 +18,11 @@
       <tr>
         <td><%= protocol.id %></td>
         <td><%= link_to protocol.name, admin_protocol_path(protocol.id) %></td>
-        <td><%= protocol.ext_prefix %></td>
-        <td><%= protocol.ext_suffix %></td>
-        <td><%= protocol.int_prefix %></td>
-        <td><%= protocol.int_suffix %></td>
-        <td><%= protocol.construct_size %></td>
-        <td><%= protocol.forbid_enzymes %></td>
-        <td><%= protocol.check_enzymes %></td>
+        <td><%= protocol.try(:organism) %></td>
+        <td><%= protocol.try(:forbid_enzymes) %></td>
+        <td><%= protocol.try(:check_enzymes) %></td>
+        <td><%= protocol.try(:construct_size) %></td>
+        <td><%= protocol.created_at %></td>
       </tr>
     <% end %>
   </tbody>

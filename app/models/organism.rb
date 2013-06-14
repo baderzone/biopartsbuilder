@@ -5,4 +5,9 @@ class Organism < ActiveRecord::Base
   attr_accessible :code, :fullname, :name
 
   validates_presence_of :fullname, :name
+
+  def to_s
+    fullname
+  end
+
 end

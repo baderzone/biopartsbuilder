@@ -9,12 +9,12 @@ class AutoBuildsController < ApplicationController
   end
 
   def confirm
-    if params[:order_name].empty? || (params[:accession].empty? && params[:sequence_file].nil?) || params[:protocol_id].nil? 
+    if params[:order_name].blank? || (params[:accession].blank? && params[:sequence_file].blank?) || params[:protocol_id].blank? 
       redirect_to new_auto_build_path, :alert => "Something is missing. Make sure to select one design standard, input order name, upload a fasta file or input accession numbers"
     else
 
       @errors = Array.new
-      if !params[:accession].empty?
+      if !params[:accession].blank?
         @accessions = params[:accession].strip.split("\r\n")
         @accessions.delete('')
 
@@ -35,7 +35,7 @@ class AutoBuildsController < ApplicationController
   end
 
   def create
-    if params[:order_name].empty? || (params[:accession].nil? && params[:sequence_file].nil?) || params[:protocol_id].nil? 
+    if params[:order_name].blank? || (params[:accession].blank? && params[:sequence_file].blank?) || params[:protocol_id].blank? 
       redirect_to new_auto_build_path, :alert => "Something is missing. Make sure to select one design standard, input order name, upload a fasta file or input accession numbers"
     else
 

@@ -4,9 +4,9 @@
 <h5>Design Standard: <%= @design.protocol.name %></h5>
 
 <% @design.constructs.each do |construct| %>
-  <b><%= construct.name %></b><br>
+  <b><%= construct.name %></b><br />
   <div id="construct">
     <%= construct.seq %>
   </div>
-  <br>
+  <br />
 <% end %>

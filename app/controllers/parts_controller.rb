@@ -22,16 +22,21 @@ class PartsController < ApplicationController
 
   def new
     @part = Part.new
+    @organisms = Array.new
+    @organisms << ['Saccharomyces cerevisiae', 1]
+    @organisms << ['Escherichia coli', 2]
+    @chromosomes = Chromosome.all
+    @features = Feature.order('name').all
   end
 
   def confirm
     @errors = Array.new
 
-    if !params[:accession].empty?
+    if !params[:accession].blank?
       @accessions = params[:accession].strip.split("\r\n")
       @accessions.delete('')
 
-    elsif !params[:sequence_file].nil?
+    elsif !params[:sequence_file].blank?
       # upload file
       uploader = SequenceFileUploader.new
       uploader.store!(params[:sequence_file])
@@ -39,6 +44,23 @@ class PartsController < ApplicationController
 
       # check file
       @sequences, @errors = FastaFile.check(@seq_file)
+
+    elsif !params[:start].blank? && !params[:end].blank?
+      if params[:end].to_i == 0
+        @errors << "Start and end position must be integer"
+      else
+        @organism = Organism.find(params[:organism])
+        @chromosome = Chromosome.find(params[:chromosome])
+        @feature = Feature.find(params[:feature])
+        @strand = params[:strand]
+        @start = params[:start].to_i
+        @end = params[:end].to_i
+        if params[:strand] == '+/-'
+          @parts = Annotation.where("chromosome_id = ? AND feature_id = ? AND start >= ? AND end <= ?", @chromosome.id, @feature.id, @start, @end) 
+        else
+          @parts = Annotation.where("chromosome_id = ? AND feature_id = ? AND strand = ? AND start >= ? AND end <= ?", @chromosome.id, @feature.id, params[:strand], @start, @end) 
+        end
+      end
     else
       redirect_to new_part_path, :alert => "Please input a list of accession numbers OR upload a FASTA file"
     end

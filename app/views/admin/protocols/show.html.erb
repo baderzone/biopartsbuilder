@@ -1,19 +1,40 @@
 <h2><i class='icon-file'> </i><%= @protocol.name %></h2>
+<p>Created at: <%= @protocol.created_at %>, Updated_at: <%= @protocol.updated_at %></p>
 <hr />
-<b>Codon Optimization:</b>&nbsp;&nbsp;<%= @protocol.organism.fullname %><br><br>
-<b>External Prefix:</b>&nbsp;&nbsp;<%= @protocol.ext_prefix %><br><br>
-<b>External Suffix:</b>&nbsp;&nbsp;<%= @protocol.ext_suffix %><br><br>
-<b>Internal Prefix:</b>&nbsp;&nbsp;<%= @protocol.int_prefix %><br><br>
-<b>Internal Suffix:</b>&nbsp;&nbsp;<%= @protocol.int_suffix %><br><br>
-<b>Size Restriction:</b>&nbsp;&nbsp;<%= @protocol.construct_size %><br><br>
-<b>Forbidden enzymes:</b>&nbsp;&nbsp;<%= @protocol.forbid_enzymes %><br><br>
-<b>Check enzymes:</b>&nbsp;&nbsp;<%= @protocol.check_enzymes %><br><br>
-<b>Overlap:</b>
-<div id="overlapDiv">
-  <%= @protocol.overlap %>
-</div>
-<br>
-<b>Comment:</b>&nbsp;&nbsp;<%= @protocol.comment %><br><br>
+<% unless @protocol.organism.blank? %>
+  <b>Codon Optimization:</b>&nbsp;&nbsp;<%= @protocol.try(:organism) %><br /><br />
+<% end %>
+<% unless @protocol.forbid_enzymes.blank? %>
+  <b>Forbidden enzymes:</b>&nbsp;&nbsp;<%= @protocol.try(:forbid_enzymes) %><br /><br />
+<% end %>
+<% unless @protocol.check_enzymes.blank? %>
+  <b>Check enzymes:</b>&nbsp;&nbsp;<%= @protocol.try(:check_enzymes) %><br /><br />
+<% end %>
+<% unless @protocol.construct_size.blank? %>
+  <b>Size Restriction:</b>&nbsp;&nbsp;<%= @protocol.try(:construct_size) %><br /><br />
+<% end %>
+<% unless @protocol.ext_prefix.blank? %>
+  <b>External Prefix:</b>&nbsp;&nbsp;<%= @protocol.try(:ext_prefix) %><br /><br />
+<% end %>
+<% unless @protocol.ext_suffix.blank? %>
+  <b>External Suffix:</b>&nbsp;&nbsp;<%= @protocol.try(:ext_suffix) %><br /><br />
+<% end %>
+<% unless @protocol.int_prefix.blank? %>
+  <b>Internal Prefix:</b>&nbsp;&nbsp;<%= @protocol.try(:int_prefix) %><br /><br />
+<% end %>
+<% unless @protocol.int_suffix.blank? %>
+  <b>Internal Suffix:</b>&nbsp;&nbsp;<%= @protocol.try(:int_suffix) %><br /><br />
+<% end %>
+<% unless @protocol.overlap.blank? %>
+  <b>Overlap:</b>
+  <div id="overlapDiv">
+    <%= @protocol.overlap %>
+  </div>
+<% end %>
+<% unless @protocol.comment.blank? %>
+  <br />
+  <b>Comment:</b>&nbsp;&nbsp;<%= @protocol.comment %><br /><br />
+<% end %>
 <div class='form-actions'>
   <%= link_to "Edit Design Standard", edit_admin_protocol_path(@protocol.id), :class => 'btn btn-primary' %>
 </div>

@@ -1,57 +1,68 @@
 <h2><i class='icon-file'> </i>New design standard</h2>
 <hr />
 <%= form_for [:admin,@protocol] do |f| %>
-  <table>
-    <tr>
-      <td width="150px" align="center"><%= f.label :name %></td>
-      <td colspan="2"><%= f.text_field :name %></td>
-    </tr>
-    <tr>
-      <td width="150px" align="center"><%= f.label :organism_id %></td>
-      <td colspan="2"><%= f.collection_select :organism_id, Organism.find((1..6).to_a), :code, :fullname %></td>
-    </tr>
-    <tr>
-      <td align="center"><%= f.label :ext_prefix, "External Prefix" %></td>
-      <td colspan="2"><%= f.text_field :ext_prefix %></td>
-    </tr>
-    <tr>
-      <td align="center"><%= f.label :ext_suffix, "External Suffix" %></td>
-      <td colspan="2"><%= f.text_field :ext_suffix %></td>
-    </tr>
-    <tr>
-      <td align="center"><%= f.label :int_prefix, "Internal Prefix" %></td>
-      <td colspan="2"><%= f.text_field :int_prefix %></td>
-    </tr>
-    <tr>
-      <td align="center"><%= f.label :int_suffix, "Internal Suffix" %></td>
-      <td colspan="2"><%= f.text_field :int_suffix %></td>
-    </tr>
-    <tr>
-      <td align="center"><%= f.label :overlap %></td>
-      <td><%= f.text_area :overlap, :rows => 5 %></td>
-      <td>One overlap per line, only letters allowed<br>e.g.<br>ATTT<br>GCCA<br>CTAA</td>
-    </tr>
-    <tr>
-      <td align="center"><%= f.label :construct_size, "Size Restriction" %></td>
-      <td><%= f.number_field :construct_size %></td>
-      <td>Maximum size of sequence, if longer than maximum size, sequence will be carved into fragments</td>
-    </tr>
-    <tr>
-      <td align="center"><%= f.label :forbid_enzymes, "Forbidden Enzymes" %></td>
-      <td><%= f.text_area :forbid_enzymes, :rows => 5 %></td>
-      <td>One enzyme per line, only letters allowed<br>e.g.<br>BsaI<br>BsmBI<br>EcoRI</td>
-    </tr>
-    <tr>
-      <td align="center"><%= f.label :check_enzymes, "Check Enzymes" %></td>
-      <td><%= f.text_area :check_enzymes, :rows => 5 %></td>
-      <td>PartBuilder will check if these enzymes in the sequence but not remove them.<br><br> One enzyme per line<br>e.g.<br>BceAI<br>SalI</td>
-    </tr>
-    <tr>
-      <td align="center"><%= f.label :comment %></td>
-      <td><%= f.text_area :comment, :rows => 5 %></td>
-      <td></td>
-    </tr>
-  </table>
+
+  <p>Name <%= f.text_field :name %></p>
+  <p>Comment <%= f.text_area :comment, :rows => 2 %></p>
+  <p><i class='icon-info-sign'> </i><b>Choose Workflow</b></p>
+  <hr />
+
+  <button type="button" data-toggle="collapse" data-target="#codon">+</button> <b>Codon Optimizaion</b> <br />
+  <div id='codon' class='collapse in'>
+    Organism <%= f.collection_select :organism_id, Organism.find((1..6).to_a), :code, :fullname, :include_blank => true %>
+  </div>
+
+  <button type="button" data-toggle="collapse" data-target="#remove">+</button> <b>Remove Resctriction Enzymes without changing translation</b> <br />
+  <div id='remove' class='collapse in'>
+    <table>
+      <tr>
+        <td align="center"><%= f.label :forbid_enzymes, "Forbidden Enzymes" %></td>
+        <td><%= f.text_area :forbid_enzymes, :rows => 5 %></td>
+        <td>One enzyme per line, only letters allowed<br />e.g.<br />BsaI<br />BsmBI<br />EcoRI</td>
+      </tr>
+    </table>
+  </div>
+
+  <button type="button" data-toggle="collapse" data-target="#check">+</button> <b>Check Resctriction Enzyme Sites</b> <br />
+  <div id='check' class='collapse in'>
+    <table>
+      <tr>
+        <td align="center">Enzymes</td>
+        <td><%= f.text_area :check_enzymes, :rows => 5 %></td>
+        <td>PartBuilder will check if these enzymes in the sequence but not remove them.<br /> One enzyme per line<br />e.g.<br />BceAI<br />SalI</td>
+      </tr>
+    </table>
+  </div>
+
+  <button type="button" data-toggle="collapse" data-target="#add">+</button> <b>Add Prefix and Suffix</b> <br />
+  <div id='add' class='collapse in'>
+    <p>External Prefix <%= f.text_field :ext_prefix %></p>
+    <p>External Suffix <%= f.text_field :ext_suffix %></p>
+  </div>
+
+  <button type="button" data-toggle="collapse" data-target="#carve">+</button> <b>Carve long sequence into fragments</b>
+  <div id='carve' class='collapse in'>
+    <table>
+      <tr>
+        <td align="center"><%= f.label :construct_size, "Size Restriction" %></td>
+        <td><%= f.number_field :construct_size %></td>
+        <td>Maximum size of sequence, if longer than maximum size, sequence will be carved into fragments</td>
+      </tr>
+      <tr>
+        <td align="center"><%= f.label :int_prefix, "Internal Prefix" %></td>
+        <td colspan="2"><%= f.text_field :int_prefix %></td>
+      </tr>
+      <tr>
+        <td align="center"><%= f.label :int_suffix, "Internal Suffix" %></td>
+        <td colspan="2"><%= f.text_field :int_suffix %></td>
+      </tr>
+      <tr>
+        <td align="center"><%= f.label :overlap %></td>
+        <td><%= f.text_area :overlap, :rows => 5 %></td>
+        <td>One overlap per line, only letters allowed<br />e.g.<br />ATTT<br />GCCA<br />CTAA</td>
+      </tr>
+    </table>
+  </div>
   <div class='form-actions'>
     <%= f.submit :class => "btn btn-primary" %>
   </div>
