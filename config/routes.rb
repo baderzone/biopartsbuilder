@@ -15,6 +15,10 @@ Partsbuilder::Application.routes.draw do
   get "part/create"
 
   get "parts/get_description_file"
+  
+  get "parts/get_fasta_file"
+  
+  get "designs/fasta"
 
   match "/orders/:id/get_zip_file", :to => "orders#get_zip_file" 
   match "/auth/:provider/callback" => "sessions#create"

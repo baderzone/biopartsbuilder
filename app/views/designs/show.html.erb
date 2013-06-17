@@ -7,10 +7,10 @@
   Comment: <%= @design.comment %>
 <% end %>
 
+<b>Designed parts:</b>
 <% @design.constructs.each do |construct| %>
-  <b><%= construct.name %></b><br />
-  <div id="construct">
-    <%= construct.seq %>
-  </div>
-  <br />
+  <% sequence = Bio::Sequence::NA.new(construct.seq) %>
+  <pre class="prettyprint linenums"><%= sequence.to_fasta(construct.name,80) %></pre>
 <% end %>
+<i class="icon-download-alt"> </i><%= link_to 'Download FASTA file', :action => :fasta, :id => @design.id %>
+<br /><br />

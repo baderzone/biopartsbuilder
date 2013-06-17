@@ -5,6 +5,7 @@ class PartsController < ApplicationController
 
   def show
     @part = Part.find(params[:id])
+    @sequence = Bio::Sequence::NA.new(@part.sequence.seq)
   end
 
   def edit
@@ -86,6 +87,10 @@ class PartsController < ApplicationController
 
   def get_description_file
     send_file "public/examples/description.txt", :type => "text", :disposition => 'inline'
+  end
+
+  def get_fasta_file
+    send_file "public/parts/#{params[:id]}.fasta", :type => "chemical/seq-na-fasta FASTA", :disposition => 'attachment' 
   end
 
 end

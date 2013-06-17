@@ -26,4 +26,15 @@ class DesignsController < ApplicationController
     end
   end
 
+  def fasta
+    data = String.new
+    design = Design.find(params[:id])
+    design.constructs.each do |c|
+      sequence = Bio::Sequence::NA.new(c.seq)
+      data += sequence.to_fasta(c.name,80)
+    end
+    filename = "design_#{design.id}.fasta"
+    send_data data, :filename => filename, :type => 'chemical/seq-na-fasta FASTA', :disposition => 'attachment'
+  end
+
 end

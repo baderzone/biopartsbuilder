@@ -2,6 +2,7 @@ require 'csv'
 
 class PartWorker
   include Sidekiq::Worker
+  sidekiq_options :retry => false
 
   def perform(params)
 
@@ -14,7 +15,7 @@ class PartWorker
     biopart = BioPart.new
     if !params['seq_file'].blank?
       data, error_info = biopart.retrieve(params['seq_file'], 'fasta')
-    elsif !params['accession'].blank?
+    elsif !params['accessions'].blank?
       data, error_info = biopart.retrieve(params['accessions'], 'ncbi')
     else
       data, error_info = biopart.retrieve(params['genome'], 'genome')
