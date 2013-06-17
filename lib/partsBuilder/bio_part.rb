@@ -7,6 +7,8 @@ class BioPart
     error = String.new
 
     case type
+    when 'genome'
+      bioparts = create_from_genome(input)
     when 'fasta'
       in_file = Bio::FastaFormat.open(input, 'r')
       in_file.each do |entry|
@@ -66,7 +68,7 @@ class BioPart
 
         # create protein fasta file for GeneDesign
         fasta_seq = Bio::Sequence.new(entry[:seq])
-        f = File.new("#{PARTSBUILDER_CONFIG['program']['part_fasta_path']}/#{entry[:accession_num]}.fasta", 'w')
+        f = File.new("#{PARTSBUILDER_CONFIG['program']['part_fasta_path']}/#{part.id}.fasta", 'w')
         f.print fasta_seq.output(:fasta, :header => part.name, :width => 80)
         f.close
       else
@@ -79,6 +81,57 @@ class BioPart
 
 
   private
+  def create_from_genome(input)
+    params = Hash.new
+    eval('params = ' + input)
+    if params[:strand] == '+/-'
+      annotations = Annotation.where("chromosome_id = ? AND feature_id = ? AND start >= ? AND end <= ?", params[:chromosome_id], params[:feature_id], params[:start], params[:end]) 
+    else
+      annotations = Annotation.where("chromosome_id = ? AND feature_id = ? AND strand = ? AND start >= ? AND end <= ?", params[:chromosome_id], params[:feature_id], params[:strand], params[:start], params[:end]) 
+    end 
+
+    parts = Array.new
+    annotations.each do |a|
+      org = a.chromosome.organism.name 
+      #get part name
+      accession = a.systematic_name
+      if a.gene_name.blank?
+        if a.feature.name == 'CDS' && org == 'Sce'
+          accession = a.systematic_name.chomp('_CDS')
+          gene = Annotation.find_by_systematic_name(accession)
+          gene_name = gene.try(:gene_name)
+          if !gene_name.blank? && gene_name != accession
+            part_name = "#{a.feature.name}_#{org}_#{gene_name}_#{accession}"
+          else
+            part_name = "#{a.feature.name}_#{org}_#{accession}"
+          end
+        else
+          part_name = "#{a.feature.name}_#{org}_#{a.systematic_name}"
+        end
+      else
+        part_name = "#{a.feature.name}_#{org}_#{a.gene_name}_#{a.systematic_name}"
+      end 
+      # get sequence
+      if a.strand == '+'
+        sequence = a.chromosome.seq[(a.start-1)..(a.end-1)]
+      else
+        chr_seq = Bio::Sequence::NA.new(a.chromosome.seq).complement
+        sequence = chr_seq[(chr_seq.size - a.end)..(chr_seq.size - a.start)]
+      end
+      #translation
+      if a.feature.name == 'CDS'
+        part_seq = Bio::Sequence::NA.new(sequence).translate
+        part_seq.chomp!('*')
+      else
+        part_seq = sequence
+      end
+      # create part
+      parts << {name: part_name, type: a.feature.name, seq: part_seq.upcase, accession_num: accession, org_latin: a.chromosome.organism.fullname, org_abbr: a.chromosome.organism.name, comment: nil}
+    end
+
+    return parts
+  end
+
   def create_from_fasta(entry)
     part = {name: nil, type: nil, seq: nil, accession_num: nil, org_latin: nil, org_abbr: nil, comment: nil}
     descriptions = entry.definition.split('|')

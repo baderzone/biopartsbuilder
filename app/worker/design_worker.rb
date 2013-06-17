@@ -22,7 +22,7 @@ class DesignWorker
       job.change_status('finished')
     else
       job.change_status('failed')
-      job.error_info = error_info.join
+      job.error_info = error_info
       job.save
     end
     # send email notice

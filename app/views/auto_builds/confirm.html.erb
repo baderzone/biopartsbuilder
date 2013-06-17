@@ -13,9 +13,10 @@
     <%= link_to 'Go Back', new_auto_build_path, :class => 'btn btn-primary' %>
   </div>
   <br />
+
 <% else %>
   <%= form_tag({:controller => "auto_builds", :action => "create"}, :method => "post", :multipart => true) do %>
-    <% if @accessions.nil? %>
+    <% if !@sequences.blank? %>
       <%= hidden_field_tag(:sequence_file, @seq_file) %>
       <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  <b><%= @sequences.size %></b> parts to be designed:</p>
       <hr />
@@ -35,13 +36,40 @@
           </tr>
         <% end %>
       </table>
-    <% else %>
+
+    <% elsif !@accessions.blank? %>
       <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  <b><%= @accessions.size %></b> parts to be designed:</p>
       <hr />
       <% @accessions.each do |entry| %>
         <p>&nbsp;&nbsp;<%= entry %></p>
         <%= hidden_field_tag('accession[]', entry) %>
       <% end %>
+
+    <% else%>
+      <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  The genome you select is: <%= @organism.fullname %>_<%= @chromosome.name %>, feature: <%= @feature.name %>, position: <%= @start %>-<%= @end %>, strand: <%= @strand %></p>
+      <%= hidden_field_tag(:genome, {chromosome_id: @chromosome.id, feature_id: @feature.id, strand: @strand, start: @start, end: @end}) %>
+      <p><b><%= @parts.size %></b> parts are found to meet your requirements.  They are: </p>
+      <table class="table table-striped">
+        <tr>
+          <th>Part Name</th>
+          <th>Part Type</th>
+          <th>Strand</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Description</th>
+        </tr>
+        <% @parts.each do |p| %>
+          <tr>
+            <td><%= p.systematic_name %></td>
+            <td><%= p.feature.name %></td>
+            <td><%= p.strand %></td>
+            <td><%= p.start %></td>
+            <td><%= p.end %></td>
+            <td><%= p.description %></td>
+          </tr>
+        <% end %>
+      </table>
+
     <% end %>
     <%= hidden_field_tag(:protocol_id, @protocol.id) %>
     <%= hidden_field_tag(:order_name, @order) %>

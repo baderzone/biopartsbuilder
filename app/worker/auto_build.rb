@@ -13,10 +13,12 @@ class AutoBuild
 
     # retrieve parts
     biopart = BioPart.new
-    if !params['seq_file'].nil?
+    if !params['seq_file'].blank?
       data, error_info = biopart.retrieve(params['seq_file'], 'fasta')
-    else
+    elsif !params['accessions'].blank?
       data, error_info = biopart.retrieve(params['accessions'], 'ncbi')
+    else
+      data, error_info = biopart.retrieve(params['genome'], 'genome')
     end 
     # check parts
     error_info = biopart.check(data) if error_info.empty?

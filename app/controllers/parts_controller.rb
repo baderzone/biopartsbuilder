@@ -26,7 +26,11 @@ class PartsController < ApplicationController
     @organisms << ['Saccharomyces cerevisiae', 1]
     @organisms << ['Escherichia coli', 2]
     @chromosomes = Chromosome.all
-    @features = Feature.order('name').all
+    @features = Array.new
+    @features << ['CDS', 5]
+    @features << ['tRNA', 16]
+    @features << ['repeat_region', 26]
+    @features << ['rRNA', 32]
   end
 
   def confirm
@@ -67,17 +71,13 @@ class PartsController < ApplicationController
   end
 
   def create
-    if params[:accession].nil? && params[:sequence_file].nil?
-      redirect_to new_part_path, :alert => "Please input a list of accession numbers OR upload a FASTA file"
+    if params[:accession].blank? && params[:sequence_file].blank? && params[:genome].blank?
+      redirect_to new_part_path, :alert => "No input"
 
     else
       @job = Job.create(job_type: JobType.find_by_name('part'), user: current_user, job_status: JobStatus.find_by_name('submitted'))
 
-      if !params[:accession].nil?
-        worker_params = {:job_id => @job.id, :accessions => params[:accession], :user_id => current_user.id, :seq_file => nil}
-      else
-        worker_params = {:job_id => @job.id, :accessions => nil, :user_id => current_user.id, :seq_file => params[:sequence_file]}
-      end
+        worker_params = {:job_id => @job.id, :accessions => params[:accession], :user_id => current_user.id, :seq_file => params[:sequence_file], :genome => params[:genome]}
 
       PartWorker.perform_async(worker_params)
       redirect_to job_path(@job.id), :notice => "Parts submitted!"

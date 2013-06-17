@@ -25,7 +25,7 @@
     <div class="tab-pane" id="genome">
       <p><b>Organism </b> <%= select_tag(:organism, options_for_select(@organisms), :include_blank => true) %></p>
       <p><b>Chromosome </b> <%= select_tag(:chromosome, options_from_collection_for_select(@chromosomes, :id, :name), :include_blank => true) %></p>
-      <p><b>Features </b> <%= select_tag(:feature, options_from_collection_for_select(@features, :id, :name), :include_blank => true) %></p>
+      <p><b>Features </b> <%= select_tag(:feature, options_for_select(@features), :include_blank => true) %></p>
       <p><b>Strand </b> <%= select_tag(:strand, options_for_select(['+', '-', '+/-']), :include_blank => true)%>
       <p><b>Start Position </b> <%= text_field_tag(:start) %> <b>End Position</b> <%= text_field_tag(:end) %></p>
     </div>
