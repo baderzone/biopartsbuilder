@@ -1,5 +1,5 @@
 require "bundler/capistrano"
-require 'puma/capistrano'
+require 'sidekiq/capistrano'
 
 set :default_environment, {
   'PATH' => "$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
@@ -54,7 +54,11 @@ namespace :deploy do
   task :config_symlink do
     run "cd #{current_path}; 
          ln -s #{shared_path}/config/database.yml config/database.yml; 
-         ln -s #{shared_path}/config/partsbuilder.yml config/partsbuilder.yml"
+         ln -s #{shared_path}/config/partsbuilder.yml config/partsbuilder.yml;
+         ln -s #{shared_path}/partsBuilder_processing/parts public/parts; 
+         ln -s #{shared_path}/partsBuilder_processing/designs public/designs; 
+         ln -s #{shared_path}/partsBuilder_processing/orders public/orders; 
+         ln -s #{shared_path}/partsBuilder_processing/uploads public/uploads;" 
   end
 
   task :pipeline_precompile do
