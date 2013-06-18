@@ -1,5 +1,4 @@
 require "bundler/capistrano"
-require 'sidekiq/capistrano'
 require 'puma/capistrano'
 
 set :default_environment, {
@@ -18,18 +17,38 @@ set :scm, :git
 set :scm_username, "jhudeployer"
 
 #deploy information
-role :web, "54.235.171.60"                          # Your HTTP server, Apache/etc
-role :app, "54.235.171.60"                          # This may be the same as your `Web` server
-role :db,  "54.235.171.60", :primary => true        # This is where Rails migrations will run
+role :web, "10.0.1.20"                          # Your HTTP server, Apache/etc
+role :app, "10.0.1.20"                          # This may be the same as your `Web` server
+role :db,  "10.0.1.20", :primary => true        # This is where Rails migrations will run
 
 set :user, "deployer"
 set :use_sudo, false
-ssh_options[:keys] = [File.join(ENV["HOME"], ".ec2", "deployer")]
+ssh_options[:keys] = [File.join(ENV["HOME"], "credentials", "baderlabvpc", "id_baderlabvpc_deployer")]
 set :deploy_to, "/home/deployer/applications/#{application}"
 
 set :rails_env, :production
 
+#puma setup
+set :puma_binary, "puma"
+set :puma_config, "#{current_path}/config/puma.rb"
+
 namespace :deploy do
+  #start task
+  task :start, :roles => :app, :except => { :no_release => true } do
+    run "cd #{current_path}; bundle exec #{puma_binary} -C #{puma_config}"
+  end
+
+  #stop task
+  task :stop, :roles => :app, :except => { :no_release => true } do
+    run "cd #{current_path}; bundle exec pumactl -S #{current_path}/tmp/pids/puma.state stop"
+  end
+
+  #restart task
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    stop
+    start
+  end
+
 
   #linking data directory
   task :config_symlink do
