@@ -6,12 +6,22 @@
     <b class="caret"></b>
   </a>
   <ul class="dropdown-menu">
-    <li><%= link_to 'View', admin_protocols_path %></li>
-    <li><%= link_to 'New', new_admin_protocol_path %></li>	
+    <li><%= link_to 'List', admin_protocols_path %></li>
+    <li><%= link_to 'Add a standard', new_admin_protocol_path %></li>	
   </ul>
 	</li>
 
-	<li><%= link_to 'Accounts', admin_users_path %><li>
+	<li class="dropdown">
+  <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+    Lab Members
+    <b class="caret"></b>
+  </a>
+  <ul class="dropdown-menu">
+    <li><%= link_to 'List', admin_users_path %></li>
+    <li><%= link_to 'Add a member', new_admin_user_path %></li>	
+  </ul>
+	</li>
+
 </ul>
 
 <ul class="nav pull-right">

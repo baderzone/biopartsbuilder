@@ -53,8 +53,10 @@ class BioPart
     return error
   end
 
-  def store(bioparts)
+  def store(bioparts, user_id)
     part_ids = Array.new
+    user = User.find(user_id)
+    lab_id = [user.lab.id]
 
     bioparts.each do |entry|
       if ! entry[:org_latin].nil?
@@ -62,7 +64,7 @@ class BioPart
       end
       sequence = Sequence.find_by_accession(entry[:accession_num])
       if sequence.nil?
-        part = Part.create(:name => entry[:name].gsub(/__/, '_'), :comment => entry[:comment])
+        part = Part.create(:name => entry[:name].gsub(/__/, '_'), :comment => entry[:comment], :lab_ids => lab_id)
         part.create_sequence(:accession => entry[:accession_num], :organism => organism, :seq => entry[:seq], :annotation => entry[:type])
         part_ids << part.id
 
@@ -72,7 +74,10 @@ class BioPart
         f.print fasta_seq.output(:fasta, :header => part.name, :width => 80)
         f.close
       else
-        part_ids << sequence.part.id
+        part = sequence.part
+        part.lab_ids = (part.lab_ids + lab_id).uniq
+        part.save
+        part_ids << part.id
       end
     end
 
@@ -92,13 +97,15 @@ class BioPart
 
     parts = Array.new
     annotations.each do |a|
-      org = a.chromosome.organism.name 
+      org = a.chromosome.organism.name
+      comment = a.description 
       #get part name
       accession = a.systematic_name
       if a.gene_name.blank?
         if a.feature.name == 'CDS' && org == 'Sce'
           accession = a.systematic_name.chomp('_CDS')
           gene = Annotation.find_by_systematic_name(accession)
+          comment = gene.description
           gene_name = gene.try(:gene_name)
           if !gene_name.blank? && gene_name != accession
             part_name = "#{a.feature.name}_#{org}_#{gene_name}_#{accession}"
@@ -126,7 +133,7 @@ class BioPart
         part_seq = sequence
       end
       # create part
-      parts << {name: part_name, type: a.feature.name, seq: part_seq.upcase, accession_num: accession, org_latin: a.chromosome.organism.fullname, org_abbr: a.chromosome.organism.name, comment: nil}
+      parts << {name: part_name, type: a.feature.name, seq: part_seq.upcase, accession_num: accession, org_latin: a.chromosome.organism.fullname, org_abbr: a.chromosome.organism.name, comment: comment}
     end
 
     return parts

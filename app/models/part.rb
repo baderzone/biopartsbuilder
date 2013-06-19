@@ -2,8 +2,9 @@ class Part < ActiveRecord::Base
   belongs_to :user
   has_one :sequence, :autosave => true
   has_many :designs
+  has_and_belongs_to_many :labs
 
-  attr_accessible :name, :sequence, :comment
+  attr_accessible :name, :sequence, :comment, :lab_ids
 
   validates_presence_of :name
 

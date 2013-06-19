@@ -11,7 +11,7 @@ class UpdateDesign
     biodesign = BioDesign.new
     data, error_info = biodesign.create_designs(part_ids, processing_path, protocol, 'update')
     # store data
-    design_ids = biodesign.store(data, protocol, 'update') if error_info.empty?
+    design_ids = biodesign.store(data, protocol, params['user_id'], 'update') if error_info.empty?
 
   end
 

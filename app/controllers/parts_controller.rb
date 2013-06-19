@@ -1,6 +1,6 @@
 class PartsController < ApplicationController
   def index
-    @parts = Part.paginate(:page => params[:page], :per_page => 10).order('id DESC')
+    @parts = current_user.lab.parts.paginate(:page => params[:page], :per_page => 10).order('id DESC')
   end
 
   def show

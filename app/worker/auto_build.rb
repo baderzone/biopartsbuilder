@@ -11,6 +11,7 @@ class AutoBuild
     job = Job.find(params['job_id'])
     job.change_status('running')
     error_info = String.new
+    order = Order.find(params['order_id'])
 
     # retrieve parts
     biopart = BioPart.new
@@ -24,7 +25,7 @@ class AutoBuild
     # check parts
     error_info = biopart.check(data) if error_info.empty?
     # store parts
-    part_ids = biopart.store(data) if error_info.empty?
+    part_ids = biopart.store(data, order.user.id) if error_info.empty?
 
     # design part 
     if error_info.empty?
@@ -34,7 +35,7 @@ class AutoBuild
       data, error_info = biodesign.create_designs(part_ids, processing_path, protocol, 'new')
     end
     # store designs
-    design_ids = biodesign.store(data, protocol, 'new') if error_info.empty?    
+    design_ids = biodesign.store(data, protocol, order.user.id, 'new') if error_info.empty?    
 
     # create order files
     if error_info.empty? 
@@ -52,7 +53,6 @@ class AutoBuild
       job.save
     end
     # send email notice
-    order = Order.find(params['order_id'])
     PartsbuilderMailer.finished_notice(order.user, error_info).deliver
 
   end 

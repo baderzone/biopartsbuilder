@@ -6,15 +6,18 @@
     <table class="table table-bordered table-striped">
       <thead>
         <tr>
-          <th>Status</th>
+          <th><%= current_user.lab.name %></th>
         </tr>
       </thead>
       <tbody>		
         <tr>
-          <td><span class="badge badge-info"><%= @count_users %></span> Registered Users</td>
+          <td><span class="badge badge-info"><%= current_user.lab.users.size %></span> Lab members</td>
         </tr>
         <tr>
-          <td><span class="badge badge-success"><%= @count_parts %></span> Parts</td>
+          <td><span class="badge badge-success"><%= current_user.lab.parts.size %></span> Parts</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-success"><%= current_user.lab.designs.size %></span> Designs</td>
         </tr>
       </tbody>
     </table>

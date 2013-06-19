@@ -70,7 +70,13 @@
             <td><%= p.strand %></td>
             <td><%= p.start %></td>
             <td><%= p.end %></td>
-            <td><%= p.description %></td>
+            <% if p.feature.name == 'CDS' && p.chromosome.organism.name == 'Sce' %>
+              <% accession = p.systematic_name.chomp('_CDS') %>
+              <% gene = Annotation.find_by_systematic_name(accession) %>
+              <td><%= gene.description %></td>
+            <% else %>
+              <td><%= p.description %></td>
+            <% end %>
           </tr>
         <% end %>
       </table>
