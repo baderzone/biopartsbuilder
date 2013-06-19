@@ -3,7 +3,7 @@ class Admin::ProtocolsController < ApplicationController
 	layout 'admin'
 
 	def index
-    @protocols = Protocol.paginate(:page => params[:page], :per_page => 10).order('id DESC')
+    @protocols = current_user.lab.protocols.paginate(:page => params[:page], :per_page => 10).order('id DESC')
   end
 
   def show
@@ -25,6 +25,7 @@ class Admin::ProtocolsController < ApplicationController
       params[:protocol]['check_enzymes'] = params[:protocol]['check_enzymes'].split("\r\n").join(':')
     end
     @protocol = Protocol.new(params[:protocol])
+    @protocol.lab = current_user.lab
 
     if @protocol.save
       redirect_to admin_protocol_path(@protocol), notice: 'New protocol created!'
@@ -55,7 +56,7 @@ class Admin::ProtocolsController < ApplicationController
         designs.each do |d|
           part_ids << d.part_id
         end
-        worker_params = {:protocol_id => @protocol.id, :part_id => part_ids}
+        worker_params = {:protocol_id => @protocol.id, :part_id => part_ids, :user_id => current_user.id}
         UpdateDesign.perform_async(worker_params)
       end
       redirect_to admin_protocol_path(@protocol), :notice => "Protocol updated"

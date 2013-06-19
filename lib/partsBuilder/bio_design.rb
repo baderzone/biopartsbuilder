@@ -35,8 +35,10 @@ class BioDesign
     return designs, error
   end
 
-  def store(designs, protocol, type)
+  def store(designs, protocol, user_id, type)
     # parameters
+    user = User.find(user_id)
+    lab_id = [user.lab.id]
     design_ids = Array.new
     construct_suf = '_CO'
     case protocol.organism_id
@@ -74,6 +76,8 @@ class BioDesign
           design.constructs.create(:name => construct_name, :seq => seq)
         end
       end 
+      design.lab_ids = (design.lab_ids + lab_id).uniq
+      design.save
       design_ids << design.id
     end
 

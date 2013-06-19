@@ -6,8 +6,8 @@
     <th>#</th>
     <th>Fullname</th>
     <th>Email</th>
+    <th>Lab</th>
     <th>Group</th>
-    <th>Provider</th>
     <th></th>
   </tr>
 
@@ -16,12 +16,13 @@
       <td><%= user.id %></td>
       <td><%= user.fullname %></td>
       <td><%= user.email %></td>
+      <td><%= user.lab.name %></td>
       <td><%= user.group.name %></td>
-      <td><%= user.provider %></td>
       <td><%= link_to 'Edit', edit_admin_user_path(user.id) %></td>
     </tr>
   <% end %>
 </table>
 
-<br />
-<br />
+<div class='form-actions'>
+  <%= link_to 'Add a memeber', new_admin_user_path, :class => 'btn' %>
+</div>

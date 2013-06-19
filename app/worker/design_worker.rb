@@ -16,7 +16,7 @@ class DesignWorker
     biodesign = BioDesign.new
     data, error_info = biodesign.create_designs(part_ids, processing_path, protocol, 'new')
     # store data
-    design_ids = biodesign.store(data, protocol, 'new') if error_info.empty?
+    design_ids = biodesign.store(data, protocol, params['user_id'], 'new') if error_info.empty?
 
     # change job status
     if error_info.empty?

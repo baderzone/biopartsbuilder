@@ -23,7 +23,7 @@ class PartWorker
     # check parts
     error_info = biopart.check(data) if error_info.empty? 
     # store parts
-    part_ids = biopart.store(data) if error_info.empty?
+    part_ids = biopart.store(data, params['user_id']) if error_info.empty?
 
     # change job status
     if error_info.empty?

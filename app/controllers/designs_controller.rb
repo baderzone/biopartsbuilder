@@ -1,7 +1,7 @@
 class DesignsController < ApplicationController
 
   def index
-    @designs = Design.paginate(:page => params[:page], :per_page => 10).order('id DESC')
+    @designs = current_user.lab.designs.paginate(:page => params[:page], :per_page => 10).order('id DESC')
   end
 
   def show

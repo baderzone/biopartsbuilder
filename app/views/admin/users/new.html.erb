@@ -1,5 +1,10 @@
-<h1>New user</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Back', users_path %>
+<h2><i class='icon-file'> </i>Add new member</h2>
+<hr />
+<%= simple_form_for([:admin,@user], :html => {:class => 'form-horizontal' }) do |f| %>
+  <%= f.input :fullname %>
+  <%= f.input :email %>
+  <%= f.association :group, :collection => Group.all %>
+  <div class="form-actions">
+    <%= f.button :submit, :class => 'btn' %>
+  </div>
+<% end %>

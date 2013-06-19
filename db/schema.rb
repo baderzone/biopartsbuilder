@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130613193446) do
+ActiveRecord::Schema.define(:version => 20130619182829) do
 
   create_table "annotations", :force => true do |t|
     t.integer  "chromosome_id"
@@ -61,6 +61,16 @@ ActiveRecord::Schema.define(:version => 20130613193446) do
   add_index "designs", ["part_id"], :name => "index_designs_on_part_id"
   add_index "designs", ["protocol_id"], :name => "index_designs_on_protocol_id"
 
+  create_table "designs_labs", :force => true do |t|
+    t.integer  "lab_id"
+    t.integer  "design_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "designs_labs", ["design_id"], :name => "index_designs_labs_on_design_id"
+  add_index "designs_labs", ["lab_id"], :name => "index_designs_labs_on_lab_id"
+
   create_table "features", :force => true do |t|
     t.string   "name"
     t.text     "definition"
@@ -99,6 +109,23 @@ ActiveRecord::Schema.define(:version => 20130613193446) do
   add_index "jobs", ["job_status_id"], :name => "index_jobs_on_job_status_id"
   add_index "jobs", ["job_type_id"], :name => "index_jobs_on_job_type_id"
   add_index "jobs", ["user_id"], :name => "index_jobs_on_user_id"
+
+  create_table "labs", :force => true do |t|
+    t.string   "name"
+    t.text     "definition"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "labs_parts", :force => true do |t|
+    t.integer  "lab_id"
+    t.integer  "part_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "labs_parts", ["lab_id"], :name => "index_labs_parts_on_lab_id"
+  add_index "labs_parts", ["part_id"], :name => "index_labs_parts_on_part_id"
 
   create_table "orders", :force => true do |t|
     t.string   "name"
@@ -140,11 +167,11 @@ ActiveRecord::Schema.define(:version => 20130613193446) do
     t.integer  "organism_id"
     t.string   "check_enzymes"
     t.text     "comment"
-    t.integer  "user_id"
+    t.integer  "lab_id"
   end
 
+  add_index "protocols", ["lab_id"], :name => "index_protocols_on_lab_id"
   add_index "protocols", ["organism_id"], :name => "index_protocols_on_organism_id"
-  add_index "protocols", ["user_id"], :name => "index_protocols_on_user_id"
 
   create_table "sequences", :force => true do |t|
     t.string   "accession"
@@ -167,7 +194,10 @@ ActiveRecord::Schema.define(:version => 20130613193446) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "group_id"
+    t.integer  "lab_id"
   end
+
+  add_index "users", ["lab_id"], :name => "index_users_on_lab_id"
 
   create_table "vendors", :force => true do |t|
     t.string   "name"
