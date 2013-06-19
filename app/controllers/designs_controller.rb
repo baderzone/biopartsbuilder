@@ -10,7 +10,7 @@ class DesignsController < ApplicationController
 
   def new
     @parts = Part.all
-    @protocols = Protocol.all
+    @protocols = current_user.lab.protocols
     @design = Design.new
   end
 

@@ -6,6 +6,13 @@ class OrdersController < ApplicationController
 
   def show
     @order = Order.find(params[:id])
+    @designs = @order.designs.paginate(:page => params[:page], :per_page => 10).order("id DESC")
+    @construct_num = 0
+    @construct_bp = 0
+    @designs.each do |d|
+      @construct_num += d.constructs.size
+      d.constructs.each {|c| @construct_bp += c.seq.size}
+    end
   end
 
   def new
@@ -18,7 +25,7 @@ class OrdersController < ApplicationController
       redirect_to new_order_path, :alert => "Please input order name, select one vendor, and select at least one design!"
     else
       
-      @order = Order.new(:name => params[:name], :user_id => current_user.id, :vendor_id => params[:order][:vendor_id])
+      @order = Order.new(:name => params[:name], :user_id => current_user.id, :vendor_id => params[:order][:vendor_id], :design_ids => params[:design_id])
       if @order.save      
       
         @job = Job.create(:job_type_id => JobType.find_by_name('order').id, :user_id => current_user.id, :job_status_id => JobStatus.find_by_name('submitted').id)

@@ -40,6 +40,8 @@ class AutoBuild
     # create order files
     if error_info.empty? 
       order = Order.find(params['order_id'])
+      order.design_ids = design_ids
+      order.save
       path = "#{PARTSBUILDER_CONFIG['program']['order_path']}"
       file = BioOrder.store(path, order.id, design_ids)
     end

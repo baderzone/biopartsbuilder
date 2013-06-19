@@ -5,7 +5,7 @@ class AutoBuildsController < ApplicationController
   end
 
   def new
-    @protocols = Protocol.all
+    @protocols = current_user.lab.protocols
     @organisms = Array.new
     @organisms << ['Saccharomyces cerevisiae', 1]
     @organisms << ['Escherichia coli', 2]

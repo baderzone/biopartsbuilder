@@ -1,0 +1,36 @@
+<h2><i class='icon-book'> </i><%= @order.name %></h2>
+<hr />
+<dl class="dl-horizontal">
+  <dt>Created at</dt>
+  <dd><%= @order.created_at %></dd>
+  <dt>Total parts designed</dt>
+  <dd><%= @designs.size %></dd>
+  <dt>Total constructs made</dt>
+  <dd><%= @construct_num %></dd>
+  <dt>Total bp designed</dt>
+  <dd><%= @construct_bp %></dd>
+</dl>
+<i class="icon-download-alt"> </i><%= link_to "Download", {:action => :get_zip_file, :id => @order.id} %>
+<hr />
+<b>Designs: </b>
+<%= will_paginate @designs %>
+<table class="table table-bordered table-stripped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Part Name</th>
+      <th>Design Standard</th>
+      <th>Designed Constructs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @designs.each do |design| %>
+      <tr>
+        <td><%= design.id %></td>
+        <td><%= link_to design.part.name, part_path(design.part) %></td>
+        <td><%= link_to design.protocol.name, protocol_path(design.protocol) %></td>
+        <td><%= link_to 'View', design_path(design) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

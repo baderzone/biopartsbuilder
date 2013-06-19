@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130619182829) do
+ActiveRecord::Schema.define(:version => 20130619260656) do
 
   create_table "annotations", :force => true do |t|
     t.integer  "chromosome_id"
@@ -70,6 +70,16 @@ ActiveRecord::Schema.define(:version => 20130619182829) do
 
   add_index "designs_labs", ["design_id"], :name => "index_designs_labs_on_design_id"
   add_index "designs_labs", ["lab_id"], :name => "index_designs_labs_on_lab_id"
+
+  create_table "designs_orders", :force => true do |t|
+    t.integer  "order_id"
+    t.integer  "design_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "designs_orders", ["design_id"], :name => "index_designs_orders_on_design_id"
+  add_index "designs_orders", ["order_id"], :name => "index_designs_orders_on_order_id"
 
   create_table "features", :force => true do |t|
     t.string   "name"

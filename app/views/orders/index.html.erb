@@ -16,7 +16,7 @@
     <% @orders.each do |order| %>
       <tr>
         <td><%= order.id %></td>
-        <td><%= order.name %></td>
+        <td><%= link_to order.name, order_path(order) %></td>
         <td><%= order.user.fullname %></td>
         <td><%= order.vendor.name %></td>
         <td><%= link_to "Download", {:action => :get_zip_file, :id => order.id} %></td>
