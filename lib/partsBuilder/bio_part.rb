@@ -8,7 +8,15 @@ class BioPart
 
     case type
     when 'genome'
-      bioparts = create_from_genome(input)
+      input.each do |entry|
+        biopart = create_from_genome(entry)
+        if biopart[:error].nil?
+          bioparts << biopart
+        else
+          error = biopart[:error]
+          return bioparts, error
+        end
+      end
     when 'fasta'
       in_file = Bio::FastaFormat.open(input, 'r')
       in_file.each do |entry|
@@ -87,56 +95,47 @@ class BioPart
 
   private
   def create_from_genome(input)
-    params = Hash.new
-    eval('params = ' + input)
-    if params[:strand] == '+/-'
-      annotations = Annotation.where("chromosome_id = ? AND feature_id = ? AND start >= ? AND end <= ?", params[:chromosome_id], params[:feature_id], params[:start], params[:end]) 
-    else
-      annotations = Annotation.where("chromosome_id = ? AND feature_id = ? AND strand = ? AND start >= ? AND end <= ?", params[:chromosome_id], params[:feature_id], params[:strand], params[:start], params[:end]) 
-    end 
+    annotation = Annotation.find(input)
 
-    parts = Array.new
-    annotations.each do |a|
-      org = a.chromosome.organism.name
-      comment = a.description 
-      #get part name
-      accession = a.systematic_name
-      if a.gene_name.blank?
-        if a.feature.name == 'CDS' && org == 'Sce'
-          accession = a.systematic_name.chomp('_CDS')
-          gene = Annotation.find_by_systematic_name(accession)
-          comment = gene.description
-          gene_name = gene.try(:gene_name)
-          if !gene_name.blank? && gene_name != accession
-            part_name = "#{a.feature.name}_#{org}_#{gene_name}_#{accession}"
-          else
-            part_name = "#{a.feature.name}_#{org}_#{accession}"
-          end
+    org = annotation.chromosome.organism.name
+    comment = annotation.description 
+    #get part name
+    accession = annotation.systematic_name
+    if annotation.gene_name.blank?
+      if annotation.feature.name == 'CDS' && org == 'Sce'
+        accession = annotation.systematic_name.chomp('_CDS')
+        gene = Annotation.find_by_systematic_name(accession)
+        comment = gene.description
+        gene_name = gene.try(:gene_name)
+        if !gene_name.blank? && gene_name != accession
+          part_name = "#{annotation.feature.name}_#{org}_#{gene_name}_#{accession}"
         else
-          part_name = "#{a.feature.name}_#{org}_#{a.systematic_name}"
+          part_name = "#{annotation.feature.name}_#{org}_#{accession}"
         end
       else
-        part_name = "#{a.feature.name}_#{org}_#{a.gene_name}_#{a.systematic_name}"
-      end 
-      # get sequence
-      if a.strand == '+'
-        sequence = a.chromosome.seq[(a.start-1)..(a.end-1)]
-      else
-        chr_seq = Bio::Sequence::NA.new(a.chromosome.seq).complement
-        sequence = chr_seq[(chr_seq.size - a.end)..(chr_seq.size - a.start)]
+        part_name = "#{annotation.feature.name}_#{org}_#{annotation.systematic_name}"
       end
-      #translation
-      if a.feature.name == 'CDS'
-        part_seq = Bio::Sequence::NA.new(sequence).translate
-        part_seq.chomp!('*')
-      else
-        part_seq = sequence
-      end
-      # create part
-      parts << {name: part_name, type: a.feature.name, seq: part_seq.upcase, accession_num: accession, org_latin: a.chromosome.organism.fullname, org_abbr: a.chromosome.organism.name, comment: comment}
+    else
+      part_name = "#{annotation.feature.name}_#{org}_#{annotation.gene_name}_#{annotation.systematic_name}"
+    end 
+    # get sequence
+    if annotation.strand == '+'
+      sequence = annotation.chromosome.seq[(annotation.start-1)..(annotation.end-1)]
+    else
+      chr_seq = Bio::Sequence::NA.new(annotation.chromosome.seq).complement
+      sequence = chr_seq[(chr_seq.size - annotation.end)..(chr_seq.size - annotation.start)]
+    end
+    #translation
+    if annotation.feature.name == 'CDS'
+      part_seq = Bio::Sequence::NA.new(sequence).translate
+      part_seq.chomp!('*')
+      return {error: "Translation of #{accession} failed!"} if part_seq.include?('*')
+    else
+      part_seq = sequence
     end
 
-    return parts
+    part = {name: part_name, type: annotation.feature.name, seq: part_seq.upcase, accession_num: accession, org_latin: annotation.chromosome.organism.fullname, org_abbr: annotation.chromosome.organism.name, comment: comment}
+    return part
   end
 
   def create_from_fasta(entry)

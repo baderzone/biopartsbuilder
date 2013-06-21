@@ -13,8 +13,6 @@ class FastaFile
         errors << "Format invalid: #{entry.definition}"
       elsif entry.seq.empty?
         errors << "No sequence data for : #{entry.definition}"
-      elsif Bio::Sequence.auto(entry.seq).moltype != Bio::Sequence::AA
-        errors << "Sequence type invalid: #{entry.definition}, only protein sequence acceptable"
       else
         sequences << {'part' => descriptions[0], 'type' => descriptions[1], 'accession' => descriptions[2], 'org' => descriptions[3]||'unknown'}
       end 

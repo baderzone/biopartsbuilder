@@ -47,10 +47,10 @@
 
     <% else%>
       <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  The genome you select is: <%= @organism.fullname %>_<%= @chromosome.name %>, feature: <%= @feature.name %>, position: <%= @start %>-<%= @end %>, strand: <%= @strand %></p>
-      <%= hidden_field_tag(:genome, {chromosome_id: @chromosome.id, feature_id: @feature.id, strand: @strand, start: @start, end: @end}) %>
       <p><b><%= @parts.size %></b> parts are found to meet your requirements.  They are: </p>
       <table class="table table-striped">
         <tr>
+          <th></th>
           <th>Part Name</th>
           <th>Part Type</th>
           <th>Strand</th>
@@ -60,12 +60,19 @@
         </tr>
         <% @parts.each do |p| %>
           <tr>
+            <td><%= check_box_tag('annotation_ids[]', p.id, true) %></td>
             <td><%= p.systematic_name %></td>
             <td><%= p.feature.name %></td>
             <td><%= p.strand %></td>
             <td><%= p.start %></td>
             <td><%= p.end %></td>
-            <td><%= p.description %></td>
+            <% if p.feature.name == 'CDS' && p.chromosome.organism.name == 'Sce' %>
+              <% accession = p.systematic_name.chomp('_CDS') %>
+              <% gene = Annotation.find_by_systematic_name(accession) %>
+              <td><%= gene.description %></td>
+            <% else %>
+              <td><%= p.description %></td>
+            <% end %> 
           </tr>
         <% end %>
       </table>

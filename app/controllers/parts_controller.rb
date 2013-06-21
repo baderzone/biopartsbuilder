@@ -50,35 +50,27 @@ class PartsController < ApplicationController
       # check file
       @sequences, @errors = FastaFile.check(@seq_file)
 
-    elsif !params[:start].blank? && !params[:end].blank?
-      if params[:end].to_i == 0
-        @errors << "Start and end position must be integer"
-      else
-        @organism = Organism.find(params[:organism])
-        @chromosome = Chromosome.find(params[:chromosome])
-        @feature = Feature.find(params[:feature])
-        @strand = params[:strand]
-        @start = params[:start].to_i
-        @end = params[:end].to_i
-        if params[:strand] == '+/-'
-          @parts = Annotation.where("chromosome_id = ? AND feature_id = ? AND start >= ? AND end <= ?", @chromosome.id, @feature.id, @start, @end) 
-        else
-          @parts = Annotation.where("chromosome_id = ? AND feature_id = ? AND strand = ? AND start >= ? AND end <= ?", @chromosome.id, @feature.id, params[:strand], @start, @end) 
+    elsif !params[:genome].blank?
+      @parts = Annotation.search do |search|
+        search.query do |query| 
+          query.string params[:genome]
         end
+        search.size 100
       end
+
     else
-      redirect_to new_part_path, :alert => "Please input a list of accession numbers OR upload a FASTA file"
+      redirect_to new_part_path, :alert => "Please input a list of accession numbers OR upload a FASTA file OR search genomes to create parts"
     end
   end
 
   def create
-    if params[:accession].blank? && params[:sequence_file].blank? && params[:genome].blank?
+    if params[:accession].blank? && params[:sequence_file].blank? && params[:annotation_ids].blank?
       redirect_to new_part_path, :alert => "No input"
 
     else
       @job = Job.create(job_type: JobType.find_by_name('part'), user: current_user, job_status: JobStatus.find_by_name('submitted'))
 
-        worker_params = {:job_id => @job.id, :accessions => params[:accession], :user_id => current_user.id, :seq_file => params[:sequence_file], :genome => params[:genome]}
+      worker_params = {:job_id => @job.id, :accessions => params[:accession], :user_id => current_user.id, :seq_file => params[:sequence_file], :annotation_ids => params[:annotation_ids]}
 
       PartWorker.perform_async(worker_params)
       redirect_to job_path(@job.id), :notice => "Parts submitted!"

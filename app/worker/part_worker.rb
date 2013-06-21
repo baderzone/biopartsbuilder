@@ -18,7 +18,7 @@ class PartWorker
     elsif !params['accessions'].blank?
       data, error_info = biopart.retrieve(params['accessions'], 'ncbi')
     else
-      data, error_info = biopart.retrieve(params['genome'], 'genome')
+      data, error_info = biopart.retrieve(params['annotation_ids'], 'genome')
     end
     # check parts
     error_info = biopart.check(data) if error_info.empty? 

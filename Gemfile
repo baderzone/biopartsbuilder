@@ -36,6 +36,10 @@ gem 'will_paginate', '~> 3.0'
 #bio gems
 gem 'bio'
 
+#elasticsearch gems
+gem 'tire'
+gem 'yajl-ruby'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
