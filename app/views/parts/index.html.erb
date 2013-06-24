@@ -19,7 +19,7 @@
         <td><%= part.id %></td>
         <td><%= link_to part.name, part_path(part.id) %></td>
         <td><%= part.sequence.accession %></td>
-        <td><%= begin; part.sequence.organism.fullname; rescue; "Unknown"; end %></td>
+        <td><%= part.sequence.organism.try(:fullname) || "Unknown" %></td>
         <td><%= part.sequence.annotation %></td>
         <td><%= l part.created_at.in_time_zone('EST') %></td>
       </tr>

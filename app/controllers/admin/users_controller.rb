@@ -12,14 +12,19 @@ class Admin::UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
-    @user.lab = current_user.lab
+    if @user.email.include?('@gmail.com')
+      @user.lab = current_user.lab
 
-    if @user.save
-      redirect_to admin_users_path, notice: 'New member added!'
-    else  
-      flash[:error] = 'Something went wrong.  Please try again.'
+      if @user.save
+        return redirect_to admin_users_path, notice: 'New member added!'
+      else  
+        flash[:error] = 'Something went wrong.  Please try again.'
+        return render :new
+      end       
+    else
+      flash[:error] = 'Only gmail account is acceptable'
       render :new
-    end       
+    end
   end
 
   def edit
@@ -35,6 +40,15 @@ class Admin::UsersController < ApplicationController
       render :edit
     end
 
+  end
+
+  def destroy
+    @user = User.find(params[:id])
+    if @user.destroy
+      redirect_to admin_users_path, :notice => "User Deleted!"
+    else
+      flash[:error] = 'Something went wrong.  Please try again!'
+    end
   end
 
 end

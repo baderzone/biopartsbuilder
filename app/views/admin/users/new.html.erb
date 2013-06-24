@@ -2,7 +2,7 @@
 <hr />
 <%= simple_form_for([:admin,@user], :html => {:class => 'form-horizontal' }) do |f| %>
   <%= f.input :fullname %>
-  <%= f.input :email %>
+  <%= f.input :email, :label => 'Gmail Account' %>
   <%= f.association :group, :collection => Group.all %>
   <div class="form-actions">
     <%= f.button :submit, :class => 'btn' %>

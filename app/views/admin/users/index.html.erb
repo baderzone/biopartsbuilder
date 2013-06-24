@@ -17,8 +17,8 @@
       <td><%= user.fullname %></td>
       <td><%= user.email %></td>
       <td><%= user.lab.name %></td>
-      <td><%= user.group.name %></td>
-      <td><%= link_to 'Edit', edit_admin_user_path(user.id) %></td>
+      <td><%= user.group.try(:name) %></td>
+      <td><%= link_to 'Edit', edit_admin_user_path(user.id) %> | <%= link_to 'Delete', admin_user_path(user.id), :confirm => 'Are you sure?', :method => :delete %></td>
     </tr>
   <% end %>
 </table>

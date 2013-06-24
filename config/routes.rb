@@ -30,6 +30,7 @@ Partsbuilder::Application.routes.draw do
   resources :constructs
   resources :orders
   resources :users
+  resources :labs
   resources :designs
   resources :parts do
     resources :designs

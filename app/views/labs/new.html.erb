@@ -1,0 +1,19 @@
+<h2><i class="icon-play-circle"> </i>Create your lab</h2>
+<hr />
+<h5><i class='icon-info-sign'> </i>If you want to join an <%= link_to 'existing lab', labs_path %>, please contact that lab's administrator</h5>
+<br />
+<%= simple_form_for(@lab, :html => {:class => 'form-horizontal'}) do |f| %>
+  <%= f.input :name, :label => 'Lab Name' %>
+  <%= f.input :description, :input_html => { :rows => 3 }, :label => 'Lab Description' %>
+  <hr />
+  <div class="control-group">
+    <label class="control-label">Your fullname</label>
+    <div class="controls"><%= text_field_tag :user_name %></div>
+    <br />
+    <label class="control-label">Your Gmail Account</label>
+    <div class="controls"><%= text_field_tag :email %></div>
+  </div>
+  <div class="form-actions">
+    <%= f.button :submit, :class => 'btn btn-primary' %>
+  </div>
+<% end %>

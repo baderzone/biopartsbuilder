@@ -1,0 +1,28 @@
+<div class="page-header">
+  <h2><i class="icon-book"> </i>Labs</h2>
+</div>
+<%= will_paginate @labs %>
+<table class="table table-bordered table-stripped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Lab Name</th>
+      <th>Description</th>
+      <th>Administrators</th>
+      <th>Created_at</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% cnt = 0 %>
+    <% @labs.each do |lab| %>
+      <tr>
+        <td><%= cnt += 1 %></td>
+        <td><%= lab.name %></td>
+        <td><%= lab.description %></td>
+        <td><%= lab.administrators.join('; ') %></td>
+        <td><%= lab.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br />
