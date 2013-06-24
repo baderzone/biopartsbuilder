@@ -14,12 +14,13 @@ class Annotation < ActiveRecord::Base
     indexes :gene_name, :type => 'string', :analyzer => 'snowball'
     indexes :strand, :type => 'string'
     indexes :ontology_term, :type => 'string', :analyzer => 'snowball'
-    indexes :description, :type => 'string', :analyzer => 'english_snowball'
+    indexes :description, :type => 'string', :analyzer => 'english'
     indexes :orf_classification, :type => 'string', :analyzer => 'snowball'
     indexes :start, :type => 'integer'
     indexes :end, :type => 'integer'
     indexes :chromosome, :as => 'chromosome.name'
     indexes :feature, :as => 'feature.name'
+    indexes :organism, :as => 'chromosome.organism.fullname'
   end
 
 end

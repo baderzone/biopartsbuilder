@@ -29,7 +29,7 @@ class OrdersController < ApplicationController
       if @order.save      
       
         @job = Job.create(:job_type_id => JobType.find_by_name('order').id, :user_id => current_user.id, :job_status_id => JobStatus.find_by_name('submitted').id)
-        worker_params = {:order_id => @order.id, :designs => params[:design_id], :job_id => @job.id}
+        worker_params = {:order_id => @order.id, :designs => params[:design_id], :job_id => @job.id, :vendor_id => @order.vendor_id}
         OrderWorker.perform_async(worker_params)
         redirect_to job_path(@job.id), :notice => "Order submitted!"
       

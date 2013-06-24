@@ -8,12 +8,12 @@
   <hr />
 
   <button type="button" data-toggle="collapse" data-target="#codon">+</button> <b>Codon Optimizaion</b> <br />
-  <div id='codon' class='collapse in'>
+  <div id='codon' class='collapse'>
     Organism <%= f.collection_select :organism_id, Organism.find((1..6).to_a), :code, :fullname, :include_blank => true %>
   </div>
 
   <button type="button" data-toggle="collapse" data-target="#remove">+</button> <b>Remove Resctriction Enzymes without changing translation</b> <br />
-  <div id='remove' class='collapse in'>
+  <div id='remove' class='collapse'>
     <table>
       <tr>
         <td align="center"><%= f.label :forbid_enzymes, "Forbidden Enzymes" %></td>
@@ -24,7 +24,7 @@
   </div>
 
   <button type="button" data-toggle="collapse" data-target="#check">+</button> <b>Check Resctriction Enzyme Sites</b> <br />
-  <div id='check' class='collapse in'>
+  <div id='check' class='collapse'>
     <table>
       <tr>
         <td align="center">Enzymes</td>
@@ -35,13 +35,13 @@
   </div>
 
   <button type="button" data-toggle="collapse" data-target="#add">+</button> <b>Add Prefix and Suffix</b> <br />
-  <div id='add' class='collapse in'>
+  <div id='add' class='collapse'>
     <p>External Prefix <%= f.text_field :ext_prefix %></p>
     <p>External Suffix <%= f.text_field :ext_suffix %></p>
   </div>
 
   <button type="button" data-toggle="collapse" data-target="#carve">+</button> <b>Carve long sequence into fragments</b>
-  <div id='carve' class='collapse in'>
+  <div id='carve' class='collapse'>
     <table>
       <tr>
         <td align="center"><%= f.label :construct_size, "Size Restriction" %></td>

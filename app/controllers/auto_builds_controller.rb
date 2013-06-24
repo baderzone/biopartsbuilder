@@ -18,8 +18,8 @@ class AutoBuildsController < ApplicationController
   end
 
   def confirm
-    if params[:order_name].blank? || (params[:accession].blank? && params[:sequence_file].blank? && params[:start].blank?) || params[:protocol_id].blank? 
-      redirect_to new_auto_build_path, :alert => "Something is missing. Make sure to select one design standard, input order name, upload a fasta file or input accession numbers"
+    if params[:order_name].blank? || (params[:accession].blank? && params[:sequence_file].blank? && params[:genome].blank?) || params[:protocol_id].blank? 
+      redirect_to new_auto_build_path, :alert => "Something is missing. Make sure to select one design standard, input order name, upload a fasta file or input accession numbers or search genomes"
     else
 
       @errors = Array.new
@@ -36,21 +36,12 @@ class AutoBuildsController < ApplicationController
         # check file
         @sequences, @errors = FastaFile.check(@seq_file)
 
-      elsif !params[:start].blank? && !params[:end].blank?
-        if params[:end].to_i == 0
-          @errors << "Start and end position must be integer"
-        else
-          @organism = Organism.find(params[:organism])
-          @chromosome = Chromosome.find(params[:chromosome])
-          @feature = Feature.find(params[:feature])
-          @strand = params[:strand]
-          @start = params[:start].to_i
-          @end = params[:end].to_i
-          if params[:strand] == '+/-'
-            @parts = Annotation.where("chromosome_id = ? AND feature_id = ? AND start >= ? AND end <= ?", @chromosome.id, @feature.id, @start, @end) 
-          else
-            @parts = Annotation.where("chromosome_id = ? AND feature_id = ? AND strand = ? AND start >= ? AND end <= ?", @chromosome.id, @feature.id, params[:strand], @start, @end) 
+      elsif !params[:genome].blank?
+        @parts = Annotation.search do |search|
+          search.query do |query| 
+            query.string params[:genome]
           end
+          search.size 100
         end
       end
 
@@ -62,7 +53,7 @@ class AutoBuildsController < ApplicationController
 
   def create
     if params[:order_name].blank? || (params[:accession].blank? && params[:sequence_file].blank? && params[:annotation_ids].blank?) || params[:protocol_id].blank? 
-      redirect_to new_auto_build_path, :alert => "Something is missing. Make sure to select one design standard, input order name, upload a fasta file or input accession numbers"
+      redirect_to new_auto_build_path, :alert => "Something is missing. Make sure to select one design standard, input order name, upload a fasta file or input accession numbers or search genomes"
     else
 
       @order = Order.new(:name => params[:order_name], :user_id => current_user.id, :vendor_id => params[:vendor_id])

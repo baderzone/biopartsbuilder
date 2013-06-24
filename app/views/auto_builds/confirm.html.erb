@@ -46,33 +46,44 @@
       <% end %>
 
     <% else%>
-      <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  The genome you select is: <%= @organism.fullname %>_<%= @chromosome.name %>, feature: <%= @feature.name %>, position: <%= @start %>-<%= @end %>, strand: <%= @strand %></p>
-      <p><b><%= @parts.size %></b> parts are found to meet your requirements.  They are: </p>
+      <% if @parts.size == 100 %>
+        <p>More than 100 parts found!  Only the first 100 are showed here.</p>
+      <% else %>
+        <p><b><%= @parts.size %></b> parts found. They are: </p>
+      <% end %>
       <table class="table table-striped">
         <tr>
           <th></th>
+          <th>Organism</th>
+          <th>Chromosome</th>
           <th>Part Name</th>
           <th>Part Type</th>
           <th>Strand</th>
           <th>Start</th>
           <th>End</th>
+          <th>Ontology Term</th>
+          <th>ORF Classification</th>
           <th>Description</th>
         </tr>
         <% @parts.each do |p| %>
           <tr>
-            <td><%= check_box_tag('annotation_ids[]', p.id, true) %></td>
+            <td><%= check_box_tag('annotation_ids[]', p.id, nil) %></td>
+            <td><%= p.organism %></td>
+            <td><%= p.chromosome %></td>
             <td><%= p.systematic_name %></td>
-            <td><%= p.feature.name %></td>
+            <td><%= p.feature %></td>
             <td><%= p.strand %></td>
             <td><%= p.start %></td>
             <td><%= p.end %></td>
-            <% if p.feature.name == 'CDS' && p.chromosome.organism.name == 'Sce' %>
+            <td><%= p.ontology_term %></td>
+            <td><%= p.orf_classification %></td>
+            <% if p.feature == 'CDS' %>
               <% accession = p.systematic_name.chomp('_CDS') %>
               <% gene = Annotation.find_by_systematic_name(accession) %>
               <td><%= gene.description %></td>
             <% else %>
               <td><%= p.description %></td>
-            <% end %> 
+            <% end %>
           </tr>
         <% end %>
       </table>

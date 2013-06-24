@@ -59,8 +59,9 @@
       <table class="table table-striped">
         <tr>
           <th></th>
-          <th>Part Name</th>
+          <th>Organism</th>
           <th>Chromosome</th>
+          <th>Part Name</th>
           <th>Part Type</th>
           <th>Strand</th>
           <th>Start</th>
@@ -72,6 +73,7 @@
         <% @parts.each do |p| %>
           <tr>
             <td><%= check_box_tag('annotation_ids[]', p.id, nil) %></td>
+            <td><%= p.organism %></td>
             <td><%= p.chromosome %></td>
             <td><%= p.systematic_name %></td>
             <td><%= p.feature %></td>

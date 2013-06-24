@@ -23,10 +23,3 @@ $(document).ready(function(){
 $(document).ready(function(){
     $("#search").quicksearch('table#sortable-table tbody tr');
     });
-$(document).ready(function(){
-    $('#codon').collapse("hide");
-    $('#remove').collapse("hide");
-    $('#check').collapse("hide");
-    $('#carve').collapse("hide");
-    $('#add').collapse("hide");
-    });

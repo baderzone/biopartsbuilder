@@ -43,7 +43,7 @@ class AutoBuild
       order.design_ids = design_ids
       order.save
       path = "#{PARTSBUILDER_CONFIG['program']['order_path']}"
-      file = BioOrder.store(path, order.id, design_ids)
+      file = BioOrder.new.store(path, order.id, design_ids, order.vendor.name)
     end
 
     # change job status
