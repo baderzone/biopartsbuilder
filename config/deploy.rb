@@ -55,6 +55,7 @@ namespace :deploy do
     run "cd #{current_path}; 
          ln -s #{shared_path}/config/database.yml config/database.yml; 
          ln -s #{shared_path}/config/partsbuilder.yml config/partsbuilder.yml;
+         ln -s #{shared_path}/geneDesign lib/geneDesign;
          ln -s #{shared_path}/partsBuilder_processing/parts public/parts; 
          ln -s #{shared_path}/partsBuilder_processing/designs public/designs; 
          ln -s #{shared_path}/partsBuilder_processing/orders public/orders; 

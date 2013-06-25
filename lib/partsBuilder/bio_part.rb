@@ -145,8 +145,10 @@ class BioPart
 
     part[:type] = descriptions[1].strip
     part[:accession_num] = descriptions[2].strip
-    part[:org_latin] = descriptions[3] && descriptions[3].strip
-    part[:org_abbr] = part[:org_latin].split(' ')[0][0].upcase + part[:org_latin].split(' ')[1][0, 2].downcase unless part[:org_latin].nil?
+    unless descriptions[3].blank?
+      part[:org_latin] = descriptions[3].strip
+      part[:org_abbr] = part[:org_latin].split(' ')[0][0].upcase + part[:org_latin].split(' ')[1][0, 2].downcase 
+    end
     part[:comment] = descriptions[4] && descriptions[4].strip
     part[:name] = "#{part[:type]}_#{part[:org_abbr]}_#{gene_name}_#{part[:accession_num]}"
     part[:seq] = entry.seq.upcase
