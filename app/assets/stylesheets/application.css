@@ -12,3 +12,6 @@
  *= require_tree .
  *= require jquery-tablesorter/theme.blue
  */
+.genome_search {
+  width: 50%
+}

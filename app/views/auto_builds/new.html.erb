@@ -22,7 +22,7 @@
     </div>
 
     <div class="tab-pane" id="genome">
-      1. <b>Input your query</b> <%= text_field_tag(:genome) %>
+      1. <b>Input your query</b> <%= text_field_tag :genome, '', class: 'genome_search' %>
       <div class="accordion" id="accordion2">
         <div class="accordion-group">
           <div class="accordion-heading">
@@ -35,7 +35,7 @@
               <p>You can input any words to search all the fields, or search a specific field using the format: field_name:words. 'AND', 'OR' can be used to combine diffrent fields to create complex queries.</p>
               <p><b>Examples:</b></p>
               <li>gene_name:SE* AND (chromosome:chrI OR chromosome:chrII) <i>(find all the genes whose gene symbol begins with SE and belongs to chromosome I or II)</i></li>
-              <li>start:[1 TO 10000] AND feature:CDS AND orf_classification:vefified <i>(find all the verified CDS with start position from 1 to 10000)</i></li>
+              <li>start:[1 TO 10000] AND feature:CDS AND orf_classification:verified <i>(find all the verified CDS with start position from 1 to 10000)</i></li>
               <hr />
               <p><b>Keywords</b></p>
               <table class="table table-stripped table-bordered">
@@ -71,12 +71,12 @@
                 </tr>
                 <tr>
                   <td>start</td>
-                  <td>The start prosotion on chromosome</td>
+                  <td>The start position on chromosome</td>
                   <td>start:[1000 TO *]</td>
                 </tr>
                 <tr>
                   <td>end</td>
-                  <td>The end prosotion on chromosome</td>
+                  <td>The end position on chromosome</td>
                   <td>end:7235</td>
                 </tr>
                 <tr>
@@ -86,7 +86,7 @@
                 </tr>
                 <tr>
                   <td>orf_classification</td>
-                  <td>ORF classification: verified, dubious, uncheracterized, ...</td>
+                  <td>ORF classification: verified, dubious, uncharacterized, ...</td>
                   <td>orf_classification:verified</td>
                 </tr>
                 <tr>

@@ -28,11 +28,15 @@ class AutoBuildsController < ApplicationController
         @sequences, @errors = FastaFile.check(@seq_file)
 
       elsif !params[:genome].blank?
-        @parts = Annotation.search do |search|
-          search.query do |query| 
-            query.string params[:genome]
+        begin
+          @parts = Annotation.search do |search|
+            search.query do |query| 
+              query.string params[:genome]
+            end
+            search.size 100
           end
-          search.size 100
+        rescue
+          return redirect_to new_part_path, :alert => "Your query '#{params[:genome]}' format is not correct, please check"
         end
       end
 
