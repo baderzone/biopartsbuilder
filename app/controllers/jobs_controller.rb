@@ -1,7 +1,7 @@
 class JobsController < ApplicationController
 
   def index
-    @jobs = current_user.job.paginate(:page => params[:page], :per_page => 10).order("id DESC")
+    @jobs = current_user.jobs.paginate(:page => params[:page], :per_page => 10).order("id DESC")
   end
 
   def show

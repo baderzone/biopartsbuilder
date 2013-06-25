@@ -36,7 +36,7 @@ class AutoBuildsController < ApplicationController
             search.size 100
           end
         rescue
-          return redirect_to new_part_path, :alert => "Your query '#{params[:genome]}' format is not correct, please check"
+          return redirect_to new_auto_build_path, :alert => "Your query '#{params[:genome]}' format is not correct, please check"
         end
       end
 
