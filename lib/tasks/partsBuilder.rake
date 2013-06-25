@@ -9,6 +9,7 @@ namespace :partsBuilder do
     task :import => :environment do
       filename = ENV['filename']
       genome = ENV['genome']
+      gff_created_at = ENV['gff_created_at']
       puts "Loading annotations from: #{filename}"
 
       gff = Bio::GFF::GFF3.new(File.open(filename))
@@ -24,7 +25,7 @@ namespace :partsBuilder do
         Chromosome.create(name: seq.entry_id, organism: organism, seq: seq.to_s, genome_version: genome)
       end
 
-      gff_created_at = Date.parse(gff.records[0].to_s).to_s
+      #gff_created_at = Date.parse(gff.records[0].to_s).to_s
       gff.records.each do |row|
         if row.start && row.feature != 'chromosome'
           attribute = {'Name' => nil, 'gene' => nil, 'Ontology_term' => nil, 'Note' => nil, 'dbxref' => nil, 'orf_classification' => nil}
@@ -35,12 +36,19 @@ namespace :partsBuilder do
           end
 
           chromosome = Chromosome.find_by_name(row.seqname)
-          feature = Feature.find_by_name(row.feature)
+          feature = Feature.find_by_name(row.feature) || Feature.create(:name => row.feature)
+          
+          case row.strand
+          when '+'
+            strand = 'W'
+          when '-'
+            strand = 'C'
+          end
 
-          if attribute['Name'].nil? || chromosome.nil? || feature.nil?
+          if attribute['Name'].nil? || chromosome.nil?
             puts "Warning: something wrong with this line, didn't load to DB: #{row.to_s}"
           else
-            Annotation.create(chromosome: chromosome, start: row.start, end: row.end, feature: feature, strand: row.strand, systematic_name: attribute['Name'], gene_name: attribute['gene'], ontology_term: attribute['Ontology_term'], dbxref: attribute['dbxref'], description: attribute['Note'], orf_classification: attribute['orf_classification'], gff_created_at: gff_created_at)
+            Annotation.create(chromosome: chromosome, start: row.start, end: row.end, feature: feature, strand: strand, systematic_name: attribute['Name'], gene_name: attribute['gene'], ontology_term: attribute['Ontology_term'], dbxref: attribute['dbxref'], description: attribute['Note'], orf_classification: attribute['orf_classification'], gff_created_at: gff_created_at)
           end
         end
       end

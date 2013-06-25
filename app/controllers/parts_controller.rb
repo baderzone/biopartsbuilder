@@ -23,15 +23,6 @@ class PartsController < ApplicationController
 
   def new
     @part = Part.new
-    @organisms = Array.new
-    @organisms << ['Saccharomyces cerevisiae', 1]
-    @organisms << ['Escherichia coli', 2]
-    @chromosomes = Chromosome.all
-    @features = Array.new
-    @features << ['CDS', 5]
-    @features << ['tRNA', 16]
-    @features << ['repeat_region', 26]
-    @features << ['rRNA', 32]
   end
 
   def confirm

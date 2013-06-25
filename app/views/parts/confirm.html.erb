@@ -1,4 +1,8 @@
-<h2><i class="icon-info-sign"> Please Check</i></h2>
+<% if @parts.blank? %>
+  <h2><i class="icon-info-sign"> Please Check</i></h2>
+<% else %>
+  <h2><i class="icon-info-sign"> Please select parts to be created</i></h2>
+<% end %>
 <hr />
 
 <% unless @errors.empty? %>

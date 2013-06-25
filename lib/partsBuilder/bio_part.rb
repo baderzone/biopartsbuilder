@@ -119,7 +119,7 @@ class BioPart
       part_name = "#{annotation.feature.name}_#{org}_#{annotation.gene_name}_#{annotation.systematic_name}"
     end 
     # get sequence
-    if annotation.strand == '+'
+    if annotation.strand == 'W'
       sequence = annotation.chromosome.seq[(annotation.start-1)..(annotation.end-1)]
     else
       chr_seq = Bio::Sequence::NA.new(annotation.chromosome.seq).complement
