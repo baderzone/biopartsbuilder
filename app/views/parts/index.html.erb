@@ -18,9 +18,9 @@
       <tr>
         <td><%= part.id %></td>
         <td><%= link_to part.name, part_path(part.id) %></td>
-        <td><%= part.sequence.accession %></td>
-        <td><%= part.sequence.organism.try(:fullname) || "Unknown" %></td>
-        <td><%= part.sequence.annotation %></td>
+        <td><%= part.sequences.first.accession %></td>
+        <td><%= part.sequences.first.organism.try(:fullname) || "Unknown" %></td>
+        <td><%= part.sequences.first.annotation %></td>
         <td><%= l part.created_at.in_time_zone('EST') %></td>
       </tr>
     <% end %>

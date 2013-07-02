@@ -26,7 +26,7 @@ class BioOrder
         part_name = c.name
         feature = c.name.split('_')[0]
         accession = c.name.split('_')[-2]
-        organism = design.protocol.organism.try(:fullname) || design.part.sequence.organism.fullname
+        organism = design.protocol.organism.try(:fullname) || design.part.sequences.first.organism.fullname
         genome = Annotation.find_by_systematic_name(accession)
         if genome.nil?
           chromosome = nil

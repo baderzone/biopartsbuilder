@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h2><i class="icon-file"> </i>Part <%= @part.id %></h2>
+  <h2><i class="icon-file"> </i><%= @part.name %></h2>
 </div>
 
 <ul class="nav nav-tabs">
@@ -9,46 +9,63 @@
 
 <div class="tab-content">
   <div class="tab-pane active" id="info">
+  <% if !@protein_seq.nil? %> 
+    <h4>Protein Sequence</h4>
     <dl class="dl-horizontal">
-      <dt>Name</dt>
-      <dd><%= @part.name %></dd>
       <dt>Length</dt>
-      <dd><%= @sequence.size %></dd>
-      <dt>GC content</dt>
-      <dd><%= @sequence.gc_percent().to_f %></dd>
-      <dt>GC skew</dt>
-      <dd><%= @sequence.gc_skew().to_f %></dd>
+      <dd><%= @protein_seq.size %></dd>
       <% if !@part.comment.blank? %>
         <dt>Comment</dt>
         <dd><%= @part.comment %></dd>
       <% end %>
     </dl>
-    <pre class="prettyprint linenums"><%= @sequence.to_fasta(@part.name,80) %></pre>
-    <i class="icon-download-alt"> </i><%= link_to 'Download FASTA file', :action => :get_fasta_file, :id => @part.id %>
-  </div>
+    <pre class="prettyprint linenums"><%= @protein_seq.to_fasta(@part.name,80) %></pre>
+    <i class="icon-download-alt"> </i><%= link_to 'Download FASTA file', :action => :get_fasta_file, :id => @p_seq.id %>
+   <% end %>
+   <% if !@protein_seq.nil? && !@dna_seq.nil? %>
+     <hr />
+   <% end %>
+   <% if !@dna_seq.nil? %>
+    <h4>Nucleotide Sequence</h4>
+    <dl class="dl-horizontal">
+      <dt>Length</dt>
+      <dd><%= @dna_seq.size %></dd>
+      <dt>GC content</dt>
+      <dd><%= @dna_seq.gc_percent().to_f %></dd>
+      <dt>GC skew</dt>
+      <dd><%= @dna_seq.gc_skew().to_f %></dd>
+      <% if !@part.comment.blank? %>
+        <dt>Comment</dt>
+        <dd><%= @part.comment %></dd>
+      <% end %>
+    </dl>
+    <pre class="prettyprint linenums"><%= @dna_seq.to_fasta(@part.name,80) %></pre>
+    <i class="icon-download-alt"> </i><%= link_to 'Download FASTA file', :action => :get_fasta_file, :id => @d_seq.id %>
+  <% end %>
+</div>
 
-  <div class="tab-pane" id="design">
-    <table class="table table-bordered table-stripped">
-      <thead>
+<div class="tab-pane" id="design">
+  <table class="table table-bordered table-stripped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Design Standard</th>
+        <th>Designed Constructs</th>
+        <th>Created_at</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @part.designs.each do |design| %>
         <tr>
-          <th>#</th>
-          <th>Design Standard</th>
-          <th>Designed Constructs</th>
-          <th>Created_at</th>
+          <td><%= design.id %></td>
+          <td><%= link_to design.protocol.name, protocol_path(design.protocol_id) %></td>
+          <td><%= link_to 'View', part_design_path(design.part_id, design.id) %></td>
+          <td><%= l design.created_at.in_time_zone('EST') %></td>
         </tr>
-      </thead>
-      <tbody>
-        <% @part.designs.each do |design| %>
-          <tr>
-            <td><%= design.id %></td>
-            <td><%= link_to design.protocol.name, protocol_path(design.protocol_id) %></td>
-            <td><%= link_to 'View', part_design_path(design.part_id, design.id) %></td>
-            <td><%= l design.created_at.in_time_zone('EST') %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 </div>
 
 <div class="form-actions">

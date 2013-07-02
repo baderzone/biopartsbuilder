@@ -26,7 +26,7 @@ class BioPart
       in_file.close
     when 'ncbi'
       input.each do |entry|
-        sequence = Sequence.find_by_accession(entry)
+        sequence = Sequence.find_all_by_accession(entry).try(:first)
         if sequence.nil?
           # create new sequence
           biopart = create_from_ncbi(entry)
@@ -38,7 +38,8 @@ class BioPart
           end
         else
           # retrieve exist data
-          bioparts << {name: sequence.part.name, type: sequence.part.name.split('_')[0], seq: sequence.seq, accession_num: sequence.accession, org_latin: sequence.organism.fullname, org_abbr: sequence.organism.name, comment: sequence.part.comment} 
+          part = sequence.part
+          bioparts << {name: part.name, type: sequence.annotation, protein_seq: part.protein_seq.try(:seq), dna_seq: part.dna_seq.try(:seq), accession_num: sequence.accession, org_latin: sequence.organism.fullname, org_abbr: sequence.organism.name, comment: part.comment} 
         end 
       end 
     end
@@ -49,10 +50,18 @@ class BioPart
   def check(bioparts)
     error = String.new
     bioparts.each do |entry|
-      exist_seq = Sequence.find_by_accession(entry[:accession_num])
+      if entry[:dna_seq].nil?
+        seq_type = 'protein'
+        part_seq = entry[:protein_seq] 
+      else
+        seq_type = 'dna'
+        part_seq = entry[:dna_seq]
+      end
+
+      exist_seq = Sequence.find_by_accession_and_seq_type(entry[:accession_num], seq_type)
       if !exist_seq.nil?
-        if exist_seq.seq != entry[:seq]
-          error = "Part '#{entry[:accession_num]}' with different sequence found!  Please check if the data is correct. Accession number must be unique (one sequence, one number). The sequence of part found in the database is: #{exist_seq.seq}. The sequence of your part is: #{entry[:seq]}"
+        if exist_seq.seq.upcase != part_seq.upcase
+          error = "Part '#{entry[:accession_num]}' with different sequence found!  Please check if the data is correct. Accession number must be unique (one sequence, one number). The sequence of part found in the database is: #{exist_seq.seq}. The sequence of your part is: #{part_seq}"
           return error
         end
       end
@@ -70,17 +79,31 @@ class BioPart
       if ! entry[:org_latin].nil?
         organism = Organism.find_by_fullname(entry[:org_latin],) || Organism.create(:fullname => entry[:org_latin], :name => entry[:org_abbr])
       end
-      sequence = Sequence.find_by_accession(entry[:accession_num])
-      if sequence.nil?
+      sequence = Sequence.find_all_by_accession(entry[:accession_num]).try(:first)
+      if sequence.blank?
         part = Part.create(:name => entry[:name].gsub(/__/, '_'), :comment => entry[:comment], :lab_ids => lab_id)
-        part.create_sequence(:accession => entry[:accession_num], :organism => organism, :seq => entry[:seq], :annotation => entry[:type])
         part_ids << part.id
 
-        # create protein fasta file for GeneDesign
-        fasta_seq = Bio::Sequence.new(entry[:seq])
-        f = File.new("#{PARTSBUILDER_CONFIG['program']['part_fasta_path']}/#{part.id}.fasta", 'w')
-        f.print fasta_seq.output(:fasta, :header => part.name, :width => 80)
-        f.close
+        unless entry[:protein_seq].nil?
+          part.sequences.create(:accession => entry[:accession_num], :organism => organism, :seq => entry[:protein_seq].upcase, :annotation => entry[:type], :seq_type => 'protein')
+        end
+        unless entry[:dna_seq].nil?
+          part.sequences.create(:accession => entry[:accession_num], :organism => organism, :seq => entry[:dna_seq].upcase, :annotation => entry[:type], :seq_type => 'dna')
+        end
+
+        # create fasta file for GeneDesign
+        unless entry[:protein_seq].nil?
+          fasta_seq = Bio::Sequence.new(entry[:protein_seq])
+          f = File.new("#{PARTSBUILDER_CONFIG['program']['part_fasta_path']}/#{part.id}_protein.fasta", 'w')
+          f.print fasta_seq.output(:fasta, :header => part.name, :width => 80)
+          f.close
+        end
+        unless entry[:dna_seq].nil?
+          fasta_seq = Bio::Sequence.new(entry[:dna_seq])
+          f = File.new("#{PARTSBUILDER_CONFIG['program']['part_fasta_path']}/#{part.id}_dna.fasta", 'w')
+          f.print fasta_seq.output(:fasta, :header => part.name, :width => 80)
+          f.close
+        end
       else
         part = sequence.part
         part.lab_ids = (part.lab_ids + lab_id).uniq
@@ -120,21 +143,22 @@ class BioPart
     end 
     # get sequence
     if annotation.strand == 'W'
-      sequence = annotation.chromosome.seq[(annotation.start-1)..(annotation.end-1)]
+      dna_sequence = annotation.chromosome.seq[(annotation.start-1)..(annotation.end-1)]
     else
       chr_seq = Bio::Sequence::NA.new(annotation.chromosome.seq).complement
-      sequence = chr_seq[(chr_seq.size - annotation.end)..(chr_seq.size - annotation.start)]
+      dna_sequence = chr_seq[(chr_seq.size - annotation.end)..(chr_seq.size - annotation.start)]
     end
+    return {error: "Sequence of #{accession} not found!"} if dna_sequence.blank?
     #translation
     if annotation.feature.name == 'CDS'
-      part_seq = Bio::Sequence::NA.new(sequence).translate
-      part_seq.chomp!('*')
-      return {error: "Translation of #{accession} failed!"} if part_seq.include?('*')
+      protein_sequence = Bio::Sequence::NA.new(dna_sequence).translate
+      protein_sequence.chomp!('*')
+      return {error: "Translation of #{accession} failed!"} if protein_sequence.include?('*')
     else
-      part_seq = sequence
+      protein_sequence = nil
     end
 
-    part = {name: part_name, type: annotation.feature.name, seq: part_seq.upcase, accession_num: accession, org_latin: annotation.chromosome.organism.fullname, org_abbr: annotation.chromosome.organism.name, comment: comment}
+    part = {name: part_name, type: annotation.feature.name, protein_seq: protein_sequence, dna_seq: dna_sequence, accession_num: accession, org_latin: annotation.chromosome.organism.fullname, org_abbr: annotation.chromosome.organism.name, comment: comment}
     return part
   end
 
@@ -151,7 +175,12 @@ class BioPart
     end
     part[:comment] = descriptions[4] && descriptions[4].strip
     part[:name] = "#{part[:type]}_#{part[:org_abbr]}_#{gene_name}_#{part[:accession_num]}"
-    part[:seq] = entry.seq.upcase
+    sequence = Bio::Sequence.auto(entry.seq)
+    if sequence.moltype == Bio::Sequence::AA 
+      part[:protein_seq] = entry.seq
+    else
+      part[:dna_seq] = entry.seq
+    end
     return part
   end
 
@@ -202,24 +231,24 @@ class BioPart
 
     # get sequence
     if get_value(xml, 'GBSeq', 'GBSeq_moltype') == 'AA'
-      part[:seq] = get_value(xml, 'GBSeq', 'GBSeq_sequence') 
+      part[:protein_seq] = get_value(xml, 'GBSeq', 'GBSeq_sequence') 
+      part[:dna_seq] = nil
     else
+      part[:dna_seq] = get_value(xml, 'GBSeq', 'GBSeq_sequence')
       features.each do |f|
         quals = get_value(f, 'GBFeature_quals', 'GBQualifier')
         quals.each do |entry|
           if get_value(entry, 'GBQualifier_name') == "translation" && !get_value(entry, 'GBQualifier_value').nil?
-            part[:seq] = get_value(entry, 'GBQualifier_value') 
+            part[:protein_seq] = get_value(entry, 'GBQualifier_value') 
             break
           end
         end unless quals.nil?
-        break unless part[:seq].nil?
+        break unless part[:protein_seq].nil?
       end unless features.nil?
     end
 
-    if part[:seq].nil?
+    if part[:protein_seq].nil?
       return {error: "Retrieve #{accession} failed! No sequence data found. Please upload your sequence file instead of using accession number."}
-    else
-      part[:seq].upcase! 
     end
 
     return part

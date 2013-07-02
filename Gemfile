@@ -35,6 +35,7 @@ gem 'will_paginate', '~> 3.0'
 
 #bio gems
 gem 'bio'
+gem 'segment_tree'
 
 #elasticsearch gems
 gem 'tire'

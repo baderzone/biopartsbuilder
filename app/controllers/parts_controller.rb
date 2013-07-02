@@ -5,7 +5,10 @@ class PartsController < ApplicationController
 
   def show
     @part = Part.find(params[:id])
-    @sequence = Bio::Sequence::NA.new(@part.sequence.seq)
+    @p_seq = @part.protein_seq
+    @d_seq = @part.dna_seq
+    @protein_seq = Bio::Sequence::NA.new(@p_seq.seq) unless @p_seq.nil?
+    @dna_seq  = Bio::Sequence::NA.new(@d_seq.seq) unless @d_seq.nil?
   end
 
   def edit
@@ -77,7 +80,11 @@ class PartsController < ApplicationController
   end
 
   def get_fasta_file
-    send_file "public/parts/#{params[:id]}.fasta", :type => "chemical/seq-na-fasta FASTA", :disposition => 'attachment' 
+    sequence = Sequence.find(params[:id])
+    data = Bio::Sequence::NA.new(sequence.seq)
+    seqid = sequence.part.name
+    filename = "#{seqid}.fasta"
+    send_data data.to_fasta(seqid,80), :filename => filename, :type => 'chemical/seq-na-fasta FASTA', :disposition => 'attachment'
   end
 
 end

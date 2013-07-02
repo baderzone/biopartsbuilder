@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130624160656) do
+ActiveRecord::Schema.define(:version => 20130627190131) do
 
   create_table "annotations", :force => true do |t|
     t.integer  "chromosome_id"
@@ -33,10 +33,10 @@ ActiveRecord::Schema.define(:version => 20130624160656) do
   create_table "chromosomes", :force => true do |t|
     t.string   "name"
     t.integer  "organism_id"
-    t.text     "seq"
+    t.text     "seq",            :limit => 2147483647
     t.string   "genome_version"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
   end
 
   create_table "constructs", :force => true do |t|
@@ -137,16 +137,6 @@ ActiveRecord::Schema.define(:version => 20130624160656) do
   add_index "labs_parts", ["lab_id"], :name => "index_labs_parts_on_lab_id"
   add_index "labs_parts", ["part_id"], :name => "index_labs_parts_on_part_id"
 
-  create_table "labs_protocols", :force => true do |t|
-    t.integer  "lab_id"
-    t.integer  "protocol_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-  end
-
-  add_index "labs_protocols", ["lab_id"], :name => "index_labs_protocols_on_lab_id"
-  add_index "labs_protocols", ["protocol_id"], :name => "index_labs_protocols_on_protocol_id"
-
   create_table "orders", :force => true do |t|
     t.string   "name"
     t.integer  "user_id"
@@ -201,6 +191,7 @@ ActiveRecord::Schema.define(:version => 20130624160656) do
     t.string   "annotation"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.string   "type"
   end
 
   add_index "sequences", ["organism_id"], :name => "index_sequences_on_organism_id"

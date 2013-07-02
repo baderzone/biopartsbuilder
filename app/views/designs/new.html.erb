@@ -31,8 +31,8 @@
           <tr>
             <td><%= f.check_box(:part_id, {:multiple => true}, part.id, nil) %></td>
             <td><%= part.name %></td>
-            <td><%= part.sequence.accession %></td>
-            <td><%= begin; part.sequence.organism.fullname; rescue; "Unknown"; end %></td>
+            <td><%= part.sequences.first.accession %></td>
+            <td><%= part.sequences.first.organism.try(:fullname) || "Unknown" %></td>
             <td><%= part.created_at %></td>
           </tr>
         <% end %>
