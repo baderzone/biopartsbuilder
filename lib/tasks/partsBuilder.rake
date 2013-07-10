@@ -61,79 +61,110 @@ namespace :partsBuilder do
     desc 'create promoters and terminators and store them into db'
 
     task :create => :environment do
-      first = ENV['range'].split(',')[0].to_i
-      last = ENV['range'].split(',')[1].to_i
-      puts "create promoters and terminators for annotation records from #{first} to #{last}"
-      annotations = Annotation.find((first..last).to_a) 
-      # create interval tree
-      puts "start creating interval trees"
-      range_w = Hash.new
-      range_c = Hash.new
-      annotations.each do |a|
-        if a.feature.name == 'gene'
-          case a.strand
-          when 'W'
-            range_w[a.start..a.end] = a.systematic_name
-          when 'C'
-            range_c[a.start..a.end] = a.systematic_name
-          end
-        end
-      end
-      tree_w = SegmentTree.new(range_w)
-      tree_c = SegmentTree.new(range_c)
-      # create promoters and terminators
-      puts "start creating promoters and terminators"
-      annotations.each do |a|
-        if a.feature.name == 'CDS'
-          gene_sys_name = a.systematic_name.split('_')[0]
-          gene = Annotation.find_by_systematic_name(gene_sys_name)
-          case a.strand
-          when 'W'
-            p_end = a.start - 1
-            p_start = p_end - 499
-            p_start = 1 if p_start < 1
-            unless tree_w.find(p_start).nil?
-              if tree_w.find(p_start).value != gene_sys_name
-                p_start = tree_w.find(p_start).range.last + 1
-              end
-            end
-            t_start = a.end + 1
-            t_end = t_start + 99
-            t_end = a.chromosome.seq.size if t_end > a.chromosome.seq.size
-            unless tree_w.find(t_end).nil?
-              if tree_w.find(t_end).value != gene_sys_name
-                t_end = tree_w.find(t_end).range.begin - 1
-              end
-            end
-          when 'C'
-            t_end = a.start - 1
-            t_start = t_end - 499
-            t_start = 1 if t_start < 1
-            unless tree_w.find(t_start).nil?
-              if tree_w.find(t_start).value != gene_sys_name
-                t_start = tree_w.find(t_start).range.last + 1
-              end
-            end
-            p_start = a.end + 1
-            p_end = p_start + 99
-            p_end = a.chromosome.seq.size if p_end > a.chromosome.seq.size
-            unless tree_w.find(p_end).nil?
-              if tree_w.find(p_end).value != gene_sys_name
-                p_end = tree_w.find(p_end).range.begin - 1
-              end
-            end
-          end
-          # store promoters and terminators
-          if (p_end - p_start) + 1 > 10
-            Annotation.create(chromosome_id: a.chromosome_id, start: p_start, end: p_end, feature: Feature.find_by_name('promoter'), strand: a.strand, systematic_name: "#{gene_sys_name}_promoter", gene_name: gene.try(:gene_name), gff_created_at: a.gff_created_at)
-          end
-          if (t_end - t_start) + 1 > 10
-            Annotation.create(chromosome_id: a.chromosome_id, start: t_start, end: t_end, feature: Feature.find_by_name('terminator'), strand: a.strand, systematic_name: "#{gene_sys_name}_terminator", gene_name: gene.try(:gene_name), gff_created_at: a.gff_created_at)
-          end
+      organism = ENV['organism']
+      puts "create promoters and terminators for #{organism}"
 
-          finished_percent = ((a.id - first)/(last - first).to_f)*100
-          puts "#{finished_percent}% finished!" if finished_percent % 10 == 0
+      org = Organism.find_by_name(organism)
+      chrs = Chromosome.find_all_by_organism_id(org.id)
+      chr_ids = Array.new
+      chrs.each {|c| chr_ids << c.id}
+      feature = Feature.find_by_name('CDS')
+
+      for chr_id in chr_ids
+        strand = 'W'  
+        annotations = Annotation.order('start').find_all_by_chromosome_id_and_feature_id_and_strand(chr_id, feature.id, strand) 
+
+        unless annotations.blank?
+          cds_before = nil
+          annotations.each do |a|
+            if cds_before.nil?  
+              p_start = a.start - 500
+              p_start = 1 if p_start < 1
+              p_end = a.start - 1
+              p_name = a.systematic_name.split('_')[0] + '_promoter'
+              Annotation.create(chromosome_id: chr_id, start: p_start, end: p_end, feature: Feature.find_by_name('promoter'), strand: strand, systematic_name: p_name, gff_created_at: a.gff_created_at)
+              cds_before = {'name' => a.systematic_name.split('_')[0], 'pos' => a.end}
+
+            else
+              gap = a.start - cds_before['pos'] - 1
+              if gap > 2
+                if gap > 100
+                  t_end = cds_before['pos'] + 100
+                else
+                  t_end = a.start - 1
+                end
+                t_start = cds_before['pos'] + 1
+                t_name = cds_before['name'] + '_terminator'
+                Annotation.create(chromosome_id: chr_id, start: t_start, end: t_end, feature: Feature.find_by_name('terminator'), strand: strand, systematic_name: t_name, gff_created_at: a.gff_created_at)
+
+                if gap > 500
+                  p_start = a.start - 500
+                else
+                  p_start = cds_before['pos'] + 1
+                end
+                p_end = a.start - 1
+                p_name = a.systematic_name.split('_')[0] + '_promoter'
+                Annotation.create(chromosome_id: chr_id, start: p_start, end: p_end, feature: Feature.find_by_name('promoter'), strand: strand, systematic_name: p_name, gff_created_at: a.gff_created_at)
+              end
+              cds_before = {'name' => a.systematic_name.split('_')[0], 'pos' => a.end}
+            end  
+          end
+          # last CDS
+          this_chr = Chromosome.find(annotations[-1].chromosome_id)
+          t_end = annotations[-1].end + 100
+          t_end = this_chr.seq.size if t_end > this_chr.seq.size
+          t_start = annotations[-1].end + 1
+          t_name = annotations[-1].systematic_name.split('_')[0] + '_terminator'
+          Annotation.create(chromosome_id: annotations[-1].chromosome_id, start: t_start, end: t_end, feature: Feature.find_by_name('terminator'), strand: strand, systematic_name: t_name, gff_created_at: annotations[-1].gff_created_at)
         end
+
+        strand = 'C'  
+        annotations = Annotation.order('start').find_all_by_chromosome_id_and_feature_id_and_strand(chr_id, feature.id, strand) 
+
+        unless annotations.blank?
+          cds_before = nil
+          annotations.each do |a|
+            if cds_before.nil?
+              t_start = a.start - 100
+              t_start = 1 if t_start < 1
+              t_end = a.start - 1
+              t_name = a.systematic_name.split('_')[0] + '_terminator'
+              Annotation.create(chromosome_id: chr_id, start: t_start, end: t_end, feature: Feature.find_by_name('terminator'), strand: strand, systematic_name: t_name, gff_created_at: a.gff_created_at)
+              cds_before = {'name' => a.systematic_name.split('_')[0], 'pos' => a.end}
+
+            else
+              gap = a.start - cds_before['pos'] - 1
+              if gap > 2
+                if gap > 500
+                  p_end = cds_before['pos'] + 500
+                else
+                  p_end = a.start - 1
+                end
+                p_start = cds_before['pos'] + 1
+                p_name = cds_before['name'] + '_promoter'
+                Annotation.create(chromosome_id: chr_id, start: p_start, end: p_end, feature: Feature.find_by_name('promoter'), strand: strand, systematic_name: p_name, gff_created_at: a.gff_created_at)
+
+                if gap > 100
+                  t_start = a.start - 100
+                else
+                  t_start = cds_before['pos'] + 1
+                end
+                t_end = a.start - 1
+                t_name = a.systematic_name.split('_')[0] + '_terminator'
+                Annotation.create(chromosome_id: chr_id, start: t_start, end: t_end, feature: Feature.find_by_name('terminator'), strand: strand, systematic_name: t_name, gff_created_at: a.gff_created_at)
+              end
+              cds_before = {'name' => a.systematic_name.split('_')[0], 'pos' => a.end}
+            end  
+          end
+          # last CDS
+          this_chr = Chromosome.find(annotations[-1].chromosome_id)
+          p_end = annotations[-1].end + 500
+          p_end = this_chr.seq.size if p_end > this_chr.seq.size
+          p_start = annotations[-1].end + 1
+          p_name = annotations[-1].systematic_name.split('_')[0] + '_promoter'
+          Annotation.create(chromosome_id: annotations[-1].chromosome_id, start: p_start, end: p_end, feature: Feature.find_by_name('promoter'), strand: strand, systematic_name: p_name, gff_created_at: annotations[-1].gff_created_at)
+        end
+
       end
     end
   end
