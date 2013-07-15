@@ -3,6 +3,18 @@ require 'date'
 namespace :partsBuilder do
   desc 'Utility methods for DB maintance'
 
+  namespace :tire do
+    desc 'import elasticsearch indexes'
+
+    task :import => :environment do
+      group_size = 1000
+      Annotation.find_in_batches(start: 0, batch_size: group_size) do |batch|
+        puts "start indexing records #{batch[0].id}~#{batch[-1].id}"
+        Tire.index("annotations").import batch
+      end
+    end
+  end
+
   namespace :gff do
     desc 'import GFF into db'
 
