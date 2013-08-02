@@ -1,0 +1,28 @@
+<h2>Search Result</h2>
+<hr />
+
+<% if @parts.size == 100 %>
+  <p>More than 100 parts found!  Only the first 100 are showed here.</p>
+<% else %>
+  <p><b><%= @parts.size %></b> parts found. They are: </p>
+<% end %>
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Accession Number</th>
+      <th>Organism</th>
+      <th>Feature</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @parts.each do |p| %>
+      <tr>
+        <td><%= link_to p.name, part_path(p.part_id) %></td>
+        <td><%= p.accession_number %></td>
+        <td><%= p.organism %></td>
+        <td><%= p.feature %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

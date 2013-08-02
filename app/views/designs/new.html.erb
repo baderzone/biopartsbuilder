@@ -7,7 +7,7 @@
     <% @protocols.each do |protocol| %>
       <tr>
         <td width="20px"><%= f.radio_button :protocol_id, protocol.id %></td>
-        <td><%= protocol.name %></td>
+        <td><%= "#{protocol.name} (#{protocol.steps})" %></td>
       </tr>
     <% end %>
   </table>
@@ -21,7 +21,8 @@
         <tr>
           <th></th>
           <th>Part Name</th>
-          <th>Accession Number</th>
+          <th>Protein Sequence</th>
+          <th>Nucleotide Sequence</th>
           <th>Organism</th>
           <th>Created_at</th>
         </tr>
@@ -31,7 +32,8 @@
           <tr>
             <td><%= f.check_box(:part_id, {:multiple => true}, part.id, nil) %></td>
             <td><%= part.name %></td>
-            <td><%= part.sequences.first.accession %></td>
+            <td><%= part.protein_seq ? raw('&radic;') : 'X' %></td>
+            <td><%= part.dna_seq ? raw('&radic;') : 'X' %></td>
             <td><%= part.sequences.first.organism.try(:fullname) || "Unknown" %></td>
             <td><%= part.created_at %></td>
           </tr>

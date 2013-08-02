@@ -9,6 +9,8 @@ Partsbuilder::Application.routes.draw do
   get "auto_builds/get_description_file"
 
   get "home/index"
+  
+  get "home/search_result"
 
   get "sequence/create"
 
@@ -25,6 +27,7 @@ Partsbuilder::Application.routes.draw do
   match "/signout" => "sessions#destroy", :as => :signout
   match "/auto_builds/confirm" => "auto_builds#confirm", :via => :post
   match "/parts/confirm" => "parts#confirm", :via => :post
+  match "/home/search_result" => "home#search_result", :via => :post
 
   resources :protocols
   resources :constructs

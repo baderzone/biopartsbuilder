@@ -38,7 +38,7 @@
               <li>start:[1 TO 10000] AND feature:CDS AND orf_classification:verified <i>(find all the verified CDS with start position from 1 to 10000)</i></li>
               <hr />
               <p><b>Keywords</b></p>
-              <table class="table table-stripped table-bordered">
+              <table class="table table-striped table-bordered">
                 <tr>
                   <th>Keyword</th>
                   <th>Description</th>
@@ -124,8 +124,7 @@
     <% @protocols.each do |protocol| %>
       <tr>
         <td width="20px"><%= radio_button_tag :protocol_id, protocol.id %></td>
-        <td><%= protocol.name %></td>
-        <td>&nbsp;&nbsp;<%= link_to 'view', protocol_path(protocol.id) %></td>
+        <td><%= link_to protocol.name, protocol_path(protocol.id) %> (<%= protocol.steps %>)</td>
       </tr>
     <% end %>
   </table>

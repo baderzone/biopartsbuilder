@@ -62,6 +62,8 @@ class BioDesign
       design = Design.find_by_part_id_and_protocol_id(entry[:part_id], protocol.id)
       if design && type.eql?('update')
         # update record
+        design.comment = entry[:comment]
+        design.save
         design.constructs.each {|c| c.destroy}
         entry[:construct].each do |i, seq|
           construct_name = entry[:part_name] + construct_suf + "_#{i}"
@@ -115,16 +117,20 @@ class BioDesign
         flag = remove_enz(back_trans_out, remove_enz_out, remove_enz_log, org_code, protocol.forbid_enzymes)
       end
     else
-      design[:error] = 'Reverse translation failed! Please check if this part has a protein sequence'
+      design[:error] = 'Reverse translation failed! Need protein sequence. Please create one through: Parts ---> New'
       return design
     end
 
     # retrieve recode sequence
     sequence = String.new
     if flag 
-      Bio::FastaFormat.open(remove_enz_out).each {|entry| sequence = entry.seq}
+      begin
+        Bio::FastaFormat.open(remove_enz_out).each {|entry| sequence = entry.seq}
+      rescue
+        design[:error] = 'No nucleotide sequence. Please create one through: Parts ---> New'
+      end
     else
-      design[:error] = 'Restriction enzyme substraction failed! Please check if this part has a nucleotide sequence'
+      design[:error] = 'Restriction enzyme substraction failed! Need nucleotide sequence. Please create one through: Parts ---> New'
       return design
     end
 
@@ -133,9 +139,13 @@ class BioDesign
       comments = Array.new
       protocol.check_enzymes.split(':').each do |enz|
         check_re = check_enz(sequence, enz)
-        comments << "#{enz} site found at #{check_re}." if check_re
+        if check_re
+          comments << "#{enz} site found at #{check_re}."
+        else
+          comments << "No #{enz} site found"
+        end
       end
-      design[:comment] = comments.join(' ') unless comments.empty?
+      design[:comment] = comments.join('; ') unless comments.empty?
     end
 
     # create constructs
@@ -183,9 +193,9 @@ class BioDesign
     # check seq type
     sequence = String.new
     unless File.file?(in_file)
-     return false
+      return false
     end 
-    
+
     Bio::FastaFormat.open(in_file).each {|entry| sequence = entry.seq}
     if system "perl lib/geneDesign/Restriction_Site_Subtraction.pl -i #{in_file} -o #{org_code} -s #{forbid_enz} -w #{out_file} -t 10 > #{log_file}"
       if File.open(log_file, 'r').read.include?('unable')
@@ -199,11 +209,32 @@ class BioDesign
   end
 
   def check_enz(sequence, enzyme)
-    out = `python enz_site.py -seq #{sequence} -e #{enzyme}`
-    if out.empty? || out.include?('false')
+    sites = Array.new
+
+    data = Bio::Sequence::NA.new(sequence)
+    cuts = data.cut_with_enzyme(enzyme)
+    frag_size = 0
+    if cuts.class != Symbol && cuts.size >= 2
+      for frag in cuts[0..-2]
+        frag_size += frag.primary.strip.size
+        sites << frag_size + 1
+      end
+    end
+
+    frag_size = 0
+    cuts = data.complement.cut_with_enzyme(enzyme)
+    if cuts.class != Symbol && cuts.size >= 2
+      for frag in cuts[0..-2]
+        frag_size += frag.complement.strip.size
+        sites << data.size - frag_size + 1
+      end
+    end
+    sites.sort!
+    
+    if sites.empty?
       return false
     else
-      return out.delete("\n")
+      return sites
     end
   end
 
