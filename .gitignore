@@ -16,14 +16,8 @@
 /config/database.yml
 /config/partsbuilder.yml
 
-# Ignore foreman config
-Procfile
-
 # Ignore dumps
 /dumps
-
-# Ignore geneDesign script
-/lib/geneDesign
 
 # Ignore parsBuilder processing files
 /public/orders
