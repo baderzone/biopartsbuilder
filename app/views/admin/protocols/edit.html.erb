@@ -1,5 +1,6 @@
 <h2><i class='icon-file'> </i>Edit design standard</h2>
 <hr />
+<p class="text-error">Important: changing the design standard will change all the designed constructs built based on this standard. All the constructs will be re-designed based on the updated standard. Only change the design standard when there is an error.  If you want to design construct in a different way, please create a new standard, DO NOT change this one.</p>
 <%= form_for [:admin,@protocol] do |f| %>
 
   <p>Name <%= f.text_field :name %></p>
