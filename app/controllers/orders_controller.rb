@@ -17,7 +17,7 @@ class OrdersController < ApplicationController
 
   def new
     @order = Order.new
-    @designs = Design.all
+    @designs = Design.order('id DESC')
   end
 
   def create

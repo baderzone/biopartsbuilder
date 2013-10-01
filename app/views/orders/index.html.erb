@@ -13,9 +13,11 @@
     </tr>
   </thead>
   <tbody>
+    <% cnt = 0 %>
     <% @orders.each do |order| %>
+      <% cnt += 1 %>
       <tr>
-        <td><%= order.id %></td>
+        <td><%= cnt %></td>
         <td><%= link_to order.name, order_path(order) %></td>
         <td><%= order.user.fullname %></td>
         <td><%= order.vendor.name %></td>

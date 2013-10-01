@@ -14,9 +14,11 @@
     </tr>
   </thead>
   <tbody>
+    <% cnt = 0 %>
     <% @designs.each do |design| %>
+      <% cnt += 1 %>
       <tr>
-        <td><%= design.id %></td>
+        <td><%= cnt %></td>
         <td><%= link_to design.part.name, part_path(design.part_id) %></td>
         <td><%= link_to design.protocol.name, protocol_path(design.protocol_id) %></td>
         <td><%= link_to 'View', part_design_path(design.part_id, design.id) %></td>

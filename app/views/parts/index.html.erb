@@ -14,9 +14,11 @@
     </tr>
   </thead>
   <tbody>
+    <% cnt = 0 %>
     <% @parts.each do |part| %>
+      <% cnt += 1 %>
       <tr>
-        <td><%= part.id %></td>
+        <td><%= cnt %></td>
         <td><%= link_to part.name, part_path(part.id) %></td>
         <td><%= part.sequences.first.accession %></td>
         <td><%= part.sequences.first.organism.try(:fullname) || "Unknown" %></td>

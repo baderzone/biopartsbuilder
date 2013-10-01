@@ -2,8 +2,8 @@ class HomeController < ApplicationController
   skip_before_filter :is_valid_session?
 
   def index
-    @parts = Part.last(6)
-    @designs = Design.last(6)
+    @parts = Part.order('id DESC').first(6)
+    @designs = Design.order('id DESC').first(6)
   end
 
   def search_result
