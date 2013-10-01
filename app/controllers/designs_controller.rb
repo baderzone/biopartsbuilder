@@ -9,7 +9,7 @@ class DesignsController < ApplicationController
   end
 
   def new
-    @parts = Part.all
+    @parts = Part.order('id DESC')
     @protocols = current_user.lab.protocols
     @design = Design.new
   end
