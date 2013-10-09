@@ -1,0 +1,27 @@
+<h2><i class="icon-play-circle"> </i>Convert a File</h2>
+<hr />
+
+<%= form_tag({:controller => "file_converts", :action => "create"}, :method => "post", :multipart => true) do %>
+
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#fasta" data-toggle="tab">Fasta File</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="fasta">
+      <p><b>Job Name</b> <%= text_field_tag :name %></p>
+      <p><b>Convert to</b></p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= check_box_tag("output_types[]", 'fasta', true) %> Fasta File</p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= check_box_tag("output_types[]", 'xls', true) %> GeneScript Spreadsheet <i>(part name, sequence, length)</i></p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= check_box_tag("output_types[]", 'sum', true) %> Summary  <i>(total parts and bp to be synthesized)</i></p>
+      <p><b>Upload a Fasta File</b> <i>(only .fasta .txt and .fa accepted):</i> <%= file_field_tag(:file)%></p>
+    </ul>
+  </div>
+
+  <div class="form-actions">
+    <%= submit_tag("Covert File", :class => "btn btn-primary") %>
+  </div>
+</div>
+<% end %>
+
+

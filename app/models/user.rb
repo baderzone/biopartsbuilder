@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   belongs_to :lab
   has_many :orders
   has_many :jobs
+  has_many :file_converts
 
   attr_accessible :email, :fullname, :provider, :uid, :group_id, :lab_id
   attr_accessible :order, :job, :group, :lab

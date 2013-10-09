@@ -23,6 +23,7 @@ Partsbuilder::Application.routes.draw do
   get "designs/fasta"
 
   match "/orders/:id/get_zip_file", :to => "orders#get_zip_file" 
+  match "/file_converts/:id/get_zip_file", :to => "file_converts#get_zip_file" 
   match "/auth/:provider/callback" => "sessions#create"
   match "/signout" => "sessions#destroy", :as => :signout
   match "/auto_builds/confirm" => "auto_builds#confirm", :via => :post
@@ -35,6 +36,7 @@ Partsbuilder::Application.routes.draw do
   resources :users
   resources :labs
   resources :designs
+  resources :file_converts
   resources :parts do
     resources :designs
   end
