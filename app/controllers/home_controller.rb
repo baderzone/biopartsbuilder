@@ -8,7 +8,7 @@ class HomeController < ApplicationController
 
   def search_result
     if params[:sequence].blank?
-      return redirect_to root_path, :alert => "Search query cannot be empty"
+      return redirect_to root_path, :flash => {:error => "Search query cannot be empty"}
     else
       begin
         @parts = Sequence.search do |search|
@@ -18,7 +18,7 @@ class HomeController < ApplicationController
           search.size 100 
         end 
       rescue
-        return redirect_to new_part_path, :alert => "Your query '#{params[:genome]}' format is not correct, please check"
+        return redirect_to root_path, :flash => {:error => "Your query '#{params[:sequence]}' format is not correct, please check"}
       end 
     end 
   end
