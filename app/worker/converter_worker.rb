@@ -9,7 +9,7 @@ class ConverterWorker
     
     # create order files
     converter = FileConvert.find(params['converter_id'])
-    FileConverter.new.convert(params['input'], converter.id, params['output_types'])
+    FileConverter.new.convert(params['input'], converter.id, params['output_types'], params['map_id'], params['first_id'])
     
     # change job status and send email notice
     job.change_status('finished')

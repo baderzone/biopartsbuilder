@@ -14,6 +14,9 @@
       <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= check_box_tag("output_types[]", 'fasta', true) %> Fasta File</p>
       <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= check_box_tag("output_types[]", 'xls', true) %> GeneScript Spreadsheet <i>(part name, sequence, length)</i></p>
       <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= check_box_tag("output_types[]", 'sum', true) %> Summary  <i>(total parts and bp to be synthesized)</i></p>
+      <p><b>Map gene name to series number? </b><%= radio_button_tag("map_id", 'yes', true) %> Yes | <%= radio_button_tag("map_id", 'no', false) %> No</p>
+      <p><i>Gene name mapper will create series number for your genes automatically, use the series name in all the ouptut files, and provide you a spreadsheet on how these series names link to the original names </i></p>
+      <p><b>If yes, what the first number should be </b><%= text_field_tag :first_id %> <i>(e.g. part0000001)</i></p>
       <p><b>Upload a Fasta File</b> <i>(only .fasta .txt and .fa accepted):</i> <%= file_field_tag(:file)%></p>
     </ul>
   </div>

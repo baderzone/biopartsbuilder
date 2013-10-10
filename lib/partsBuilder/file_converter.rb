@@ -2,13 +2,18 @@ require 'bio'
 require 'axlsx'
 
 class FileConverter
-  def convert(input, converter_id, output_types)
+  def convert(input, converter_id, output_types, map_id, first_id)
     output_path = "#{PARTSBUILDER_CONFIG['program']['converter_path']}/#{converter_id}"
     system "mkdir #{output_path}"
     file_list = []
 
     if input['type'] == 'fasta'
-      fasta = create_fasta_from_fasta(input['file'], output_path)
+      if map_id == 'yes'
+        fasta, mapper = create_fasta_from_fasta(input['file'], output_path, map_id, first_id)
+        file_list << mapper
+      else
+        fasta = create_fasta_from_fasta(input['file'], output_path, map_id, first_id)
+      end
     end
 
     if output_types.include?('fasta')
@@ -29,7 +34,7 @@ class FileConverter
   end
 
   private
-  def create_fasta_from_fasta(input, output_path)
+  def create_fasta_from_fasta(input, output_path, map_id, first_id)
     # fix the windows newline incompatible issue
     in_f = File.open(input, 'r')
     tmp_fn = "#{output_path}/tmp.fasta"
@@ -40,18 +45,51 @@ class FileConverter
     in_f.close
     tmp_f.close
 
+    # delete duplications
     out_fn = "#{output_path}/parts.fasta"
     out_f = File.new("#{output_path}/parts.fasta", 'w')
     parts = {}
     Bio::FastaFormat.open(tmp_fn).each do |e|
       parts[e.entry_id] = e.seq
     end
-    parts.each do |k, v|
-      out_f.puts Bio::Sequence.new(v).output(:fasta, :header => k, :width => 80)
-    end
-    out_f.close
 
-    return out_fn
+    if map_id == 'yes'
+      # create series numbers
+      id_str = first_id.gsub(/[0-9]/, '')
+      id_num = first_id.gsub(/#{id_str}/, '')
+      id_num = '00001' if id_num.blank?
+      num_start = "#{id_num.to_i}"
+      num_end = "#{id_num.to_i + parts.size}"
+      num_size = id_num.size
+      num_size = num_end.size if num_size < num_end.size
+      ids = ("#{id_str}#{num_start.rjust(id_num.size, '0')}".."#{id_str}#{num_end.rjust(id_num.size, '0')}").to_a
+
+      # create mapper spreadsheet
+      cnt = -1
+      p = Axlsx::Package.new
+      ws = p.workbook.add_worksheet(:name => 'Gene Name Mapper')
+      header = ws.styles.add_style(:b => true)
+      ws.add_row ['Series Number', 'Original Gene Name'], :style => header
+
+      parts.each do |k, v|
+        cnt += 1
+        ws.add_row [ids[cnt], k]
+        out_f.puts Bio::Sequence.new(v).output(:fasta, :header => ids[cnt], :width => 80)
+      end
+      xls_fn = "#{output_path}/name_mapper.xlsx"
+      p.serialize(xls_fn)
+      out_f.close
+      return [out_fn, xls_fn]
+
+    else
+      # create fasta file without name mapper
+      parts.each do |k, v|
+        out_f.puts Bio::Sequence.new(v).output(:fasta, :header => k, :width => 80)
+      end
+      out_f.close
+      return out_fn
+    end
+
   end
 
   def create_xls(input, output_path)

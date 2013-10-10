@@ -11,14 +11,18 @@ class FileConvertsController < ApplicationController
   def create
     if params[:file].blank?
       redirect_to new_file_convert_path, :flash => {:error => "Please upload a file!"}
+    elsif params[:map_id] == 'yes' and params[:first_id].blank?
+      redirect_to new_file_convert_path, :flash => {:error => "Must provide the first number!"}
     else
+
       uploader = FileUploader.new
       uploader.store!(params[:file])
       @file = FileConvert.new(:name => params[:name])
       @file.user_id = current_user.id
+      
       if @file.save
         @job = Job.create(:job_type_id => JobType.find_by_name('file_convert').id, :user_id => current_user.id, :job_status_id => JobStatus.find_by_name('submitted').id)
-        worker_params = {:input => {'type' => 'fasta', 'file' => uploader.current_path}, :output_types => params[:output_types], :job_id => @job.id, :converter_id => @file.id}
+        worker_params = {:input => {'type' => 'fasta', 'file' => uploader.current_path}, :output_types => params[:output_types], :map_id => params[:map_id], :first_id => params[:first_id], :job_id => @job.id, :converter_id => @file.id}
         ConverterWorker.perform_async(worker_params)
         redirect_to job_path(@job.id), :notice => "File submitted!"
       else
