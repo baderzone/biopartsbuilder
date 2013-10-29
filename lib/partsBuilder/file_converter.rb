@@ -99,7 +99,7 @@ class FileConverter
     ws.add_row ['Gene Name', 'Sequence for Synthesis', 'Length[Bases]'], :style => header
 
     Bio::FastaFormat.open(input).each do |e|
-      ws.add_row [e.entry_id.split(' ')[0], e.seq, e.length]  
+      ws.add_row [e.entry_id, e.seq, e.length]  
     end
 
     filename = "#{output_path}/parts.xlsx"
