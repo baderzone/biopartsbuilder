@@ -1,8 +1,8 @@
 # The description line must be one of the followings:
-# >part_name|part_type|accession_number|organism|Any notes or comments you wish to add(free text)
-# without note:  >parts_name|part_type|accession_number|organism
-# without organism:  >parts_name|part_type|accession_number||notes 
-# without organism and note:  >parts_name|part_type|accession_number
+# >part_symbol|part_type|accession_number|organism|Any notes or comments you wish to add(free text)
+# without note:  >part_symbol|part_type|accession_number|organism
+# without organism:  >part_symbol|part_type|accession_number||notes 
+# without organism and note:  >part_symbol|part_type|accession_number
 #
 # Important: there can only be ONE > comment line for one sequence
 # Important: accession number is the unique identifier for sequence, if no accession number available, use an unique serial number instead (e.g. 4579034, cobD_L3A_v1).
@@ -11,7 +11,7 @@
 #
 # Examples:
 
->camR|CDS|BAA03510.1|Pseudomonas putida | SIG055 Note: has VP16-NLS at C-term
+>camR|CDS|BAA03510.1|Pseudomonas putida|SIG055 Note: has VP16-NLS at C-term
 MDIKQSLLHAAMRLLSAKGRDGATMRPICAEVGVTPPTLYHHYGDLQGLHKAAIDETYRQVAEAYHGGTEERGPLKGIRD
 GWATFLQFAYSEPNMCRMLVQHIMAGEPPSMVADTLRGVADDLAQFHAQGRLTFPPREAAQLLWMGALGALTYALSREGA
 GYTQDLALQKAKLDITLVALFNIEEEGPADALDDFDLDMLPADALDDFDLDMLPADALDDFDLDMLPGMPKKKRKV

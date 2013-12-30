@@ -14,7 +14,7 @@ class FastaFile
       elsif entry.seq.empty?
         errors << "No sequence data for : #{entry.definition}"
       else
-        sequences << {'part' => descriptions[0], 'type' => descriptions[1], 'accession' => descriptions[2], 'org' => descriptions[3]||'unknown'}
+        sequences << {'part' => descriptions[0].split(' ').join('-'), 'type' => descriptions[1], 'accession' => descriptions[2], 'org' => descriptions[3]||'unknown'}
       end 
     end 
     f.close

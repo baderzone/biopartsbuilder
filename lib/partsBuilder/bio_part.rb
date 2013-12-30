@@ -165,7 +165,7 @@ class BioPart
   def create_from_fasta(entry)
     part = {name: nil, type: nil, seq: nil, accession_num: nil, org_latin: nil, org_abbr: nil, comment: nil}
     descriptions = entry.definition.split('|')
-    gene_name = descriptions[0].strip
+    gene_name = descriptions[0].strip.split(' ').join('-')
 
     part[:type] = descriptions[1].strip
     part[:accession_num] = descriptions[2].strip

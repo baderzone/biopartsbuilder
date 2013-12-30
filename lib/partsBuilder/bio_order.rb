@@ -8,6 +8,8 @@ class BioOrder
       create_order_for_gen9(path, order_id, design_ids)
     when 'BioPartsDB'
       create_order_for_bioparts(path, order_id, design_ids)
+    when 'BioPartsRegistry'
+      create_order_for_registry(path, order_id, design_ids)
     end
   end
 
@@ -45,6 +47,37 @@ class BioOrder
         end
         seq = c.seq
         csv_file << [part_name, feature, organism, chromosome, start, stop, strand, seq]
+      end
+    end
+
+    csv_file.close
+    Zip::ZipFile.open("#{order_path}/#{zip_file_name}", Zip::ZipFile::CREATE) do |ar|
+      ar.add(csv_file_name, "#{order_path}/#{csv_file_name}")
+    end
+    system "rm #{order_path}/#{csv_file_name}"
+
+    return "#{order_path}/#{zip_file_name}"
+  end
+
+  def create_order_for_registry(path, order_id, design_ids)
+    # parameters
+    order_path = "#{path}/#{order_id}"
+    system "mkdir #{order_path}"
+    zip_file_name = "order#{order_id}.zip"
+    csv_file_name = "order#{order_id}_biopartsregistry.csv"
+
+    csv_file = CSV.open("#{order_path}/#{csv_file_name}", 'w')
+    csv_file << ['Part_Name', 'Accession_Number', 'Organism', 'Description', 'Part_Type', 'Vector', 'Status', 'Sequence']
+    design_ids.each do |design_id|
+      design = Design.find(design_id)
+      design.constructs.each do |c|
+        part_name = c.name
+        feature = c.name.split('_')[0]
+        accession = design.part.sequences.first.accession
+        organism = design.protocol.organism.try(:fullname) || design.part.sequences.first.organism.fullname
+        desc = c.comment
+        seq = c.seq
+        csv_file << [part_name, accession, organism, desc, feature, nil, 'In Progress', seq]
       end
     end
 
