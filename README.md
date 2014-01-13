@@ -1,2 +1,2 @@
-biopartsbuilder
+BioPartsBuilder
 ===============
