@@ -13,7 +13,7 @@ To install a local instance of the software, please follow the instructions on t
 License
 ---
 
-The source code is released under the Creative Commons Attribution-NonCommercial-ShareAlike license.
+The source code is released under the [Creative Commons Attribution-NonCommercial-ShareAlike](http://creativecommons.org/licenses/by-nc-sa/3.0/us/) license.
 
 Cite us
 ---
