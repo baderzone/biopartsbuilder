@@ -7,6 +7,9 @@ For this reason, we developed **BioPartsBuilder**, a web design tool for the des
 Installation
 ===
 
+The software is available at: public.biopartsbuilder.org.  
+To install a local instance of the software, please follow the instructions on the wiki.
+
 License
 ===
 
