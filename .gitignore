@@ -15,6 +15,7 @@
 /tmp
 /config/database.yml
 /config/partsbuilder.yml
+/config/deploy.rb
 
 # Ignore dumps
 /dumps
