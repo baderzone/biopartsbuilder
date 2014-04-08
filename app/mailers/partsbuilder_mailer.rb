@@ -1,5 +1,5 @@
 class PartsbuilderMailer < ActionMailer::Base
-  default from: "syntheticyeast1@gmail.com"
+  default from: "biopartsapps@gmail.com"
 
   def finished_notice(user, error)
     @user = user
