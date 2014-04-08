@@ -20,8 +20,12 @@
         <td><%= f.text_area :forbid_enzymes, :rows => 5 %></td>
         <td>One enzyme per line, only letters allowed<br />e.g.<br />BsaI<br />BsmBI<br />EcoRI</td>
       </tr>
+      <tr><td colspan=3 >Please use the usual naming convention with the upper case letters and Latin numbering</td></tr>
+      <tr><td colspan=3 ><a href="#myModal" data-toggle="modal">Not sure about the enzyme names, check here.</a></td></tr>
     </table>
   </div>
+  
+  <%= render :partial => 'enzymes' %>
 
   <button type="button" data-toggle="collapse" data-target="#check">+</button> <b>Check Resctriction Enzyme Sites</b> <br />
   <div id='check' class='collapse'>
@@ -29,8 +33,10 @@
       <tr>
         <td align="center">Enzymes</td>
         <td><%= f.text_area :check_enzymes, :rows => 5 %></td>
-        <td>PartBuilder will check if these enzymes in the sequence but not remove them.<br /> One enzyme per line<br />e.g.<br />BceAI<br />SalI</td>
+        <td>PartBuilder will check if these enzymes in the sequence but not remove them.<br /> One enzyme per line<br />e.g.<br />BceAI<br />BstCI</td>
       </tr>
+      <tr><td colspan=3 >Please use the usual naming convention with the upper case letters and Latin numbering</td></tr>
+      <tr><td colspan=3 ><a href="#myModal" data-toggle="modal">Not sure about the enzyme names, check here.</a></td></tr>
     </table>
   </div>
 

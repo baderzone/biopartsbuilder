@@ -10,7 +10,13 @@ class SessionsController < ApplicationController
     session[:user_id] = user.id
     redirect_to root_url, :notice => "Welcome back, #{user.fullname}!"
   end
-  
+
+  def guest
+    user = User.find_by_fullname('Guest')
+    session[:user_id] = user.id
+    redirect_to root_url, :notice => "Welcome, #{user.fullname}!"
+  end
+
   def destroy
     session[:user_id] = nil
     redirect_to root_url, :notice => "Logged out!"

@@ -93,13 +93,13 @@ class BioPart
 
         # create fasta file for GeneDesign
         unless entry[:protein_seq].nil?
-          fasta_seq = Bio::Sequence.new(entry[:protein_seq])
+          fasta_seq = Bio::Sequence.new(entry[:protein_seq].upcase)
           f = File.new("#{PARTSBUILDER_CONFIG['program']['part_fasta_path']}/#{part.id}_protein.fasta", 'w')
           f.print fasta_seq.output(:fasta, :header => part.name, :width => 80)
           f.close
         end
         unless entry[:dna_seq].nil?
-          fasta_seq = Bio::Sequence.new(entry[:dna_seq])
+          fasta_seq = Bio::Sequence.new(entry[:dna_seq].upcase)
           f = File.new("#{PARTSBUILDER_CONFIG['program']['part_fasta_path']}/#{part.id}_dna.fasta", 'w')
           f.print fasta_seq.output(:fasta, :header => part.name, :width => 80)
           f.close

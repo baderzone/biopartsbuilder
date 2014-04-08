@@ -1,0 +1,22 @@
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">  
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Restriction Ezymes</h3>
+  </div>
+  <div class="modal-body">
+    <table class='table table-striped table-bordered'>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Cut Pattern</th>
+        </tr>
+        <% Enzyme.all.each do |e| %>
+        <tr>
+          <td><%= e.name %></td>
+          <td><%= e.sequence %></td>
+        </tr>
+      <% end %>
+      </thead>
+    </table>
+  </div>
+</div>
