@@ -96,11 +96,16 @@ class BioDesign
     remove_enz_log = "#{processing_path}/#{filename}_recode.log"
 
     # reverse translation
-    if protocol.organism.blank?
+    if File.file?(dna_file)
       back_trans_out = dna_file
       flag = true
     else
-      flag = back_trans(protein_file, back_trans_out, protocol.organism_id)
+      if protocol.organism.blank?
+        back_trans_out = dna_file
+        flag = true
+      else
+        flag = back_trans(protein_file, back_trans_out, protocol.organism_id)
+      end
     end
 
     # remove forbidden enzymes
@@ -230,7 +235,7 @@ class BioDesign
       end
     end
     sites.sort!
-    
+
     if sites.empty?
       return false
     else
