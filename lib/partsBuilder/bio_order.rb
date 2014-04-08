@@ -4,7 +4,7 @@ class BioOrder
 
   def store(path, order_id, design_ids, vendor)
     case vendor
-    when 'General'
+    when 'CSV and Fasta'
       create_order_for_gen9(path, order_id, design_ids)
     when 'BioPartsWorkflow'
       create_order_for_bioparts(path, order_id, design_ids)
