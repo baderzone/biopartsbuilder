@@ -52,7 +52,7 @@ class SequenceFileUploader < CarrierWave::Uploader::Base
   #   "something.jpg" if original_filename
   # end
 	def extension_white_list
-		%w(fasta txt)
+		%w(fa fasta txt)
 	end
 
   def filename

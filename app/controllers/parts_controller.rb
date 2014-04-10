@@ -38,7 +38,11 @@ class PartsController < ApplicationController
     elsif !params[:sequence_file].blank?
       # upload file
       uploader = SequenceFileUploader.new
-      uploader.store!(params[:sequence_file])
+      begin
+        uploader.store!(params[:sequence_file])
+      rescue
+        return redirect_to new_part_path, :alert => "Upload Failed! Only .fa, .fasta and .txt allowed"
+      end
       @seq_file = uploader.current_path
 
       # check file

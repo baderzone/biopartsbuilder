@@ -9,19 +9,19 @@ class Protocol < ActiveRecord::Base
 
   def steps
     steps = Array.new
-    unless organism_id.nil?
+    unless organism_id.blank?
       steps << 'Codon Optimization'
     end
-    unless forbid_enzymes.empty?
+    unless forbid_enzymes.blank?
       steps << 'Restriction Enzyme Substraction'
     end
-    unless check_enzymes.empty?
+    unless check_enzymes.blank?
       steps << 'Report Enzyme Sites'
     end
-    unless ext_suffix.empty? && ext_prefix.empty?
+    unless ext_suffix.blank? && ext_prefix.blank?
       steps << "Add prefix and/or suffix"
     end
-    unless construct_size.nil?
+    unless construct_size.blank?
       steps << 'Carve Long Sequence'
     end
     return steps.join(' ---> ')
