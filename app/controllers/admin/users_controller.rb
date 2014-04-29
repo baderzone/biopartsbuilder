@@ -12,6 +12,7 @@ class Admin::UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
+    @user.provider = 'google'
     if params[:user][:email].include?('@gmail.com')
       @user.lab = current_user.lab
 
