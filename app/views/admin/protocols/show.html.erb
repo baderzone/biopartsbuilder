@@ -25,10 +25,13 @@
 <% unless @protocol.int_suffix.blank? %>
   <b>Internal Suffix:</b>&nbsp;&nbsp;<%= @protocol.try(:int_suffix) %><br /><br />
 <% end %>
-<% unless @protocol.overlap.blank? %>
+<% unless @protocol.overlap_size.blank? %>
+  <b>Overlap Size:</b>&nbsp;&nbsp;<%= @protocol.try(:overlap_size) %><br /><br />
+<% end %>
+<% unless @protocol.overlap_list.blank? %>
   <b>Overlap:</b>
   <div id="overlapDiv">
-    <%= @protocol.overlap %>
+    <%= @protocol.overlap_list %>
   </div>
 <% end %>
 <% unless @protocol.comment.blank? %>

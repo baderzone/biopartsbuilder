@@ -34,10 +34,10 @@
       <tr>
         <td align="center">Enzymes</td>
         <% if @protocol.check_enzymes.blank? %>
-        <td><%= f.text_area :check_enzymes, :rows => 5 %></td>
-      <% else %>
-        <td><%= f.text_area :check_enzymes, :rows => 5, :value => @protocol.check_enzymes.gsub(/:/, "\r\n") %></td>
-      <% end %>
+          <td><%= f.text_area :check_enzymes, :rows => 5 %></td>
+        <% else %>
+          <td><%= f.text_area :check_enzymes, :rows => 5, :value => @protocol.check_enzymes.gsub(/:/, "\r\n") %></td>
+        <% end %>
         <td>PartBuilder will check if these enzymes in the sequence but not remove them.<br /> One enzyme per line<br />e.g.<br />BceAI<br />SalI</td>
       </tr>
     </table>
@@ -65,15 +65,43 @@
         <td align="center"><%= f.label :int_suffix, "Internal Suffix" %></td>
         <td colspan="2"><%= f.text_field :int_suffix %></td>
       </tr>
-      <tr>
-        <td align="center"><%= f.label :overlap %></td>
-        <% if @protocol.overlap.blank? %>
-          <td><%= f.text_area :overlap, :rows => 5 %></td>
-        <% else %>
-          <td><%= f.text_area :overlap, :rows => 5, :value => @protocol.overlap.gsub(/,/, "\r\n") %></td>
-        <% end %>
-        <td>One overlap per line, only letters allowed<br />e.g.<br />ATTT<br />GCCA<br />CTAA</td>
-      </tr>
+      <% if !@protocol.overlap_size.blank? %>
+        <tr>
+          <td align="center">Overlap</td>
+          <td colspan="2"><%= f.text_field :overlap_size %></td>
+        </tr>
+      <% elsif !@protocol.overlap_list.blank? %>
+        <tr>
+          <td align="center">Overlap</td>
+          <td><%= f.text_area :overlap_list, :rows => 5, :value => @protocol.overlap_list.gsub(/,/, "\r\n") %></td>
+          <td>One overlap per line, only letters allowed<br />e.g.<br />ATTT<br />GCCA<br />CTAA</td>
+        </tr>
+      <% else %>
+        <tr>
+          <td align="center">Overlap</td>
+          <td colspan='2'><i style="color:gray">BioPartsBuilder creates unique overlap between constructs</i></td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td colspan='2'>Input overlap size: <%= f.text_field :overlap_size %></td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td align="center">OR</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td align="center">Paste a list of allowed overlaps</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td><%= f.text_area :overlap_list, :rows => 5 %></td>
+          <td>One overlap per line, only letters allowed<br />e.g.<br />ATTT<br />GCCA<br />CTAA</td>
+        </tr>
+
+      <% end %>
     </table>
   </div>
   <div class='form-actions'>

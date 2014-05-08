@@ -48,7 +48,8 @@
 		<li><%= link_to 'Design Standards', protocols_path %></li>
 		<li class="divider"></li>
 		<li><%= link_to 'Account Info', users_path %></li>
-		<li class="divider"></li>
+    <li><%= link_to 'Tutorial', tutorials_path %> </li>
+    <li class="divider"></li>
 		<% if can? :manage, :admin %>
 			<li><%= link_to 'administration', admin_root_path %></li>
 			<li class="divider"></li>

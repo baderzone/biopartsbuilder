@@ -39,8 +39,8 @@ class Admin::ProtocolsController < ApplicationController
     end
     params[:protocol]['check_enzymes'] = ens.join(':')
 
-    if params[:protocol]['overlap'].include?("\r\n")
-      params[:protocol]['overlap'] = params[:protocol]['overlap'].split("\r\n").join(',').upcase
+    if params[:protocol]['overlap_list'].include?("\r\n")
+      params[:protocol]['overlap_list'] = params[:protocol]['overlap_list'].split("\r\n").join(',').upcase
     end
     @protocol = Protocol.new(params[:protocol])
     @protocol.lab = current_user.lab
@@ -58,13 +58,13 @@ class Admin::ProtocolsController < ApplicationController
 
   def update
     @protocol = Protocol.find(params[:id])
-    if params[:protocol]['overlap'].include?("\r\n")
-      params[:protocol]['overlap'] = params[:protocol]['overlap'].split("\r\n").join(',').upcase
+    if !params[:protocol]['overlap_list'].nil? and params[:protocol]['overlap_list'].include?("\r\n")
+      params[:protocol]['overlap_list'] = params[:protocol]['overlap_list'].split("\r\n").join(',').upcase
     end
-    if params[:protocol]['forbid_enzymes'].include?("\r\n")
+    if !params[:protocol]['forbid_enzymes'].nil? and params[:protocol]['forbid_enzymes'].include?("\r\n")
       params[:protocol]['forbid_enzymes'] = params[:protocol]['forbid_enzymes'].split("\r\n").join(':')
     end
-    if params[:protocol]['check_enzymes'].include?("\r\n")
+    if !params[:protocol]['check_enzymes'].nil? and params[:protocol]['check_enzymes'].include?("\r\n")
       params[:protocol]['check_enzymes'] = params[:protocol]['check_enzymes'].split("\r\n").join(':')
     end
     if @protocol.update_attributes(params[:protocol])

@@ -63,8 +63,26 @@
         <td colspan="2"><%= f.text_field :int_suffix %></td>
       </tr>
       <tr>
-        <td align="center"><%= f.label :overlap %></td>
-        <td><%= f.text_area :overlap, :rows => 5 %></td>
+        <td align="center">Overlap</td>
+        <td colspan='2'><i style="color:gray">BioPartsBuilder creates unique overlap between constructs</i></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td colspan='2'>Input overlap size: <%= f.number_field :overlap_size %></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td align="center">OR</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td align="center">Paste a list of allowed overlaps</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><%= f.text_area :overlap_list, :rows => 5 %></td>
         <td>One overlap per line, only letters allowed<br />e.g.<br />ATTT<br />GCCA<br />CTAA</td>
       </tr>
     </table>

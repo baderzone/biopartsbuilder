@@ -33,6 +33,7 @@ Partsbuilder::Application.routes.draw do
   match "/home/search_result" => "home#search_result", :via => :post
 
   resources :protocols
+  resources :tutorials
   resources :constructs
   resources :orders
   resources :users

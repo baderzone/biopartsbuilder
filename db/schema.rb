@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140408141837) do
+ActiveRecord::Schema.define(:version => 20140506174434) do
 
   create_table "annotations", :force => true do |t|
     t.integer  "chromosome_id"
@@ -182,7 +182,7 @@ ActiveRecord::Schema.define(:version => 20140408141837) do
     t.string   "name"
     t.string   "int_prefix"
     t.string   "int_suffix"
-    t.text     "overlap"
+    t.text     "overlap_list"
     t.integer  "construct_size"
     t.string   "forbid_enzymes"
     t.datetime "created_at",     :null => false
@@ -193,6 +193,7 @@ ActiveRecord::Schema.define(:version => 20140408141837) do
     t.string   "check_enzymes"
     t.text     "comment"
     t.integer  "lab_id"
+    t.integer  "overlap_size"
   end
 
   add_index "protocols", ["lab_id"], :name => "index_protocols_on_lab_id"

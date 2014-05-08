@@ -168,7 +168,13 @@ class BioDesign
     if sequence.size <= max_size
       design[:construct] = {1 => sequence}
     else
-      constructs = creat_frag(protocol.int_prefix, protocol.int_suffix, protocol.construct_size, sequence, protocol.overlap.split(','))
+      if !protocol.overlap_size.blank?
+        constructs = creat_frag(protocol.int_prefix, protocol.int_suffix, protocol.construct_size, sequence, protocol.overlap_size, 'overlap_size')
+      elsif !protocol.overlap_list.blank?
+        constructs = creat_frag(protocol.int_prefix, protocol.int_suffix, protocol.construct_size, sequence, protocol.overlap_list.split(','), 'overlap_list')
+      else
+        constructs = creat_frag(protocol.int_prefix, protocol.int_suffix, protocol.construct_size, sequence, '', 'no_overlap')
+      end
       if constructs 
         design[:construct] = constructs
       else
@@ -243,46 +249,105 @@ class BioDesign
     end
   end
 
-  def creat_frag(int_pre, int_suf, max_size, seq, overlaps)
-    # create allowed overlap list
-    allowed_overlaps =  Array.new
-    overlaps.each do |entry|
-      allowed_overlaps << entry.upcase
-      allowed_overlaps << Bio::Sequence::NA.new(entry).complement.to_s.upcase
-    end
-    allowed_overlaps.uniq!
-    # adjust fragment size to avoid small fagment
-    frag_size = max_size - int_pre.size - int_suf.size
-    frag_num = (seq.size.to_f / frag_size).ceil
-    frag_size = seq.size / frag_num
-    # create construct
-    construct = Hash.new
-    cnt = 0
-    seq_remain = seq.upcase
-    while cnt < frag_num
-      cnt += 1
-      if cnt == frag_num
-        construct[cnt] = int_pre + seq_remain
-      else
-        re = create_overlap(allowed_overlaps, seq_remain[0, frag_size], seq_remain[frag_size..-1])
-        if re
+  def creat_frag(int_pre, int_suf, max_size, seq, overlaps, overlap_type)
+    if overlap_type == 'overlap_list'
+      # create allowed overlap list
+      allowed_overlaps =  Array.new
+      overlaps.each do |entry|
+        allowed_overlaps << entry.upcase
+        allowed_overlaps << Bio::Sequence::NA.new(entry).complement.to_s.upcase
+      end
+      allowed_overlaps.uniq!
+      # adjust fragment size to avoid small fagment
+      frag_size = max_size - int_pre.size - int_suf.size
+      frag_num = (seq.size.to_f / frag_size).ceil
+      frag_size = seq.size / frag_num
+      # create construct
+      construct = Hash.new
+      cnt = 0
+      seq_remain = seq.upcase
+      while cnt < frag_num
+        cnt += 1
+        if cnt == frag_num
+          construct[cnt] = int_pre + seq_remain
+        else
+          re = create_overlap_with_list(allowed_overlaps, seq_remain[0, frag_size], seq_remain[frag_size..-1])
+          if re
+            if cnt == 1
+              construct[cnt] = re['seq_left'] + int_suf
+            else
+              construct[cnt] = int_pre + re['seq_left'] + int_suf
+            end
+            seq_remain = re['seq_right']
+            allowed_overlaps.delete_at(allowed_overlaps.index(re['overlap']))
+            allowed_overlaps.delete_at(allowed_overlaps.index(Bio::Sequence::NA.new(re['overlap']).complement.to_s.upcase))
+          else
+            return false
+          end
+        end
+      end
+
+    elsif overlap_type == 'overlap_size'
+      # create used overlap list
+      used_overlaps =  Array.new
+      # adjust fragment size to avoid small fagment
+      frag_size = max_size - int_pre.size - int_suf.size
+      frag_num = (seq.size.to_f / frag_size).ceil
+      frag_size = seq.size / frag_num
+      # create construct
+      construct = Hash.new
+      cnt = 0
+      seq_remain = seq.upcase
+      while cnt < frag_num
+        cnt += 1
+        if cnt == frag_num
+          construct[cnt] = int_pre + seq_remain
+        else
+          re = create_overlap_with_size(overlaps, used_overlaps, seq_remain[0, frag_size], seq_remain[frag_size..-1])
+          if re
+            if cnt == 1
+              construct[cnt] = re['seq_left'] + int_suf
+            else
+              construct[cnt] = int_pre + re['seq_left'] + int_suf
+            end
+            seq_remain = re['seq_right']
+            used_overlaps << re['overlap']
+            used_overlaps << Bio::Sequence::NA.new(re['overlap']).complement.to_s.upcase
+          else
+            return false
+          end
+        end
+      end
+
+    else
+      # adjust fragment size to avoid small fagment
+      frag_size = max_size - int_pre.size - int_suf.size
+      frag_num = (seq.size.to_f / frag_size).ceil
+      frag_size = seq.size / frag_num
+      # create construct
+      construct = Hash.new
+      cnt = 0
+      seq_remain = seq.upcase
+      while cnt < frag_num
+        cnt += 1
+        if cnt == frag_num
+          construct[cnt] = int_pre + seq_remain
+        else
+          re = {'seq_left' => seq_remain[0, frag_size], 'seq_right' => seq_remain[frag_size..-1]}
           if cnt == 1
             construct[cnt] = re['seq_left'] + int_suf
           else
             construct[cnt] = int_pre + re['seq_left'] + int_suf
           end
           seq_remain = re['seq_right']
-          allowed_overlaps.delete_at(allowed_overlaps.index(re['overlap']))
-          allowed_overlaps.delete_at(allowed_overlaps.index(Bio::Sequence::NA.new(re['overlap']).complement.to_s.upcase))
-        else
-          return false
         end
       end
     end
+
     return construct
   end
 
-  def create_overlap(allowed_overlaps, seq_left, seq_right)
+  def create_overlap_with_list(allowed_overlaps, seq_left, seq_right)
     ol_size = allowed_overlaps[0].size
     shift = 0
     while shift < seq_left.size/2 && shift < seq_right.size/2
@@ -298,6 +363,29 @@ class BioDesign
       new_right = seq_right[shift..-1]
       overlap = new_left[(new_left.size - ol_size), ol_size]
       if allowed_overlaps.include?(overlap)
+        return {'seq_left' => new_left, 'seq_right' => (overlap + new_right), 'overlap' => overlap}
+      end
+      # no overlap found  
+      shift += 1
+    end
+    return false    
+  end
+
+  def create_overlap_with_size(ol_size, used_overlaps, seq_left, seq_right)
+    shift = 0
+    while shift < seq_left.size/2 && shift < seq_right.size/2
+      # shift left
+      new_left = seq_left[0, (seq_left.size - shift)]
+      new_right = seq_left[(seq_left.size - shift), shift] + seq_right
+      overlap = new_left[(new_left.size - ol_size), ol_size]
+      if !used_overlaps.include?(overlap)
+        return {'seq_left' => new_left, 'seq_right' => (overlap + new_right), 'overlap' => overlap}
+      end
+      # shift right
+      new_left = seq_left + seq_right[0, shift]
+      new_right = seq_right[shift..-1]
+      overlap = new_left[(new_left.size - ol_size), ol_size]
+      if !used_overlaps.include?(overlap)
         return {'seq_left' => new_left, 'seq_right' => (overlap + new_right), 'overlap' => overlap}
       end
       # no overlap found  

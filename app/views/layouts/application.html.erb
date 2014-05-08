@@ -30,7 +30,8 @@
 			<ul class="nav nav-pills">
 				<li><a href="/auth/google">Login / Create your Lab</a></li>					      
         <li><%= link_to 'Login as Guest', :controller => :sessions, :action => :guest %></li>					      
-		  	</ul>
+        <li><%= link_to 'Tutorial', tutorials_path %></li>
+      </ul>
 		<% else %>
 			<%= render :partial => "layouts/menubar" %>
 		<% end %>
