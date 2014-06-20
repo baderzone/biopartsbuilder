@@ -16,16 +16,14 @@ class AutoBuild
     # retrieve parts
     biopart = BioPart.new
     if !params['seq_file'].blank?
-      data, error_info = biopart.retrieve(params['seq_file'], 'fasta')
+      data, error_info = biopart.retrieve(params['seq_file'], 'fasta', order.user.id)
     elsif !params['accessions'].blank?
-      data, error_info = biopart.retrieve(params['accessions'], 'ncbi')
+      data, error_info = biopart.retrieve(params['accessions'], 'ncbi', order.user.id)
     else
-      data, error_info = biopart.retrieve(params['annotation_ids'], 'genome')
+      data, error_info = biopart.retrieve(params['annotation_ids'], 'genome', order.user.id)
     end 
-    # check parts
-    error_info = biopart.check(data) if error_info.empty?
     # store parts
-    part_ids = biopart.store(data, order.user.id) if error_info.empty?
+    part_ids = biopart.store(data, order.user.id) if error_info.empty? 
 
     # design part 
     if error_info.empty?

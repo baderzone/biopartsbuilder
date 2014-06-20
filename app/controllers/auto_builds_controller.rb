@@ -19,7 +19,7 @@ class AutoBuildsController < ApplicationController
         @accessions = params[:accession].strip.split("\r\n")
         @accessions.delete('')
         @accessions.each do |a|
-          if !Sequence.find_by_accession(a).blank?
+          if !Sequence.find_by_accession_and_lab_id(a, current_user.lab_id).blank?
             @existing_parts << a
           end
         end
@@ -37,7 +37,7 @@ class AutoBuildsController < ApplicationController
         # check file
         @sequences, @errors = FastaFile.check(@seq_file)
         @sequences.each do |s|
-          if !Sequence.find_by_accession(s['accession']).blank?
+          if !Sequence.find_by_accession_and_lab_id(s['accession'], current_user.lab_id).blank?
             @existing_parts << s['accession']
           end
         end
@@ -52,7 +52,7 @@ class AutoBuildsController < ApplicationController
             search.size 100
           end
           @parts.each do |p|
-            if !Sequence.find_by_accession(p.systematic_name).blank?
+            if !Sequence.find_by_accession_and_lab_id(p.systematic_name, current_user.lab_id).blank?
               @existing_parts << p.systematic_name
             end 
           end

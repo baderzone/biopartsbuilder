@@ -14,14 +14,12 @@ class PartWorker
     # retrieve parts
     biopart = BioPart.new
     if !params['seq_file'].blank?
-      data, error_info = biopart.retrieve(params['seq_file'], 'fasta')
+      data, error_info = biopart.retrieve(params['seq_file'], 'fasta', params['user_id'])
     elsif !params['accessions'].blank?
-      data, error_info = biopart.retrieve(params['accessions'], 'ncbi')
+      data, error_info = biopart.retrieve(params['accessions'], 'ncbi', params['user_id'])
     else
-      data, error_info = biopart.retrieve(params['annotation_ids'], 'genome')
+      data, error_info = biopart.retrieve(params['annotation_ids'], 'genome', params['user_id'])
     end
-    # check parts
-    error_info = biopart.check(data) if error_info.empty? 
     # store parts
     part_ids = biopart.store(data, params['user_id']) if error_info.empty?
 

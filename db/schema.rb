@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140506174434) do
+ActiveRecord::Schema.define(:version => 20140620174516) do
 
   create_table "annotations", :force => true do |t|
     t.integer  "chromosome_id"
@@ -208,8 +208,10 @@ ActiveRecord::Schema.define(:version => 20140506174434) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.string   "seq_type"
+    t.integer  "lab_id"
   end
 
+  add_index "sequences", ["lab_id"], :name => "index_sequences_on_lab_id"
   add_index "sequences", ["organism_id"], :name => "index_sequences_on_organism_id"
   add_index "sequences", ["part_id"], :name => "index_sequences_on_part_id"
 

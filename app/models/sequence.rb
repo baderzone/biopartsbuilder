@@ -4,8 +4,9 @@ class Sequence < ActiveRecord::Base
   
   belongs_to :organism
   belongs_to :part
+  belongs_to :lab
 
-  attr_accessible :accession, :annotation, :organism_id, :part_id, :seq, :organism, :seq_type
+  attr_accessible :accession, :annotation, :organism_id, :part_id, :seq, :organism, :seq_type, :lab_id
 
   validates_presence_of :accession
 

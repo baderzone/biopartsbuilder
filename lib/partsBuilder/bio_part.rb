@@ -2,9 +2,11 @@ require 'xmlsimple'
 
 class BioPart
 
-  def retrieve(input, type)
+  def retrieve(input, type, user_id)
     bioparts = Array.new
     error = String.new
+    user = User.find(user_id)
+    lab_id = user.lab_id
 
     case type
     when 'genome'
@@ -26,8 +28,8 @@ class BioPart
       in_file.close
     when 'ncbi'
       input.each do |entry|
-        sequence = Sequence.find_all_by_accession(entry).try(:first)
-        if sequence.nil?
+        sequence = Sequence.find_by_accession_and_lab_id(entry, lab_id)
+        if sequence.blank?
           # create new sequence
           biopart = create_from_ncbi(entry)
           if biopart[:error].nil?
@@ -47,48 +49,25 @@ class BioPart
     return bioparts, error 
   end
 
-  def check(bioparts)
-    error = String.new
-    bioparts.each do |entry|
-      if entry[:dna_seq].nil?
-        seq_type = 'protein'
-        part_seq = entry[:protein_seq] 
-      else
-        seq_type = 'dna'
-        part_seq = entry[:dna_seq]
-      end
-
-      exist_seq = Sequence.find_by_accession_and_seq_type(entry[:accession_num], seq_type)
-      if !exist_seq.nil?
-        if exist_seq.seq.upcase != part_seq.upcase
-          error = "Part '#{entry[:accession_num]}' with different sequence found!  Please check if the data is correct. Accession number must be unique (one sequence, one number). The sequence of part found in the database is: #{exist_seq.seq}. The sequence of your part is: #{part_seq}"
-          return error
-        end
-      end
-    end
-
-    return error
-  end
-
   def store(bioparts, user_id)
     part_ids = Array.new
     user = User.find(user_id)
-    lab_id = [user.lab.id]
+    lab_id = user.lab_id
 
     bioparts.each do |entry|
       if ! entry[:org_latin].nil?
         organism = Organism.find_by_fullname(entry[:org_latin],) || Organism.create(:fullname => entry[:org_latin], :name => entry[:org_abbr])
       end
-      sequence = Sequence.find_all_by_accession(entry[:accession_num]).try(:first)
+      sequence = Sequence.find_by_accession_and_lab_id(entry[:accession_num], lab_id)
       if sequence.blank?
-        part = Part.create(:name => entry[:name].gsub(/__/, '_'), :comment => entry[:comment], :lab_ids => lab_id)
+        part = Part.create(:name => entry[:name].gsub(/__/, '_'), :comment => entry[:comment], :lab_ids => [lab_id])
         part_ids << part.id
 
         unless entry[:protein_seq].nil?
-          part.sequences.create(:accession => entry[:accession_num], :organism => organism, :seq => entry[:protein_seq].upcase, :annotation => entry[:type], :seq_type => 'protein')
+          part.sequences.create(:accession => entry[:accession_num], :organism => organism, :seq => entry[:protein_seq].upcase, :annotation => entry[:type], :seq_type => 'protein', :lab_id => lab_id)
         end
         unless entry[:dna_seq].nil?
-          part.sequences.create(:accession => entry[:accession_num], :organism => organism, :seq => entry[:dna_seq].upcase, :annotation => entry[:type], :seq_type => 'dna')
+          part.sequences.create(:accession => entry[:accession_num], :organism => organism, :seq => entry[:dna_seq].upcase, :annotation => entry[:type], :seq_type => 'dna', :lab_id => lab_id)
         end
 
         # create fasta file for GeneDesign
@@ -106,7 +85,7 @@ class BioPart
         end
       else
         part = sequence.part
-        part.lab_ids = (part.lab_ids + lab_id).uniq
+        part.lab_ids = (part.lab_ids + [lab_id]).uniq
         part.save
         part_ids << part.id
       end
