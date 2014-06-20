@@ -9,6 +9,7 @@ class AutoBuildsController < ApplicationController
   end
 
   def confirm
+    @existing_parts = []
     if params[:order_name].blank? || (params[:accession].blank? && params[:sequence_file].blank? && params[:genome].blank?) || params[:protocol_id].blank? 
       redirect_to new_auto_build_path, :alert => "Something is missing. Make sure to select one design standard, input order name, upload a fasta file or input accession numbers or search genomes"
     else
@@ -17,6 +18,11 @@ class AutoBuildsController < ApplicationController
       if !params[:accession].blank?
         @accessions = params[:accession].strip.split("\r\n")
         @accessions.delete('')
+        @accessions.each do |a|
+          if !Sequence.find_by_accession(a).blank?
+            @existing_parts << a
+          end
+        end
 
       elsif !params[:sequence_file].blank?
         # upload file
@@ -30,6 +36,12 @@ class AutoBuildsController < ApplicationController
 
         # check file
         @sequences, @errors = FastaFile.check(@seq_file)
+        @sequences.each do |s|
+          if !Sequence.find_by_accession(s['accession']).blank?
+            @existing_parts << s['accession']
+          end
+        end
+
 
       elsif !params[:genome].blank?
         begin
@@ -38,6 +50,11 @@ class AutoBuildsController < ApplicationController
               query.string params[:genome]
             end
             search.size 100
+          end
+          @parts.each do |p|
+            if !Sequence.find_by_accession(p.systematic_name).blank?
+              @existing_parts << p.systematic_name
+            end 
           end
         rescue
           return redirect_to new_auto_build_path, :alert => "Your query '#{params[:genome]}' format is not correct, please check"

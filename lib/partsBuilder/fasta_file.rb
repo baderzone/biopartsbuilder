@@ -13,6 +13,8 @@ class FastaFile
         errors << "Format invalid: #{entry.definition}"
       elsif entry.seq.empty?
         errors << "No sequence data for : #{entry.definition}"
+      elsif !descriptions[3].blank? and descriptions[3].split(' ').size != 2
+        errors << "Wrong organism name '#{descriptions[3]}', must use latin name"
       else
         sequences << {'part' => descriptions[0].split(' ').join('-'), 'type' => descriptions[1], 'accession' => descriptions[2], 'org' => descriptions[3]||'unknown'}
       end 

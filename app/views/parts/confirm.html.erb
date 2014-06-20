@@ -23,6 +23,10 @@
   <br />
 
 <% else %>
+  <% if !@existing_parts.blank? %>
+    <p class="text-warning">Note: If parts / designs are already in the system, BioPartsBuilder will use the data in the database instead of re-creating new records.</p>
+    <p class="text-warning"> The following parts are found in the database: <%= @existing_parts.join(', ') %></p>
+  <% end %>
   <%= form_tag({:controller => "parts", :action => "create"}, :method => "post", :multipart => true) do %>
 
     <% if !@sequences.blank? %>

@@ -29,11 +29,17 @@ class PartsController < ApplicationController
   end
 
   def confirm
+    @existing_parts = []
     @errors = Array.new
 
     if !params[:accession].blank?
       @accessions = params[:accession].strip.split("\r\n")
       @accessions.delete('')
+      @accessions.each do |a|
+        if !Sequence.find_by_accession(a).blank?
+          @existing_parts << a
+        end
+      end
 
     elsif !params[:sequence_file].blank?
       # upload file
@@ -47,6 +53,13 @@ class PartsController < ApplicationController
 
       # check file
       @sequences, @errors = FastaFile.check(@seq_file)
+      @sequences.each do |s|
+        if !Sequence.find_by_accession(s['accession']).blank?
+          @existing_parts << s['accession']
+        end
+      end
+
+
 
     elsif !params[:genome].blank?
       begin
@@ -55,6 +68,11 @@ class PartsController < ApplicationController
             query.string params[:genome]
           end
           search.size 100
+        end
+        @parts.each do |p|
+          if !Sequence.find_by_accession(p.systematic_name).blank?
+            @existing_parts << p.systematic_name
+          end 
         end
       rescue
         return redirect_to new_part_path, :alert => "Your query '#{params[:genome]}' format is not correct, please check"
