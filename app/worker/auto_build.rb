@@ -17,6 +17,8 @@ class AutoBuild
     biopart = BioPart.new
     if !params['seq_file'].blank?
       data, error_info = biopart.retrieve(params['seq_file'], 'fasta', order.user.id)
+    elsif !params['csv_file'].blank?
+      data, error_info = biopart.retrieve(params['csv_file'], 'csv', order.user.id)
     elsif !params['accessions'].blank?
       data, error_info = biopart.retrieve(params['accessions'], 'ncbi', order.user.id)
     else

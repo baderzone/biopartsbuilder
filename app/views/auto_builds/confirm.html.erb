@@ -3,11 +3,10 @@
 </div>
 <% unless @errors.empty? %>
   <p style="color:red">There are errors in your uploaded file.</p>
-  <p>Please note that the description line must follow the format: <b>>part_name|accession_number|organism|comments</b>.  Organism and comments are optional. One sequence can only have one description line.<p>
   <hr />
   <p><b>Errors:</b></p>
-  <% @errors.each do |key, value| %>
-    &nbsp;&nbsp;<%= value['error'] %> <br />
+  <% @errors.each do |value| %>
+    &nbsp;&nbsp;<%= value %> <br />
   <% end %>
   <div class="form-actions">
     <%= link_to 'Go Back', new_auto_build_path, :class => 'btn btn-primary' %>
@@ -29,9 +28,30 @@
           <th>Part Name</th>
           <th>Part Type</th>
           <th>Accession Number</th>
-          <th>Organism</th>
+          <th>Source Organism</th>
         </tr>
         <% @sequences.each do |seq| %>
+          <tr>
+            <td><%= seq['part'] %></td>
+            <td><%= seq['type'] %></td>
+            <td><%= seq['accession'] %></td>
+            <td><%= seq['org'] %></td>
+          </tr>
+        <% end %>
+      </table>
+
+    <% elsif !@csv_seqs.blank? %>
+      <%= hidden_field_tag(:csv_file, @csv_file) %>
+      <p>The protocol you choose to use is <b><%= @protocol.name %></b>.  And the order name is <b><%= @order %></b>.  <b><%= @csv_seqs.size %></b> parts to be designed:</p>
+      <hr />
+      <table class="table table-striped">
+        <tr>
+          <th>Part Name</th>
+          <th>Part Type</th>
+          <th>Accession Number</th>
+          <th>Source Organism</th>
+        </tr>
+        <% @csv_seqs.each do |seq| %>
           <tr>
             <td><%= seq['part'] %></td>
             <td><%= seq['type'] %></td>

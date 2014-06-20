@@ -59,7 +59,19 @@ class PartsController < ApplicationController
         end
       end
 
+    elsif !params[:csv_file].blank?
+      # upload file
+      uploader = CsvFileUploader.new
+      uploader.store!(params[:csv_file])
+      @csv_file = uploader.current_path
 
+      # check file
+      @csv_seqs, @errors = CsvFile.check(@csv_file)
+      @csv_seqs.each do |s|
+        if !Sequence.find_by_accession_and_lab_id(s['accession'], current_user.lab_id).blank?
+          @existing_parts << s['accession']
+        end
+      end
 
     elsif !params[:genome].blank?
       begin
@@ -79,18 +91,18 @@ class PartsController < ApplicationController
       end
 
     else
-      redirect_to new_part_path, :alert => "Please input a list of accession numbers OR upload a FASTA file OR search genomes to create parts"
+      redirect_to new_part_path, :alert => "Please input a list of accession numbers OR upload a CSV/FASTA file OR search genomes to create parts"
     end
   end
 
   def create
-    if params[:accession].blank? && params[:sequence_file].blank? && params[:annotation_ids].blank?
+    if params[:accession].blank? && params[:csv_file].blank? && params[:sequence_file].blank? && params[:annotation_ids].blank?
       redirect_to new_part_path, :alert => "No input"
 
     else
       @job = Job.create(job_type: JobType.find_by_name('part'), user: current_user, job_status: JobStatus.find_by_name('submitted'))
 
-      worker_params = {:job_id => @job.id, :accessions => params[:accession], :user_id => current_user.id, :seq_file => params[:sequence_file], :annotation_ids => params[:annotation_ids]}
+      worker_params = {:job_id => @job.id, :accessions => params[:accession], :user_id => current_user.id, :csv_file => params[:csv_file], :seq_file => params[:sequence_file], :annotation_ids => params[:annotation_ids]}
 
       PartWorker.perform_async(worker_params)
       redirect_to job_path(@job.id), :notice => "Parts submitted!"
@@ -99,6 +111,10 @@ class PartsController < ApplicationController
 
   def get_description_file
     send_file "public/examples/description.txt", :type => "text", :disposition => 'inline'
+  end
+
+  def get_csv_template
+    send_file "public/examples/template.csv", :type => "text/csv", :disposition => 'inline'
   end
 
   def get_fasta_file

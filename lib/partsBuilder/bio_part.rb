@@ -1,4 +1,5 @@
 require 'xmlsimple'
+require 'csv'
 
 class BioPart
 
@@ -19,6 +20,15 @@ class BioPart
           return bioparts, error
         end
       end
+
+    when 'csv'
+      CSV.foreach(input) do |row|
+        unless ['part symbol', 'symbol', 'part name', 'name'].include?(row[0].downcase)
+          biopart = create_from_csv(row)
+          bioparts << biopart
+        end
+      end
+
     when 'fasta'
       in_file = Bio::FastaFormat.open(input, 'r')
       in_file.each do |entry|
@@ -26,6 +36,7 @@ class BioPart
         bioparts << biopart
       end 
       in_file.close
+
     when 'ncbi'
       input.each do |entry|
         sequence = Sequence.find_by_accession_and_lab_id(entry, lab_id)
@@ -159,6 +170,27 @@ class BioPart
       part[:protein_seq] = entry.seq
     else
       part[:dna_seq] = entry.seq
+    end
+    return part
+  end
+
+  def create_from_csv(row)
+    part = {name: nil, type: nil, seq: nil, accession_num: nil, org_latin: nil, org_abbr: nil, comment: nil}
+    gene_name = row[0].strip.split(' ').join('-')
+
+    part[:type] = row[1].strip
+    part[:accession_num] = row[2].strip
+    unless row[3].blank?
+      part[:org_latin] = row[3].strip
+      part[:org_abbr] = part[:org_latin].split(' ')[0][0].upcase + part[:org_latin].split(' ')[1][0, 2].downcase
+    end
+    part[:comment] = row[5] && row[5].strip
+    part[:name] = "#{part[:type]}_#{part[:org_abbr]}_#{gene_name}_#{part[:accession_num]}"
+    sequence = Bio::Sequence.auto(row[4].strip)
+    if sequence.moltype == Bio::Sequence::AA
+      part[:protein_seq] = row[4].strip
+    else
+      part[:dna_seq] = row[4].strip
     end
     return part
   end

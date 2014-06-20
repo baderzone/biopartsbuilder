@@ -15,6 +15,8 @@ class PartWorker
     biopart = BioPart.new
     if !params['seq_file'].blank?
       data, error_info = biopart.retrieve(params['seq_file'], 'fasta', params['user_id'])
+    elsif !params['csv_file'].blank?
+      data, error_info = biopart.retrieve(params['csv_file'], 'csv', params['user_id'])
     elsif !params['accessions'].blank?
       data, error_info = biopart.retrieve(params['accessions'], 'ncbi', params['user_id'])
     else

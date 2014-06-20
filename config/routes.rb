@@ -19,7 +19,9 @@ Partsbuilder::Application.routes.draw do
   get "parts/get_description_file"
   
   get "parts/get_fasta_file"
-  
+ 
+  get "parts/get_csv_template"
+
   get "designs/fasta"
 
   get "sessions/guest"

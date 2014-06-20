@@ -5,6 +5,7 @@
 
   <ul class="nav nav-tabs">
     <li class="active"><a href="#ncbi" data-toggle="tab">NCBI</a></li>
+    <li><a href="#csv" data-toggle="tab">CSV File</a></li>
     <li><a href="#file" data-toggle="tab">Fasta File</a></li>
     <li><a href="#genome" data-toggle="tab">Search Genomes</a></li>
   </ul>
@@ -18,6 +19,21 @@
           <td>One id per line<br />e.g.<br />NP_058651.3<br />YP_491843.1<br />P29929.1</td>
         </tr>
       </table>
+    </div>
+
+    <div class="tab-pane" id="csv">
+      <h5>1. Upload a CSV File of Protein/Nucleotide Sequences (only .fasta, .fa and .txt allowed):</h5>
+      <%= file_field_tag(:csv_file)%>
+      <p><i><%= link_to 'Download template', {:controller => :parts, :action => :get_csv_template} %></i></p>
+      <p class="muted">CSV File must have the follwoing fields:</p>
+      <ul>
+        <li class="muted">Part Symbol</li>
+        <li class="muted">Part Type (e.g. CDS, tRNA, Promoter)</li>
+        <li class="muted">Accession Number (Unique identifier for parts. Both NCBI and customized identifier are acceptible)</li>
+        <li class="muted">Source Organism (Must use latin name, if unknown, leave blank )</li>
+        <li class="muted">Sequence</li>
+        <li class="muted">Comment (If no comment, leave blank)</li>
+      </ul>
     </div>
 
     <div class="tab-pane" id="genome">
@@ -108,7 +124,7 @@
     </div>
 
     <div class="tab-pane" id="file">
-      <h5>1. Upload a Fasta File of Protein Sequences (only .fa, .fasta and .txt allowed):</h5>
+      <h5>1. Upload a Fasta File of Protein/Nucleotide Sequences (only .fa, .fasta and .txt allowed):</h5>
       <%= file_field_tag(:sequence_file)%>
       <p class="text-error">Important: The description line must use the following format:</p>
       <p><b>></b> part_symbol <b>|</b> part_type <b>|</b> accession_number <b>|</b> source organism<b> | </b>comments</p>
