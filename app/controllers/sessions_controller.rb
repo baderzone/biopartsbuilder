@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
     
   def create
     auth = request.env['omniauth.auth']    
-    user = User.find_by_provider_and_email(auth[:provider],auth[:info][:email])
+    user = User.find_by_email(auth[:info][:email])
     if user.nil?
       return redirect_to new_lab_path
     end
