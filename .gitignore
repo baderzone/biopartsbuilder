@@ -7,6 +7,7 @@
 # Ignore bundler config
 /.bundle
 .DS_Store
+.ruby-version
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -29,3 +30,4 @@
 /public/uploads
 /public/gff
 /public/converted_files
+/public/inputs
