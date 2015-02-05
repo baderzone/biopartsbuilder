@@ -8,7 +8,7 @@
       <td><%= text_field_tag :name %></td>
     </tr>
     <tr>
-      <td width="60px"><%= label_tag :vendor_id, "Vendor" %></td>
+      <td width="60px"><%= label_tag :vendor_id, "Format" %></td>
       <td><%= collection_select :order, :vendor_id, Vendor.all, :id, :name %></td>
     </tr>
   </table>
