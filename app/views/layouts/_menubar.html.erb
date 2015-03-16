@@ -51,7 +51,7 @@
     <li><%= link_to 'Account Info', users_path %></li>
     <li class="divider"></li>
     <% if can? :manage, :admin %>
-      <li><%= link_to 'administration', admin_root_path %></li>
+      <li><%= link_to 'Administration', admin_root_path %></li>
       <li class="divider"></li>
     <% end %>
     <li><%= link_to 'Logout', signout_path %></li>

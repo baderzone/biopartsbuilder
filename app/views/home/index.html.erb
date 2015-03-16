@@ -5,8 +5,11 @@
 
 <div align='center'>
   <%= form_tag({:action => "search_result"}, :method => "post", :multipart => true) do %>
-    <%= text_field_tag :sequence, '', :class => 'genome_search' %><br />
-    Examples: name:*YAL*, sequence:*KAVNVLKKADVV*, organism:Bacillus subtilis AND feature:CDS, <a href="#myModal" data-toggle="modal">see full syntax instruction</a><br /><br />
+    <%= text_field_tag :sequence, '', :class => 'genome_search' %>
+    <br />
+    Query Example: organism:Saccharomyces cerevisiae AND feature:CDS &nbsp; &nbsp; 
+    <a href="#myModal" data-toggle="modal">see full syntax instruction</a>
+    <br /><br />
     <%= submit_tag("Search Part", :class => "btn btn-primary") %>
   <% end %>
 </div>
