@@ -6,12 +6,16 @@ namespace :partsBuilder do
   namespace :tire do
     desc 'import elasticsearch indexes'
 
-    task :import => :environment do
-      group_size = 1000
+    task :import_annotation => :environment do
+      group_size = 50
       Annotation.find_in_batches(start: 0, batch_size: group_size) do |batch|
-        puts "start indexing records #{batch[0].id}~#{batch[-1].id}"
+        puts "start indexing annotations #{batch[0].id}~#{batch[-1].id}"
         Tire.index("annotations").import batch
       end
+    end
+
+    task :import_sequence => :environment do
+      Tire.index("sequences").import Sequence.all
     end
   end
 
