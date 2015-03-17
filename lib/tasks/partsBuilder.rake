@@ -73,7 +73,7 @@ namespace :partsBuilder do
     end
   end
 
-  namespace :promoter do
+  namespace :promoter_terminator do
     desc 'create promoters and terminators and store them into db'
 
     task :create => :environment do
