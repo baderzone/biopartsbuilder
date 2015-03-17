@@ -4,7 +4,8 @@
 <% if @parts.size == 100 %>
   <p>More than 100 parts found!  Only the first 100 are showed here.</p>
 <% else %>
-  <p><b><%= @parts.size %></b> parts found. They are: </p>
+  <% uniq = {}; @parts.each {|p| uniq[p.name] = 0} %> 
+  <p><b><%= uniq.keys.size %></b> parts found. They are: </p>
 <% end %>
 <table class="table table-striped table-bordered">
   <thead>
