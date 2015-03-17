@@ -16,13 +16,17 @@
     </tr>
   </thead>
   <tbody>
+    <% uniq = {} %>
     <% @parts.each do |p| %>
-      <tr>
-        <td><%= link_to p.name, part_path(p.part_id) %></td>
-        <td><%= p.accession_number %></td>
-        <td><%= p.organism %></td>
-        <td><%= p.feature %></td>
-      </tr>
+      <% unless uniq.has_key?(p.name) %>
+        <% uniq[p.name] = 0 %>
+        <tr>
+          <td><%= link_to p.name, part_path(p.part_id) %></td>
+          <td><%= p.accession_number %></td>
+          <td><%= p.organism %></td>
+          <td><%= p.feature %></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
