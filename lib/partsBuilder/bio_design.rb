@@ -178,7 +178,7 @@ class BioDesign
       if constructs 
         design[:construct] = constructs
       else
-        design[:error] = 'Fragment creation failed!'
+        design[:error] = 'Fragment creation failed, cannot assign unique overlap for constructs. Please edit design standard to add more allowable overlaps.'
       end
     end
 
@@ -270,8 +270,15 @@ class BioDesign
         cnt += 1
         if cnt == frag_num
           construct[cnt] = int_pre + seq_remain
+          if construct[cnt].size > max_size
+            cnt = 0
+            construct = Hash.new
+            seq_remain = seq.upcase
+            frag_num += 1
+            frag_size = seq.size / frag_num
+          end
         else
-          re = create_overlap_with_list(allowed_overlaps, seq_remain[0, frag_size], seq_remain[frag_size..-1])
+          re = create_overlap_with_list((max_size - int_pre.size - int_suf.size), allowed_overlaps, seq_remain[0, frag_size], seq_remain[frag_size..-1])
           if re
             if cnt == 1
               construct[cnt] = re['seq_left'] + int_suf
@@ -302,8 +309,15 @@ class BioDesign
         cnt += 1
         if cnt == frag_num
           construct[cnt] = int_pre + seq_remain
+          if construct[cnt].size > max_size
+            cnt = 0
+            construct = Hash.new
+            seq_remain = seq.upcase
+            frag_num += 1
+            frag_size = seq.size / frag_num
+          end
         else
-          re = create_overlap_with_size(overlaps, used_overlaps, seq_remain[0, frag_size], seq_remain[frag_size..-1])
+          re = create_overlap_with_size((max_size - int_pre.size - int_suf.size), overlaps, used_overlaps, seq_remain[0, frag_size], seq_remain[frag_size..-1])
           if re
             if cnt == 1
               construct[cnt] = re['seq_left'] + int_suf
@@ -347,10 +361,10 @@ class BioDesign
     return construct
   end
 
-  def create_overlap_with_list(allowed_overlaps, seq_left, seq_right)
+  def create_overlap_with_list(size_limit, allowed_overlaps, seq_left, seq_right)
     ol_size = allowed_overlaps[0].size
     shift = 0
-    while shift < seq_left.size/2 && shift < seq_right.size/2
+    while shift < seq_left.size*0.8
       # shift left
       new_left = seq_left[0, (seq_left.size - shift)]
       new_right = seq_left[(seq_left.size - shift), shift] + seq_right
@@ -360,10 +374,12 @@ class BioDesign
       end
       # shift right
       new_left = seq_left + seq_right[0, shift]
-      new_right = seq_right[shift..-1]
-      overlap = new_left[(new_left.size - ol_size), ol_size]
-      if allowed_overlaps.include?(overlap)
-        return {'seq_left' => new_left, 'seq_right' => (overlap + new_right), 'overlap' => overlap}
+      if new_left.size < size_limit
+        new_right = seq_right[shift..-1]
+        overlap = new_left[(new_left.size - ol_size), ol_size]
+        if allowed_overlaps.include?(overlap)
+          return {'seq_left' => new_left, 'seq_right' => (overlap + new_right), 'overlap' => overlap}
+        end
       end
       # no overlap found  
       shift += 1
@@ -371,9 +387,9 @@ class BioDesign
     return false    
   end
 
-  def create_overlap_with_size(ol_size, used_overlaps, seq_left, seq_right)
+  def create_overlap_with_size(size_limit, ol_size, used_overlaps, seq_left, seq_right)
     shift = 0
-    while shift < seq_left.size/2 && shift < seq_right.size/2
+    while shift < seq_left.size*0.8
       # shift left
       new_left = seq_left[0, (seq_left.size - shift)]
       new_right = seq_left[(seq_left.size - shift), shift] + seq_right
@@ -383,10 +399,12 @@ class BioDesign
       end
       # shift right
       new_left = seq_left + seq_right[0, shift]
-      new_right = seq_right[shift..-1]
-      overlap = new_left[(new_left.size - ol_size), ol_size]
-      if !used_overlaps.include?(overlap)
-        return {'seq_left' => new_left, 'seq_right' => (overlap + new_right), 'overlap' => overlap}
+      if new_left.size < size_limit
+        new_right = seq_right[shift..-1]
+        overlap = new_left[(new_left.size - ol_size), ol_size]
+        if !used_overlaps.include?(overlap)
+          return {'seq_left' => new_left, 'seq_right' => (overlap + new_right), 'overlap' => overlap}
+        end
       end
       # no overlap found  
       shift += 1
