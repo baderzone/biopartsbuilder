@@ -241,6 +241,7 @@ class BioDesign
       end
     end
     sites.sort!
+    sites.uniq!
 
     if sites.empty?
       return false
