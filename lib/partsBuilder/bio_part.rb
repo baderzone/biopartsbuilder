@@ -197,12 +197,12 @@ class BioPart
 
   def create_from_ncbi(accession)
     part = {name: nil, type: nil, seq: nil, accession_num: nil, org_latin: nil, org_abbr: nil, comment: nil}
-    Bio::NCBI.default_email = 'synbio@jhu.edu'
     part[:accession_num] = accession
     part[:type] = 'CDS'
 
+    url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=#{accession}&rettype=gb&retmode=xml"
     begin
-      ncbi = Bio::NCBI::REST.efetch(accession, {"db"=>"nucleotide", "rettype"=>"gb", "retmode" => "xml"})
+      ncbi = open(url) {|f| f.read}
       if ncbi.include?("Cannot process")
         return {error: "Bad ID: #{accession}!"}
       elsif ncbi.include?("Bad Gateway")
