@@ -1,5 +1,6 @@
 require 'xmlsimple'
 require 'csv'
+require 'open-uri'
 
 class BioPart
 
@@ -199,18 +200,33 @@ class BioPart
     part = {name: nil, type: nil, seq: nil, accession_num: nil, org_latin: nil, org_abbr: nil, comment: nil}
     part[:accession_num] = accession
     part[:type] = 'CDS'
+    this_flag = false
 
     url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=#{accession}&rettype=gb&retmode=xml"
     begin
       ncbi = open(url) {|f| f.read}
       if ncbi.include?("Cannot process")
-        return {error: "Bad ID: #{accession}!"}
+        this_flag = true
       elsif ncbi.include?("Bad Gateway")
-        return {error: "NCBI is temporarily unavailable. Please try later!"}
+        this_flag = true
       end 
     rescue
-      return {error: "Retrieve #{accession} failed, cannot connect to NCBI.  Please check your network access and try again!"}
+      this_flag = true
     end    
+
+    if this_flag
+      url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id=#{accession}&rettype=gb&retmode=xml"
+      begin
+        ncbi = open(url) {|f| f.read}
+        if ncbi.include?("Cannot process")
+          return {error: "Bad ID: #{accession}!"}
+        elsif ncbi.include?("Bad Gateway")
+          return {error: "NCBI is temporarily unavailable. Please try later!"}
+        end 
+      rescue
+        return {error: "Retrieve #{accession} failed, cannot connect to NCBI.  Please check your network access and try again!"}
+      end    
+    end
 
     xml = XmlSimple.xml_in(ncbi, {'ForceArray' => false})
 
